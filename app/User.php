@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -12,8 +13,10 @@ class User extends Authenticatable
     CONST MEMBER = 'member';
     CONST VENDOR = 'vendor';
     CONST THOMAS = 'Thomas Bardin';
+
+    protected $dates = ['deleted_at'];
     
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     protected $fillable = ['type','first_name', 'middle_name', 'last_name', 'email','username', 'password', 'phone', 'gender','mobile_number','whatsapp_number',
                             'date_of_birth', 'address_1', 'address_2', 'country', 'state', 'city', 'district_id', 'last_year_member',

@@ -20,10 +20,13 @@
     <link href="<?php echo url('public/assets/css/bootstrap-colorpicker.css'); ?>" rel="stylesheet" />
     <link href="<?php echo url('public/assets/css/jquery.timepicker.min.css'); ?>" rel="stylesheet" />
     <!-- <link href="css/bootstrap-colorpicker/bootstrap-colorpicker.css" rel="stylesheet"> -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 CSS (Optional, for custom styling) -->
+    <link rel="stylesheet" href="<?php echo url('public/assets/css/sweetalert2.min.css'); ?>">    
 
     <script src="<?php echo url('public/assets/js/jquery.min.js'); ?>"></script>
     <script src="<?php echo url('public/assets/js/jquery.minicolors.js'); ?>"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="<?php echo url('public/assets/js/sweetalert2@11.js'); ?>"></script>
     
     <link rel="shortcut icon" href="<?php echo url('public/assets/images/favicon.png'); ?>" />
     <style>
@@ -93,7 +96,7 @@
         <div class="container">
             <div class="logo">
                 <div  class="logo-image">
-                    <?php $header_logo = App\Http\Helpers\RosenHelper::getOption('header_logo') ?>
+                    <?php $header_logo = App\Http\Helpers\GeneralHelper::getOption('header_logo') ?>
                     <a href="<?php echo route('admin.dashboard'); ?>" style="background:none; height: auto;"><img src="<?php if(!empty($header_logo)): ?>  <?php echo url('public'); ?>/<?php echo e($header_logo); ?> <?php else: ?> <?php echo url('public/assets/images/logo-white.png'); ?> <?php endif; ?>" class="logo" alt="Logo"></a>
                 </div>
                 
@@ -111,103 +114,7 @@
 </header>
 
 <div class="admin-page-whole-content">
-    <div class="left-side-bar">
-        <div class="side-bar-content" <?php echo $url = str_replace(request()->root(),'',url()->current()); ?>>
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <!-- -->
-                </div>
-                <!-- <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse">
-                                <img src="<?php echo e(url('public/assets/images/user-icon.png')); ?>">
-                                <strong>Users</strong>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse" class="panel-collapse collapse <?php echo str_contains($url,'/admin/users') ? 'in' : ''; ?><?php echo str_contains($url,'/admin/dashboard') ? 'in' : ''; ?>">
-                        <div class="panel-body">
-                            <div class="accordions-content-link">
-                                <ul>
-                                    <li><a href="<?php echo e(url('admin/')); ?>">All Users</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a  href="<?php echo e(url('admin/dashboard')); ?>">
-                                <i class="fa fa-dashboard"></i> 
-                                <strong>Dashboard</strong>
-                            </a>
-                        </h4>
-                    </div>
-                    <!-- <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                                <img src="<?php echo e(url('public/assets/images/settings.png')); ?>">
-                                <strong>Home Page Settings</strong>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse <?php echo str_contains($url,'/admin/home_page') ? 'in' : ''; ?>">
-                        <div class="panel-body">
-                            <div class="accordions-content-link">
-                                <ul>
-                                    <li><a href="<?php echo e(url('admin/home_page/home_settings')); ?>">General Settings</a></li>
-                                    <li><a href="<?php echo e(url('admin/home_page/about_section')); ?>">About Rosen I Vara</a></li>
-                                    <li><a href="<?php echo e(url('admin/home_page/testimonials')); ?>">Testimonials</a></li>
-                                    <li><a href="<?php echo e(url('admin/home_page/team_members')); ?>">Team Members</a></li>
-                                    <li><a href="<?php echo e(url('admin/home_page/contact_us')); ?>">Contact Us</a></li>
-                                    
-                                </ul>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>              
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                                <img src="<?php echo e(url('public/assets/images/settings.png')); ?>">
-                                <strong>Settings</strong>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse 
-                    <?php echo str_contains($url,'/admin/change-password') ||                        
-                        str_contains($url,'/admin/users') ||
-                        str_contains($url,'/admin/global-settings') ||
-                        str_contains($url,'/admin/global-styling') ||                              
-                        str_contains($url,'/admin/logs')                         
-                         
-                         ? 'in' : ''; ?>
-
-
-                    ">
-                        <div class="panel-body">
-                            <div class="accordions-content-link">
-                                <ul>
-                                    
-                                    <li><a href="<?php echo e(url('admin/users')); ?>">Users</a></li>
-                                    <li><a href="<?php echo e(url('admin/global-settings')); ?>">Global Settings</a></li>
-                                    <li><a href="<?php echo e(url('admin/logs')); ?>">Logs</a></li>
-                                    <li><a href="<?php echo e(url('admin/global-styling')); ?>">Styling</a></li>
-                                    <li><a href="<?php echo e(url('admin/change-password')); ?>">Change Admin Password</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </div>
+    
 
     
 
@@ -610,68 +517,60 @@ function  removeRecord(count){
     jQuery(".remove_me_"+count).remove();
     jQuery("button.close").trigger('click');
 }
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-</script>
-
-<?php if(!empty($counts) && !empty($dayNames)): ?>
-<script type="text/javascript">
-  var dataCount = <?php echo json_encode($counts); ?>;
-  var xValuesRDGR = <?php echo json_encode($dayNames); ?>;
-  loadLaundryBookingChart(dataCount,xValuesRDGR);
 
 
 
+    $(document).on('click', '.delete-rec', function () {
+        let id = $(this).data('id');
+        let route = $(this).data('route');
+        let tableId = $(this).data('tableid');
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will be deleted permanently!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: route,
+                    type: 'DELETE',
+                    data: {
+                        _token: '<?php echo e(csrf_token()); ?>'
+                    },
+                    success: function (response) {
+                        Swal.fire(
+                            'Deleted!',
+                            response.success,
+                            'success'
+                        );
+                        $(".delete-rec[data-id='"+id+"']").parents("tr").remove();
+                        setTimeout(function(){
+                            $("#"+tableId).DataTable().columns.adjust().draw();
+                        },500);
+                        
+                    },
+                    error: function () {
+                        Swal.fire(
+                            'Error!',
+                            'Something went wrong.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
 
-</script>
-<?php endif; ?>
-
-<?php if(!empty($reporetedIssues['counts'])): ?>
-    <?php
-    $counts = $reporetedIssues['counts'];
-    $colorCodes = [];
-    ?>
-    <?php if($counts): ?>
-    <?php $__currentLoopData = $counts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $count): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-    <?php
-    $colorCodes[] = '#'.substr(md5(rand()), 0, 6);
-    ?>
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    <?php endif; ?>
-    <script type="text/javascript">
-      var dataCount = <?php echo json_encode($reporetedIssues['counts']); ?>;
-      var xValuesRDGR = <?php echo json_encode($reporetedIssues['title']); ?>;
-       var colorCodes = <?php echo json_encode($colorCodes); ?>;
-      loadReportedIssues(dataCount,xValuesRDGR,'pie',colorCodes);
-    </script>
-<?php endif; ?>
-
-<?php if(!empty($yearlyExpCount['expense'])): ?>
-    <?php
-        $expense = $yearlyExpCount['expense'];
-        $colorCodes2 = [];
-    ?>
-    <?php if($expense): ?>
-        <?php $__currentLoopData = $expense; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $count): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php
-                $colorCodes2[] = '#059862';
-
-            ?>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    <?php endif; ?>
-
-<?php endif; ?>
-<?php  //dd($colorCodes2); ?>
-<?php if(!empty($yearlyExpCount)): ?>
-<script type="text/javascript">
-  var dataCount = <?php echo json_encode($yearlyExpCount['expense']); ?>;
-  var xValuesRDGR = <?php echo json_encode($yearlyExpCount['month_name']); ?>;
-  var colorCodes = <?php echo json_encode($colorCodes2); ?>;
-  loadReportedIssues(dataCount,xValuesRDGR,'bar',colorCodes);
 
 </script>
-<?php endif; ?>
-    <?php echo $__env->yieldContent('scripts'); ?>
+
+
+
+<?php echo $__env->yieldContent('scripts'); ?>
 
 </body>
 </html>

@@ -64,7 +64,8 @@
                 ordering: true, // Enable sorting
                 info: true // Show info text (e.g., "Showing 1 to 5 of 25 entries")
             });
-        });
+        });      
+
     </script>
 <?php $__env->stopSection(); ?>
 

@@ -82,7 +82,7 @@ class UsersController extends Controller
                     return '<a class="btn btn-sm btn-primary" href="'.url("admin/users/$user->id/edit").'" class="btn-sm btn-success action-button">
                                             Edit
                                         </a>
-                                        <a type="button" href="#" class="btn-sm btn-danger btn_user_delete" data-toggle="modal" data-target="#DeleteConfirmationModal" data-delete-id="'.$user->id.'">
+                                        <a type="button" href="#" class="delete-rec btn-sm btn-danger" data-route="/admin/users/'.$user->id.'" data-tableid="usersTable"   data-id="'.$user->id.'">
                                             Delete
                                         </a>';
                 })
@@ -270,7 +270,7 @@ class UsersController extends Controller
 
    }
 
-    public function destroy($id)
+    /*public function destroy($id)
     {
         $user = User::find($id);
         if(!$user){
@@ -278,6 +278,14 @@ class UsersController extends Controller
         }
         User::Where('id',$id)->delete();
         return redirect()->route('users.index')->with('success','Record has been deleted successfully');
+    }*/
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['success' => 'User deleted successfully.']);
     }
 
     public function usersActiveUpdate($id)

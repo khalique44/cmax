@@ -3,7 +3,7 @@ namespace App\Http\Helpers;
 use App\GlobalSetting;
 use Carbon\Carbon;
 
-class RosenHelper
+class GeneralHelper
 {
 	public static function setOption($optionKey,$optionValue){
 
@@ -111,8 +111,8 @@ class RosenHelper
     	if(!empty($bookedSlots)){
     		foreach ($bookedSlots as $key => $record) {
     			
-    			$timeFrom = RosenHelper::timeSlotFormat($timeFrom);
-    			$timeTo = RosenHelper::timeSlotFormat($timeTo);
+    			$timeFrom = GeneralHelper::timeSlotFormat($timeFrom);
+    			$timeTo = GeneralHelper::timeSlotFormat($timeTo);
     			
     			if($record->booking_time == "$timeFrom till $timeTo"){
     				
@@ -127,8 +127,8 @@ class RosenHelper
 
     public static function getAvailableTimeSlots(){
 
-        $timeFrom = RosenHelper::getOption('laundry_available_time_from');
-        $timeTo = RosenHelper::getOption('laundry_available_time_to');
+        $timeFrom = GeneralHelper::getOption('laundry_available_time_from');
+        $timeTo = GeneralHelper::getOption('laundry_available_time_to');
     }
 
 

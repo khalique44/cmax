@@ -114,7 +114,7 @@
 </header>
 
 <div class="admin-page-whole-content">
-    
+     @include("layouts.includes.admin.sidebar")
 
     {{-- Confirmation Alert Box Model for confirm to delete--}}
 

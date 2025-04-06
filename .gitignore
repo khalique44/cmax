@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /storage/app/*
+/storage/framework/views/*
 vendor
 .vscode
 .idea

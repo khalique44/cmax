@@ -33,34 +33,74 @@
                         </a>
                     </h4>
                 </div>
-                <!-- <div class="panel-heading">
+                <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                            <img src="{{url('public/assets/images/settings.png')}}">
-                            <strong>Home Page Settings</strong>
+                        <a data-bs-toggle="collapse" href="#collapse5" role="button" aria-expanded="false" aria-controls="collapse5">
+                        
+                            <i class="fa fa-mountain-city"></i>
+                            <strong>Projects</strong>
                         </a>
                     </h4>
                 </div>
-                <div id="collapse2" class="panel-collapse collapse {!! str_contains($url,'/admin/home_page') ? 'in' : '' !!}">
+                <div id="collapse5" class="panel-collapse collapse {!! str_contains($url,'/admin/projects') ? 'show' : '' !!}">
                     <div class="panel-body">
                         <div class="accordions-content-link">
                             <ul>
-                                <li><a href="{{url('admin/home_page/home_settings')}}">General Settings</a></li>
-                                <li><a href="{{ url('admin/home_page/about_section') }}">About Rosen I Vara</a></li>
-                                <li><a href="{{ url('admin/home_page/testimonials') }}">Testimonials</a></li>
-                                <li><a href="{{ url('admin/home_page/team_members') }}">Team Members</a></li>
-                                <li><a href="{{ url('admin/home_page/contact_us') }}">Contact Us</a></li>
+                                <li><a href="{{url('admin/projects/')}}">All Projects</a></li>
+                                <li><a href="{{url('admin/projects/create')}}">Add Project</a></li>
                                 
                             </ul>
                         </div>
                     </div>
-                </div> -->
-            </div>              
+                </div>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-bs-toggle="collapse" href="#collapse2" role="button" aria-expanded="false" aria-controls="collapse2">
+                        
+                            <i class="fa fa-building"></i>
+                            <strong>Properties</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse {!! str_contains($url,'/admin/properties') ? 'show' : '' !!}">
+                    <div class="panel-body">
+                        <div class="accordions-content-link">
+                            <ul>
+                                <li><a href="{{url('admin/properties/')}}">All Properties</a></li>
+                                <li><a href="{{url('admin/properties/create')}}">Add Property</a></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-bs-toggle="collapse" href="#collapse4" role="button" aria-expanded="false" aria-controls="collapse4">
+                        
+                            <i class="fa fa-building-user"></i>
+                            <strong>Builders</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse {!! str_contains($url,'/admin/builders') ? 'show' : '' !!}">
+                    <div class="panel-body">
+                        <div class="accordions-content-link">
+                            <ul>
+                                <li><a href="{{url('admin/builders/')}}">All Builders</a></li>
+                                <li><a href="{{url('admin/builders/create')}}">Add Property</a></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+                    
 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+
+                        <a data-bs-toggle="collapse" href="#collapse3" role="button" aria-expanded="false" aria-controls="collapse3">
                             <img src="{{url('public/assets/images/settings.png')}}">
                             <strong>Settings</strong>
                         </a>
@@ -74,7 +114,7 @@
                     str_contains($url,'/admin/global-styling') ||                              
                     str_contains($url,'/admin/logs')                         
                      
-                     ? 'in' : '' 
+                     ? 'show' : '' 
                 !!}
 
                 ">

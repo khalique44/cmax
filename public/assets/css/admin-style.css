@@ -51,7 +51,7 @@
     font-weight: 600;
     padding: 5px 8px;
 }
-a:hover,a:focus {
+/*a:hover,a:focus {
     color: #DC1C2E;
     text-decoration: none;
     transition: all 0.4s ease 0s;
@@ -61,7 +61,7 @@ a:hover,a:focus {
     border: 1px solid #DC1C2E;
     font-size: 22px;
     padding: 7px 10px;
-}
+}*/
 
 
 ::-webkit-input-placeholder {
@@ -727,8 +727,8 @@ color: #555555;
 .membership-card-details strong {
     font-size: 55px;
 }
-span {
-    display: block;
+form .form-label span {
+    color: red;
 }
 
 .btn-section {
@@ -950,15 +950,15 @@ span {
     color: #1c9c9b!important;
     opacity: 1 !important;
 }
-.submit-request-btn {
+/*.submit-request-btn {
     padding: 10px 0 20px;
-}
-.submit-request-btn button.btn {
+}*/
+/*.submit-request-btn button.btn {
     border: 1px solid #DC1C2E;
     font-size: 22px;
     font-weight: 700;
     padding: 7px 10px;
-}
+}*/
 .membership-renewal {
     padding: 0 0 60px;
 }
@@ -1100,6 +1100,7 @@ span {
     vertical-align: middle;
     width: 100%;
     text-transform: uppercase;
+    text-decoration: none;
 }
 .accordions-content-link a {
     color: #000;
@@ -1143,6 +1144,7 @@ span {
     float: right;
     padding-top: 10px;
 }
+/*
 .database-btn a.BE-btn {
     background: #DC1C2E none repeat scroll 0 0;
     
@@ -1161,7 +1163,7 @@ span {
     background: #DC1C2E none repeat scroll 0 0;
     border: 1px solid transparent;
     color: #fff;
-}
+}*/
 .database-table-section {
     padding: 20px 0 0;
 }
@@ -1323,99 +1325,6 @@ span {
     background: #fff;
 }
 
-.districts-menu .dropdown {
-    display: inline-block;
-    width: 100%;
-}
-.districts-menu .btn {
-    background: transparent none repeat scroll 0 0;
-    border: 2px solid #1c9c9b;
-    color: #1c9c9b;
-    font-size: 15px;
-    font-weight: 400;
-    height: auto;
-    padding: 4px 15px;
-    text-align: left;
-    text-transform: inherit;
-    width: 100%;
-}
-.districts-menu .dropdown-menu {
-    border: 1px solid #1c9c9b;
-    border-radius: 0;
-    box-shadow: none;
-    height: 175px;
-    margin: 0;
-    overflow: auto;
-    padding: 10px 15px;
-    width: 100%;
-    border-top: none;
-}
-.districts-menu .dropdown .dropdown-item {
-    display: block;
-    text-align: left;
-}
-.districts-menu input[type="checkbox"], .districts-menu input[type="radio"] {
-    display: inline-block;
-    line-height: normal;
-    margin: 4px 7px 0 0;
-    vertical-align: top;
-    width: auto;
-}
-.districts-menu .district-menu-list label {
-    color: #1c9c9b;
-    font-weight: 400;
-    font-size: 15px;
-    display: inline-block;
-    width: auto;
-    vertical-align:middle;
-}
-
-
-.district-form-sec {
-    background: #f3f3f3 none repeat scroll 0 0;
-}
-
-.district-title {
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.48);
-    padding: 10px 20px;
-}
-.district-form-content {
-    /*margin: 0 auto;*/
-    max-width: 100%;
-    padding: 20px 0;
-    width: 100%;
-}
-.district-form-content.add-new-district-form{
-    max-width: 100%;
-}
-
-.search-filter.district-form-content{
-    margin: 0 auto;
-    /* max-width: 420px; */
-    padding: 20px 0;
-    width: 100%;
-    float: left;
-}
-.district-form-content .form-group {
-    display: inline-block;
-    margin-bottom: 5px;
-    vertical-align: top;
-    width: 100%;
-    float: left;
-}
-.district-form-content.add-new-district-form .form-group{
-    width: 100%;
-    padding: 0 10px;
-}
-.district-form-content label {
-    color: #000;
-    display: inline-block;
-    float: left;
-    font-weight: 700;
-    margin-bottom: 0;
-    width: 100%;
-    font-size: 18px;
-}
 
 
 
@@ -2637,6 +2546,9 @@ span {
 
 
 /* Added By KHL */
+.display-none{
+    display: none !important;
+}
 /* Ajax Loader */
 .lds-dual-ring.hidden { 
 display: none;
@@ -2685,4 +2597,110 @@ display: none;
 
 .data-passed {
     background-color: #DC1C2E;
+}
+
+
+/* ----- */
+
+.form-group label.form-label {
+    font-size: 16px;
+    font-weight: 600;
+    
+    padding-top:10px;
+}
+.property-form-ul{
+    background-color: #e8e6e6;
+    padding: 10px;
+    border-radius: 3px;
+}
+.property-form-ul li {
+    padding: 5px;
+}
+.display-cats {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.display-cats li {
+  display: inline-block;
+  margin-right: 10px; /* spacing between items */
+}
+/* ----- */
+
+
+.file-pond-preview-wrapper {
+    position: relative; 
+    display: inline-block; 
+    margin-right: 10px;
+}
+.file-pond-preview-wrapper img {
+     
+    height: 100px; 
+    object-fit: cover; 
+    border: 1px solid rgb(204, 204, 204); 
+    border-radius: 4px;
+}
+.file-pond-preview-wrapper span {
+    color: rgb(231, 76, 60);    
+    
+    border-radius: 50%; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-size: 12px;
+   
+}
+
+.pac-container {
+    position: absolute !important;
+}
+.pac-container {
+    z-index: 10000 !important; /* Ensure it's above modals etc. */
+    width: 35% !important;    /* Make it match the input width */
+    max-width: none !important;
+    box-sizing: border-box;
+}
+#gmap-location {
+    width: 100%;
+}
+
+.my-location-wrapper .pac-container {
+    width: 100% !important;
+}
+
+#autocomplete {
+    width:500px;
+    position: absolute;
+}
+
+.pac-container:after{
+    content:"";
+    padding:1px 1px 1px 0;
+    height:16px;
+    text-align:right;
+    display:block;
+}
+
+
+.pond-container {
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+.uploaded-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+.uploaded-images img {
+    border-radius: 6px;
+    max-width: 75%;
+    height: auto;
+    border: 1px solid #ccc;
+}
+.uploaded-images .media-thumb {
+    width: 200px;
+}
+.uploaded-images .media-remove {
+    
 }

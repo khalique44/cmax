@@ -1,0 +1,38 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class TemporaryUpload extends Model implements HasMedia
+{
+    use InteractsWithMedia;
+
+    protected $table = 'temporary_uploads'; // Not used
+
+    public $timestamps = false;
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')              // Better compression and quality
+        //->fit('contain', 300)    // Preserves aspect ratio inside bounds
+        ->width(200)
+        ->quality(85)                 // 80–90 is usually perfect
+        ->nonQueued();
+    }
+
+    // This tricks Spatie into allowing us to upload without a real DB record
+    public function getKey()
+    {
+        return 0;
+    }
+
+    public function getKeyName()
+    {
+        return 'id';
+    }
+}
+

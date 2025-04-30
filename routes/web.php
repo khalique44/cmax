@@ -3,6 +3,11 @@
 //Route::get('/', 'HomeController@welcome');
 
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Admin\MediaController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 
 
 
@@ -92,6 +97,21 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
             Route::resource('general_settings','GeneralSettingController');                      
         });
 
+        
+        Route::resource('projects','ProjectController'); 
+        Route::get('/projects-data', 'ProjectController@getProjects')->name('projects.data');
+        Route::get('/projects/add-property/{id}', 'ProjectController@addProperty')->name('add.property');
+        Route::get('/projects/edit-property/{id}/{property_id}', 'ProjectController@editProperty')->name('edit.property');
+
+        Route::resource('properties','PropertyController'); 
+        Route::get('/properties-data', 'PropertyController@getProperties')->name('properties.data');
+
+        
+
+        Route::resource('builders','BuilderController'); 
+        Route::get('/builders-data', 'BuilderController@getBuilders')->name('builders.data');
+
+
         Route::resource('users','UsersController');
         Route::get('user/import','UsersController@importUsers')->name('admin.import-users');
         Route::post('user/import','UsersController@importUsersStore')->name('admin.import-users');
@@ -106,7 +126,43 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::get('global-styling/reset_color_to_default','GlobalStylingController@resetColorsDefault')->name('reset_color_to_default');
         Route::resource('global-styling','GlobalStylingController');     
 
-        Route::resource('logs','LogActivityController');       
+        Route::resource('logs','LogActivityController');      
+
+
+
+        Route::post('media/upload', [MediaController::class, 'upload'])->name('media.upload');
+        Route::get('media/list', [MediaController::class, 'list'])->name('media.list');
+        Route::delete('media/delete/{id}', [MediaController::class, 'delete'])->name('media.delete'); 
+        Route::get('/media/{media}', function (\Spatie\MediaLibrary\MediaCollections\Models\Media $media) {
+            return response()->file($media->getPath());
+        });
+
+        Route::post('/upload-temp', function (Request $request) {
+            $path = $request->file('file')->store('temp');
+            return $path;
+        });
+
+        Route::delete('/upload-temp-revert', function (Request $request) {
+            $mediaId = trim(file_get_contents('php://input'), '"');
+
+            $media = Media::find($mediaId);
+
+            if ($media) {
+                $media->delete(); // will remove file from storage + db
+                return response()->json(['deleted' => true]);
+            }
+
+            return response()->json(['deleted' => false, 'message' => 'Media not found'], 404);
+        });
+
+        Route::get('/media/{media}', function (Media $media) {
+            return response()->file($media->getPath());
+        });
+
+        Route::delete('/media/{media}', function (Media $media) {
+            $media->delete();
+            return response()->json(['deleted' => true]);
+        });
 
 
     });

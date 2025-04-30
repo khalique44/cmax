@@ -37,7 +37,8 @@ class HomeController extends Controller
             $header_image = url('public') .'/'.$data->header_image;
           } 
         }
+        //return view('home',compact('data','header_image','testimonials'));
         
-        return view('home',compact('data','header_image','testimonials'));
+        return '<H2>Coming Soon</H2';
     }
 }

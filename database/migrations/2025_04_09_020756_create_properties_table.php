@@ -11,6 +11,7 @@ class CreatePropertiesTable extends Migration
         if (!Schema::hasTable('properties')) {
             Schema::create('properties', function (Blueprint $table) {
                 $table->increments('id');
+                $table->unsignedBigInteger('builder_id');
                 $table->foreign('builder_id')->references('id')->on('builders')->onDelete('cascade');
                 $table->string('property_title');
                 $table->text('description');
@@ -31,6 +32,7 @@ class CreatePropertiesTable extends Migration
                 $table->text('email');
                 $table->text('phone_number');
                 $table->text('listed_by');
+                $table->unsignedBigInteger('added_by');
                 $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
                 $table->softDeletes();
                 $table->timestamps();

@@ -11,8 +11,8 @@ class CreatePropertiesTable extends Migration
         if (!Schema::hasTable('properties')) {
             Schema::create('properties', function (Blueprint $table) {
                 $table->increments('id');
-                $table->unsignedBigInteger('builder_id');
-                $table->foreign('builder_id')->references('id')->on('builders')->onDelete('cascade');
+                $table->foreignId('builder_id')->constrained('builders')->onDelete('cascade');
+
                 $table->string('property_title');
                 $table->text('description');
                 $table->enum('property_type', ['home', 'apartment', 'plot', 'commercial']);

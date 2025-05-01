@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('property_amunities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('property_id');
-            $table->unsignedBigInteger('amenity_id');
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
-            $table->foreign('amenity_id')->references('id')->on('amenities')->onDelete('cascade');            
+            $table->unsignedBigInteger('amenity_id');                        
             $table->timestamps();
         });
     }

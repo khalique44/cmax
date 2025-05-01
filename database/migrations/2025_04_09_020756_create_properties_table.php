@@ -31,8 +31,7 @@ class CreatePropertiesTable extends Migration
                 $table->text('email');
                 $table->text('phone_number');
                 $table->text('listed_by');
-                $table->unsignedBigInteger('added_by');
-                $table->foreign('added_by')->references('id')->on('users')->onDelete('cascade');
+                $table->unsignedBigInteger('added_by');               
                 $table->softDeletes();
                 $table->timestamps();
             });

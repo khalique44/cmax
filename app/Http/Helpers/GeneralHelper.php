@@ -2,6 +2,7 @@
 namespace App\Http\Helpers;
 use App\GlobalSetting;
 use Carbon\Carbon;
+use App\Country;
 
 class GeneralHelper
 {
@@ -130,6 +131,40 @@ class GeneralHelper
         $timeFrom = GeneralHelper::getOption('laundry_available_time_from');
         $timeTo = GeneralHelper::getOption('laundry_available_time_to');
     }
+
+
+
+   
+    public static function getCitiesByCountry($countryId)
+    {
+        $country = Country::with(['states.cities' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])->find($countryId);
+
+        if (!$country) {
+            return collect();
+        }
+
+        $cities = collect();
+        foreach ($country->states as $state) {
+            $cities = $cities->merge($state->cities);
+        }
+
+        return $cities->sortBy('name')->values(); // Ensure fully sorted
+    }
+    
+
+    public static function getStatusLabel($status = 1,$color = 'success'){
+
+        if(is_numeric($status)){
+
+            $status = $status == 1 ? 'Active' : 'Deactive';
+            $color = $status == 1 ? 'success' : 'danger';
+        }
+
+        return '<span class="badge badge-'.$color.'">'.$status.'</span>';
+    }
+
 
 
     /*public static function timeTo24($time){

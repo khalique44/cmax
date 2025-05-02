@@ -1,26 +1,41 @@
 <?php
 
 return [
-    'limit_laundry_booking' => env('LIMIT_LAUNDRY_BOOKING', 3),
-    'issue_status' => [
-    					'close' => env('ISSUE_CLOSE', 'Closed'),
-    					'inprogress' => env('ISSUE_INPROGRESS', 'Inprogress'),
-    					'new' => env('ISSUE_NEW', 'New'),
-    					'verification' => env('ISSUE_VERIFICATION', 'Verification'),
+   
+    'area_types' => [
+
+					'Marla',
+                    'Sq. Ft.',
+                    'Sq. M.',
+                    'Sq. Yd.',
+                    'Kanal'                        					
 						
-						],
+					],
+
+    'property_types' => [
+                            'home', 
+                            'plot', 
+                            'commercial'
+                        ],
+    'purpose' => [
+                            'sell' => 'Sell', 
+                            'rent' => 'Rent', 
+                        ],
+    'progress' => [
+                            'under_construction' => 'Under Construction ', 
+                            'new_launch' => 'New Launch ', 
+                            'ready' => 'Ready/Close to Possession '
+                        ],
+
 	'user_types' => [
     					'vendor' => env('VENDOR', 'vendor'),
     					'admin' => env('ADMIN', 'admin'),
     					'member' => env('Member', 'member'),   					
 						
 						],
-    'send_types' => [
-                        'apartment' => env('APARTMENT', 'Apartment'),
-                        'all_apartments' => env('ALL_APARTMENTS', 'All Apartments'),
-                        'vendor' => env('VENDOR', 'Vendor'),                    
-                        'all_vendors' => env('ALL_VENDORS', 'All Vendors'),                    
-                        
-                        ],
+    
     'date_format' => env('DATE_FROMAT', 'd-M-Y'),
+
+    'bedrooms' => ['Studio',1,2,3,4,5,6,7,8,9,10,'10+'],
+    'bathrooms' => [1,2,3,4,5,6,'6+']
 ];

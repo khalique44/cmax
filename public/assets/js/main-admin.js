@@ -38,10 +38,10 @@ function displayMsg(msgArea, msg, msgType){
 
 }
 
-function ajaxPostRequest(url,data,successCallback,isJson){
+function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
-
+    console.log('isJson:',isJson);
     var ajaxParams = {
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         method: 'POST',
@@ -63,32 +63,24 @@ function ajaxPostRequest(url,data,successCallback,isJson){
             contentType: false,
             cache: false,
             processData: false,
-        }
-
-    
-
+        } 
     }
 
     ajaxParams = Object.assign(extraParams,ajaxParams);
 
+    var moreParams = {
+                        success: successCallback,
+                        error: ajaxErrorCallback
+                    }
+    ajaxParams = Object.assign(moreParams,ajaxParams);
     $.ajax(ajaxParams)
-    .done(successCallback)
-    .fail( function( reason ) {
-          // Handles errors only
-    })
-    .always(function(){
-     
-      hideAjaxLoader();
+    .always(function(){     
+        hideAjaxLoader();
     });
 }
 
 
-$(document).on("change","select.time-slot-month",function(){
-    var month = $(this).val();
-    var data = {month:month};
-    var url = "/available_time_slots/get-days";
-    ajaxPostRequest(url,data,successCallback,true);
-});
+
 
 function successCallback(response){
     if(response.success){
@@ -107,135 +99,361 @@ function successCallback(response){
     }
 }
 
-function loadLaundryBookingChart(dataCount,xValuesRDGR){ 
+
+
+
+
+
+/*-----CMAX----*/
+
+$(document).on("submit","form#builder-form",function(e){
+    e.preventDefault();    
+   
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/builders",formData,builderSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+$(document).on("submit","form#builder-form-update",function(e){
+    e.preventDefault();    
+   var builder_id = $('input[name="builder_id"]').val();
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/builders/"+builder_id,formData,builderSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function builderSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
         
-    new Chart("myChart", {
-      type: "bar",
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#builder-form")[0].reset();
+            FilePond.find(document.querySelector('#filepond')).removeFiles();
+            $("#uploaded-preview").html('');
 
-      data: {
-        labels: xValuesRDGR,
-        datasets: [
-            {
-            label: 'Number of Bookings',  
-            data: dataCount,
-            borderColor: "blue",
-            backgroundColor: "blue",
-            fill: false
-            }
-        ]
-      },
-      options: {
-        legend: {
-                position:'bottom',
-                align:'end',
-                
-            },
-            scales: {
-		      y: {
-		        beginAtZero: true
-		      }
-		    }
-      }
-    });
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
+    }
+    
 }
 
 
-function loadReportedIssues(dataCount,labels,type,colorCodes){
+$(document).on("submit","form#property-form",function(e){
+    e.preventDefault();    
+   
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/properties",formData,propertySuccessCallback,ajaxErrorCallback,true);    
 
-    var chart_type = (typeof type !== 'undefined') ? type : 'pie';	
-    var label = 'Number of Issues';
-    var id = "reportedIssues";
+});
 
-    if(chart_type !== 'pie'){
-        label = 'Total Expense Amount';
-        id = 'reportedIssuesExp';
-    }
-console.log(chart_type,label,id);
-	new Chart(id, {
-      type: chart_type,
-      data: {
-        labels: labels,
-        datasets: [
-            {
-            label:  label,  
-            data: dataCount,
-            backgroundColor: 		      
-            colorCodes
-		   
+$(document).on("submit","form#property-form-update",function(e){
+    e.preventDefault();    
+    var id = $('input[name="property_id"]').val();
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function propertySuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#property-form")[0].reset();
+            FilePond.find(document.querySelector('#filepond')).removeFiles();
+            $("#uploaded-preview").html('');
+
+            if(response.project_id){
+                location.reload();
             }
-        ]
-      },
-      options: {
-        legend: {
-                position:'bottom',
-                align:'end',
-                
-            },
-            scales: {
-		      y: {
-		        beginAtZero: true
-		      }
-		    }
-      }
-    });
 
+        },1000);
+    }else{
 
+         displayMsg(msgArea,response.message,msgType);
+    }
+    
 }
 
-$(document).on("change","select#laundry_number",function(){
-    var laundry_number = $(this).val();
-    if(laundry_number !== ''){
-       document.location = $('meta[name="admin_url"]').attr('content')+"/available_time_slots/?laundry_number="+laundry_number;
+
+
+
+$(document).on("submit","form#project-form",function(e){
+    e.preventDefault();    
+   
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/projects",formData,projectSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+$(document).on("submit","form#project-form-update",function(e){
+    e.preventDefault();    
+    var id = $('input[name="project_id"]').val();
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/projects/"+id,formData,projectSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function projectSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#project-form")[0].reset();
+            FilePond.find(document.querySelector('#filepond')).removeFiles();
+            $("#uploaded-preview").html('');
+
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
     }
-});
-
-$(document).on("change","select#laundry_number_create, select#laundry_number_edit",function(){
-    var laundry_number = $(this).val();
-    if(laundry_number !== ''){
-       $("#datepicker td.active.day").trigger("click");
-    }
-});
-
-var counter = 0;
-$(document).on("click",".add-more-slots",function(e){
-    e.preventDefault();
-    counter++;
-    var addMoreHtml = $(".selected-slots:eq(0)").html();
-    $(".more-slots-area").append('<div class="remove_me_'+counter+'"><div class="">'+addMoreHtml+'<div class="col-xs-2"><button type="button" class="btn-sm btn-danger mt-30 remove-slots" data-id='+counter+' style="margin-top:30px; ">- Remove</button></div></div></div>');
-    setTimeout(function(){ loadTimePicker() },100)
-});
+    
+}
 
 
-jQuery(document).on("click",".remove-slots",function(e){
-    e.preventDefault();
-    var removeDivId = jQuery(this).data("id");
-    if(confirm("Are you sure want to remove this record?")){
-      jQuery('.remove_me_'+removeDivId).remove();
-    }
-});
+function ajaxErrorCallback(response){
 
-function loadTimePicker(){
-    $('.time_from').timepicker({
-            timeFormat: 'HH:mm',
-            interval: 30,
-            minTime: '01',
-            maxTime: '23',
-            defaultTime: $("input.time_from").val(),
-            startTime: '01',
-            dynamic: false,
-            dropdown: true,
-            scrollbar: false
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if (response.responseJSON && response.responseJSON.errors){
+        let errors = response.responseJSON.errors;       
+        let html = '<ul >';
+        $.each(errors, function (key, value) {
+            html += `<li>${value[0]}</li>`;
         });
+        html += '</ul>';
+        displayMsg(msgArea,html,msgType);         
+        
+    }else{
 
-    $('.time_to').timepicker({
-        timeFormat: 'HH:mm',
-        interval: 30,
-        minTime: '01',
-        maxTime: '23',
-        defaultTime: $("input.time_to").val(),
-        startTime: '01',
-        dynamic: false,
-        dropdown: true,
-        scrollbar: false
+        displayMsg(msgArea,'Server Error!',msgType);
+    }
+}
+
+
+
+
+FilePond.registerPlugin(
+    //FilePondPluginImagePreview,
+    FilePondPluginFileValidateSize,
+    FilePondPluginFileValidateType
+);
+
+// Create pond instance
+const pond = FilePond.create(document.getElementById('filepond'), {
+        allowMultiple: false,
+        maxFileSize: '5MB',
+        acceptedFileTypes: ['image/*'],
+        server: {
+            process: {
+                url: '/admin/media/upload',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                onload: (res) => {
+
+                    const data = JSON.parse(res);
+                    console.log('data:',data)
+
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'media_ids[]';
+                    hidden.value = parseInt(data.id);
+                    document.querySelector('form.has-filepond').appendChild(hidden);
+
+                    /*// Show thumbnail preview (optional)
+                    const img = document.createElement('img');
+                    img.src = data.url.replace("storage","storage/app/public");
+                    document.getElementById('uploaded-preview').appendChild(img);*/
+
+                    const container = document.getElementById('uploaded-preview');
+
+
+                    // Create wrapper for image + remove icon
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('preview-box');
+                    //wrapper.classList.add('file-pond-preview-wrapper');
+                    wrapper.dataset.mediaId = data.id;
+                    
+
+                    // Create image element
+                    const img = document.createElement('img');
+                    img.src = data.url.replace("storage", "storage/app/public");
+                    
+
+                    // Create remove icon/button
+                    const removeBtn = document.createElement('span');
+                    wrapper.classList.add('remove-media');
+                    removeBtn.innerHTML = 'Remove'; // X icon
+                    removeBtn.title = 'Remove';
+
+                    // Remove logic
+                    /*removeBtn.onclick = function () {
+                        wrapper.remove();
+                        
+                        // Also remove the hidden input if needed
+                        const inputToRemove = document.querySelector(`input[type="hidden"][value="${data.id}"]`);
+                        if (inputToRemove) inputToRemove.remove();
+                    };*/
+                     const div1 = document.createElement('div');
+                     div1.classList.add('media-thumb');
+                     const div2 = document.createElement('div');
+                     div1.classList.add('media-remove');
+                    // Append everything
+                    div1.appendChild(img);
+                    wrapper.appendChild(div1);
+                    div2.appendChild(removeBtn);
+                    wrapper.appendChild(div2);
+                    container.appendChild(wrapper);
+                    
+                    //window._uploadedFilesToAdd = window._uploadedFilesToAdd || [];
+                    //window._uploadedFilesToAdd.push(data);
+
+                    return data.id;
+                }
+            },
+            revert: {
+                url: '/admin/upload-temp-revert',
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }
+        },
+
+        onremovefile: (file,file2, file3) => {
+            /*var mediaId = file2.source;
+            if(typeof mediaId === 'number' && !isNaN(mediaId) && mediaId !== null){
+                console.log(mediaId);
+                document.querySelector(`.remove-media[data-media-id="${mediaId}"]`)?.remove();
+                addDeletedFile(mediaId);
+            }*/
+                       
+        }
+
+        
+});
+
+
+
+
+function addUploadedFile(filePath) {
+        const field = document.getElementById('uploaded-files');
+        let val = field.value ? JSON.parse(field.value) : [];
+        val.push(filePath);
+        field.value = JSON.stringify(val);
+}
+
+function addDeletedFile(mediaId) {
+    const field = document.getElementById('deleted-files');
+    let val = field.value ? JSON.parse(field.value) : [];
+    val.push(mediaId);
+    field.value = JSON.stringify(val);
+}
+
+
+function deleteUploadedFile(mediaId){
+
+        // Send request to delete the media file
+        fetch(`/admin/media/${mediaId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('Media deleted:', data);
+        })
+        .catch(err => {
+            console.error('Error deleting media:', err);
+        });
+    
+
+}
+
+$(document).on('click', '.remove-media span', function(){
+    var mediaId = $(this).parents('.preview-box').data('media-id');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "The media will be deleted after you save the record.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if(typeof mediaId === 'number' && !isNaN(mediaId) && mediaId !== null){
+                
+                addDeletedFile(mediaId);
+                $(this).parents('.preview-box').remove();
+            }
+        }
     });
+    
+});
+
+
+$(document).on("change", "select#property_type", function(){
+
+    if($(this).val() == 'home'){
+
+        $(".category-home").show();
+        $(".amenity-home").show();
+        $(".amenity-plot").hide();
+        $(".amenity-commercial").hide();
+        $(".category-commercial").hide();
+
+    }else if($(this).val() == 'plot'){
+
+        $(".amenity-plot").show();
+        $(".category-plot").show();
+        $(".amenity-home").hide();
+        $(".category-home").hide();
+        $(".amenity-commercial").hide();
+        $(".category-commercial").hide();
+
+
+    }else if($(this).val() == 'commercial'){
+
+        $(".amenity-commercial").show();
+        $(".category-commercial").show();
+        $(".amenity-plot").hide();
+        $(".amenity-home").hide();
+        $(".category-plot").hide();
+        $(".category-home").hide();
+        
+    }
+
+});
+
+function renderStatusBadge(is_active) {
+    if (is_active === 1) {
+        return '<span class="badge bg-success">Active</span>';
+    } else {
+        return '<span class="badge bg-danger">Inactive</span>';
+    }
 }

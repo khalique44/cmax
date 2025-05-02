@@ -12,4 +12,9 @@ class State extends Model
     {
         return $this->hasMany(User::class,'state','id');
     }
+
+    public function cities()
+    {
+        return $this->hasMany(City::class);
+    }
 }

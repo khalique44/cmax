@@ -5,8 +5,8 @@
     <title>Cmax | Admin </title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="admin_url" content="{{ url('admin') }}">
-    <link href="{!! url('public/assets/css/font-awesome.min.css') !!}" rel="stylesheet">
-    <link href="{!! url('public/assets/css/bootstrap.min.css') !!}" rel="stylesheet">
+    <link href="{!! url('public/assets/fontawesome/css/all.min.css') !!}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{!! url('public/assets/css/animate.css')!!}" rel="stylesheet">
     <link href="{!! url('public/assets/css/admin-style.css') !!}" rel="stylesheet">
 
@@ -29,6 +29,15 @@
     <script src="{!! url('public/assets/js/sweetalert2@11.js') !!}"></script>
     
     <link rel="shortcut icon" href="{!! url('public/assets/images/favicon.png') !!}" />
+
+    <!-- FilePond Styles -->
+    <link href="{!! url('public/assets/filepond/css/filepond.css') !!}" rel="stylesheet" />
+    <link href="{!! url('public/assets/filepond/css/filepond-plugin-image-preview.css') !!}" rel="stylesheet" />
+    <!-- Include Google Places API JS -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_API') }}&libraries=places"></script>
+    
+
     <style>
         .number_arrow::-webkit-inner-spin-button,
         .number_arrow::-webkit-outer-spin-button {
@@ -88,6 +97,13 @@
             display: inline-block;
         }
     </style>
+    <script>
+        window.cmax = {
+            csrfToken: "{{ csrf_token() }}",
+            adminUrl:  "{{ url('admin') }}",
+               
+        };
+    </script>
 </head>
 <body id="user-backend">
     <div id="loader" class="lds-dual-ring hidden overlay"></div>
@@ -114,6 +130,7 @@
 </header>
 
 <div class="admin-page-whole-content">
+
      @include("layouts.includes.admin.sidebar")
 
     {{-- Confirmation Alert Box Model for confirm to delete--}}
@@ -151,7 +168,7 @@
     @yield('content')
 
 <script src="{!! url('public/assets/js/jquery.js') !!}"></script>
-<script src="{!! url('public/assets/js/bootstrap.min.js') !!}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{!! url('public/assets/js/parallax.js') !!}"></script>
 <script src="{!! url('public/assets/js/moment.min.js') !!}"></script>
 <script src="{!! url('public/assets/js/bootstrap-datepicker.min.js') !!}"></script>
@@ -171,6 +188,15 @@
 <script src="{!! url('public/assets/js/bootstrap-colorpicker.js') !!}"></script>
 <script src="{!! url('public/assets/js/ckeditor/ckeditor.js') !!}"></script>
 <script src="{!! url('public/assets/js/jquery.timepicker.min.js') !!}"></script>
+
+<!-- FilePond Scripts -->
+<script src="{!! url('public/assets/filepond/js/filepond-plugin-file-validate-type.js') !!}"></script>
+<script src="{!! url('public/assets/filepond/js/filepond-plugin-file-validate-size.min.js') !!}"></script>
+<script src="{!! url('public/assets/filepond/js/filepond-plugin-image-preview.js') !!}"></script>
+
+<script src="{!! url('public/assets/filepond/js/filepond.js') !!}"></script>
+
+
 <script src="{!! url('public/assets/js/main-admin.js')!!}"></script>
 
 

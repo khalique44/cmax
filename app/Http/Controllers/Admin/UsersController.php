@@ -15,7 +15,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Admin;
-use App\Apartment;
 use Yajra\DataTables\DataTables;
 
 class UsersController extends Controller

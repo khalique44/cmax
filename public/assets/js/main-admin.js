@@ -41,7 +41,7 @@ function displayMsg(msgArea, msg, msgType){
 function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
-    console.log('isJson:',isJson);
+    //console.log('isJson:',isJson);
     var ajaxParams = {
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         method: 'POST',
@@ -219,6 +219,9 @@ function projectSuccessCallback(response){
             $("form#project-form")[0].reset();
             FilePond.find(document.querySelector('#filepond')).removeFiles();
             $("#uploaded-preview").html('');
+            if(response.project.id){
+                document.location=window.cmax.adminUrl+"/projects/add-property/"+response.project.id;
+            }
 
         },1000);
     }else{
@@ -273,7 +276,7 @@ const pond = FilePond.create(document.getElementById('filepond'), {
                 onload: (res) => {
 
                     const data = JSON.parse(res);
-                    console.log('data:',data)
+                    //console.log('data:',data)
 
                     const hidden = document.createElement('input');
                     hidden.type = 'hidden';
@@ -384,7 +387,7 @@ function deleteUploadedFile(mediaId){
         })
         .then(res => res.json())
         .then(data => {
-            console.log('Media deleted:', data);
+            //console.log('Media deleted:', data);
         })
         .catch(err => {
             console.error('Error deleting media:', err);

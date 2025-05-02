@@ -122,7 +122,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary mt-3">{{ isset($project) ? 'Update' : 'Submit' }}</button>
+                                        <button type="submit" class="btn btn-primary mt-3">{{ isset($project) ? 'Update' : 'Save & Add Properties' }}</button>
                                     </div>
                                 </div>
                             </div>

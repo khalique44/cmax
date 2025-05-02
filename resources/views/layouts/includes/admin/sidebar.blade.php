@@ -87,7 +87,7 @@
                         <div class="accordions-content-link">
                             <ul>
                                 <li><a href="{{url('admin/builders/')}}">All Builders</a></li>
-                                <li><a href="{{url('admin/builders/create')}}">Add Property</a></li>
+                                <li><a href="{{url('admin/builders/create')}}">Add Builder</a></li>
                                 
                             </ul>
                         </div>

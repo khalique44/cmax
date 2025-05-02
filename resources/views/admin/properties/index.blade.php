@@ -24,8 +24,7 @@
                         <thead>
                         <tr>
                             <th>Title</th>
-                            <th>Type</th>                            
-                            <th>Progress</th>
+                            <th>Type</th>                             
                             <th>Purpose</th>
                             <th>Price</th>
                             <th>Added At</th>
@@ -53,8 +52,7 @@
                 columns: [
                    
                     { data: 'property_title', name: 'property_title' },
-                    { data: 'property_type', name: 'property_type' },
-                    { data: 'progress', name: 'progress' },
+                    { data: 'property_type', name: 'property_type' },                    
                     { data: 'purpose', name: 'purpose' },                    
                     { data: 'price', name: 'price' },
                     { data: 'created_at', name: 'created_at' },

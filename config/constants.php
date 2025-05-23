@@ -17,6 +17,14 @@ return [
                             'plot', 
                             'commercial'
                         ],
+
+    'offering' => [
+                            'Flats', 
+                            'Plots',
+                            'Shops', 
+                            'Offices',
+                            'Appartments'
+                        ],
     'purpose' => [
                             'sell' => 'Sell', 
                             'rent' => 'Rent', 
@@ -33,6 +41,12 @@ return [
     					'member' => env('Member', 'member'),   					
 						
 						],
+    'price_types' => [
+                            
+                            'Lakh', 
+                            'Crore',
+                            'Thousand',  
+                        ],
     
     'date_format' => env('DATE_FROMAT', 'd-M-Y'),
 

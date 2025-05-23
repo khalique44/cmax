@@ -2704,3 +2704,9 @@ display: none;
 .uploaded-images .media-remove {
     
 }
+.accordion-button:not(.collapsed) {
+  background-color: #ddd; /* When open */
+}
+.accordion-button.collapsed {
+  background-color: #ddd; /* When closed */
+}

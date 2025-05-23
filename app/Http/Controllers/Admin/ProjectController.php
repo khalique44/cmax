@@ -70,10 +70,22 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        
+        $users = User::where(['status'=>1,'type'=> User::MEMBER])->orderBy('first_name','asc')->orderBy('last_name','asc')->get();
+        $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');
+        $amenities = Amenity::where('is_active',1)->orderBy('name' , 'asc')->get();
+        $categories = Category::where('is_active',1)->orderBy('name', 'asc')->get();
+        $area_types = config('constants.area_types');
+        $property_types = config('constants.property_types');
+        $bedrooms = config('constants.bedrooms');
+        $bathrooms = config('constants.bathrooms');
+        $purposes = config('constants.purpose');
+        $cities = GeneralHelper::getCitiesByCountry(166);
+        $price_types = config('constants.price_types');
+        $offering = config('constants.offering');       
         
-        return view('admin.projects.create', compact('progress'));
+        
+        return view('admin.projects.create', compact('users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types'));
     }
 
     /**

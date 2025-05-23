@@ -45,6 +45,25 @@
                                         <input type="text" name="project_title" class="form-control" value="{{ old('project_title', $project->project_title ?? '') }}" required>
                                     </div>
                                 </div>
+                                <div class="col-md-6">                       
+                                    <div class="form-group">
+                                        <label class="form-label">Upload Logo:</label>
+                                        <input type="file" name="logo_url" id="logo_url"  class="form-control"  >
+
+                                        @if(!empty($project->logo_url))
+                                            <a href="{!! url('public') !!}/{{$project->logo_url}}" target="_blank" class="available-image-area">
+                                                
+                                                <img src="{!! url('public') !!}/{{$project->logo_url}}" class="logo" alt="Logo" width="50%">
+                                                
+                                            </a>
+                                        @endif
+                                        
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Progress<span>*</span></label>
@@ -56,7 +75,60 @@
                                         </select>
                                     </div>
                                 </div>
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label select2">Builder<span>*</span></label>
+                                        <select name="builder_id" id="builder_id" class="form-control select2" required>
+                                            <option value="">Select Builder</option>
+                                            @foreach($builders as $builder)
+                                                <option value="{{ $builder->id }}" {{ old('builder_id', $property->builder_id ?? '') === $builder->id ? 'selected' : '' }}>{{ ucfirst($builder->builder_name) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                       
                             </div>
+                            <div class="row">                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Description<span>*</span></label>
+                                        <textarea name="description" id="txtEditor" class="form-control" required>{{ old('description', $project->description ?? '') }}</textarea>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="row my-location-wrapper">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">City<span>*</span></label>
+                                        <select name="city_id" id="city_id" class="form-control select2" >
+                                            <option value="">Select City</option>
+                                            @foreach($cities as $city)
+                                                <option value="{{ $city->id }}" {{ old('listed_by', $property->city_id ?? '') === $city->id ? 'selected' : '' }}>{{ ucfirst($city->name)  }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>                                    
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Location<span>*</span></label>
+                                        <input  type="text" name="location" class="form-control" value="{{ old('location', $property->location ?? '') }}" id="gmap-location" required >
+
+                                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $property->latitude ?? '') }}">
+                                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $property->longitude ?? '') }}">
+                                    </div>                                    
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                       <div id="map" style="height: 300px; width: 100%;" class="m-2"></div>
+                                    </div> 
+                                </div>                                  
+
+                                
 
 
                             <div class="row">                            
@@ -106,6 +178,191 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Offering</label>
+                      
+                                        <ul class="list-inline property-form-ul">
+                                            @foreach($offering as $offer)
+
+                                                <li class="offer-{{ $offer }} list-inline-item">
+                                                <input type="checkbox" class="btn-check offering" name="offering[]" id="offer-{{ $offer }}"  autocomplete="off" value="{{ $offer }}" {{ isset($project) && $project->offering->contains($offer) ? 'checked' : '' }} >
+                                                    <label class="btn btn-light" for="offer-{{$offer}}">{{$offer}}</label>
+                                                    
+                                                </li>
+                                                
+                                            @endforeach
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+
+                                
+                            </div>    
+
+                            <div class="row">
+                                <div class="accordion" id="project-offers">
+                                    @foreach($offering as $key => $offer)
+                                        <div class="accordion-item offer-item-{{$offer}} display-none">
+                                            
+                                            <h2 class="accordion-header" id="offer-heading-{{$key}}">
+                                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#offer-{{$key}}"
+                                                aria-expanded="true" aria-controls="offer-{{$key}}">
+                                                {{$offer}}
+                                              </button>
+                                            </h2>
+                                            <div id="offer-{{$key}}" class="accordion-collapse collapse" aria-labelledby="offer-heading-{{$key}}"
+                                              data-bs-parent="#project-offers">
+                                              <div class="accordion-body">
+                                                  <div class="repeatable-wrapper">
+                                                    <div class="repeatable-fields">
+                                                      <div class="repeatable-group border p-3 mb-3 rounded bg-light">
+                                                        <div class="row">
+                                                          <div class="col-md-4">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Title <span>*</span></label>
+                                                              <input type="text" name="{{$offer}}[title][]" class="form-control" required>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-4">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Area <span>*</span></label>
+                                                              <input type="number" name="{{$offer}}[area][]" class="form-control" required>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-4">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Area Type</label>
+                                                              <select name="{{$offer}}[area_type][]" class="form-control">
+                                                                @foreach($area_types as $area_type)
+                                                                  <option value="{{ $area_type }}">{{ ucfirst($area_type) }}</option>
+                                                                @endforeach
+                                                              </select>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+
+                                                        <div class="row mt-2">
+                                                        @if($offer != 'Plots' && $offer != 'Offices' && $offer != 'Shops')
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Bedrooms</label>
+                                                              <select name="{{$offer}}[bedrooms][]" class="form-control">
+                                                                <option value="">Select</option>
+                                                                @foreach($bedrooms as $bedroom)
+                                                                  <option value="{{ $bedroom }}">{{ $bedroom }}</option>
+                                                                @endforeach
+                                                              </select>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Bathrooms</label>
+                                                              <select name="{{$offer}}[bathroom][]" class="form-control">
+                                                                <option value="">Select</option>
+                                                                @foreach($bathrooms as $bathroom)
+                                                                  <option value="{{ $bathroom }}">{{ $bathroom }}</option>
+                                                                @endforeach
+                                                              </select>
+                                                            </div>
+                                                          </div>
+                                                          @endif
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Price From <span>*</span></label>
+                                                              <input type="number" name="{{$offer}}[price_from][]" class="form-control" min="0" required>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Amount in</label>
+                                                              <select name="{{$offer}}[price_type_from][]" id="price_type_from_{{$offer}}" class="form-control select2" required>
+                                                                
+                                                                @foreach($price_types as $key => $price_type)
+                                                                    <option value="{{ $price_type }}" {{ old('price_type_from', $project->price_type_from ?? '') === $price_type ? 'selected' : '' }}>{{ ucfirst($price_type) }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Price To <span>*</span></label>
+                                                              <input type="number" name="{{$offer}}[price_to][]" class="form-control" min="0" required>
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <div class="form-group">
+                                                              <label class="form-label">Amount in</label>
+                                                              <select name="{{$offer}}[price_type_to][]" id="price_type_to_{{$offer}}" class="form-control select2" required>
+                                                                
+                                                                @foreach($price_types as $key => $price_type)
+                                                                    <option value="{{ $price_type }}" {{ old('price_type_to', $project->price_type_to ?? '') === $price_type ? 'selected' : '' }}>{{ ucfirst($price_type) }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            </div>
+                                                          </div>
+                                                          
+                                                        </div>
+
+                                                        <!-- Remove Button -->
+                                                        <div class="text-end mt-2">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-group">Remove</button>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+                                                    <!-- Add More Button -->
+                                                    <div class="mt-2">
+                                                      <button type="button" id="add-more" class="btn btn-primary btn-sm add-more"><i class="fa fa-plus"></i> Add More</button>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>        
+                            <div class="row p-3">
+                                <div class="repeatable-wrapper" id="floorplans-wrapper">
+                                  <label><strong>Floor Plans</strong></label>
+                                  
+                                  <div class="repeatable-fields">
+                                    <div class="repeatable-group border p-3 mb-3 rounded bg-light">
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                              <label class="form-label">Title</label>
+                                              <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" required>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                              <label class="form-label">Upload Image</label>
+                                              <input type="file" name="floorplans[image][]" class="form-control" accept="image/*" required>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                          <button type="button" class="btn btn-danger remove-group">×</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <button type="button" class="btn btn-primary mt-2 btn-sm add-more"><i class="fa fa-plus"></i> Add More</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                      <label class="form-label">Payment Plan</label>
+                                      <input type="file" name="payment_plan[]" class="form-control" accept="image/*" required multiple="">
+                                  </div>
+                                </div>
+                                
+                            </div>
 
                             <div class="col-xs-12 mb-3 mt-3">
                                 <div class="form-group">
@@ -122,7 +379,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary mt-3">{{ isset($project) ? 'Update' : 'Save & Add Properties' }}</button>
+                                        <button type="submit" class="btn btn-success mt-3">{{ isset($project) ? 'Update' : 'Save' }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +398,7 @@
 
 <script>
 
-/*let map;
+let map;
 let marker;
 let autocomplete;
 let geocoder;
@@ -215,9 +472,40 @@ function onCityChange(cityName) {
 
 
 // Load on window
-google.maps.event.addDomListener(window, 'load', initMap);*/
+google.maps.event.addDomListener(window, 'load', initMap);
+
+$(document).on("change", "input.offering", function(){
+    var offer = $(this).val();
+    if($(this).is(":checked")){
+        $(".offer-item-"+offer).removeClass("display-none");
+    }else{
+        $(".offer-item-"+offer).addClass("display-none");
+    }
+
+});
 
 
+$(document).ready(function () {
+  // Handle Add More for all groups
+  $('.repeatable-wrapper').on('click', '.add-more', function () {
+    let $wrapper = $(this).closest('.repeatable-wrapper');
+    let $group = $wrapper.find('.repeatable-group:first').clone();
+
+    // Clear input/select values
+    $group.find('input, select').val('');
+    console.log($group);
+    $wrapper.find('.repeatable-fields').append($group);
+  });
+
+  // Handle Remove within groups
+  $('.repeatable-wrapper').on('click', '.remove-group', function () {
+    let $fields = $(this).closest('.repeatable-fields');
+    if ($fields.find('.repeatable-group').length > 1) {
+      $(this).closest('.repeatable-group').remove();
+    }
+  });
+});
 </script>
+
 @endsection
 

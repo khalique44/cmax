@@ -189,7 +189,7 @@
                                         <label class="form-label">Offering<span>*</span></label>
                                         @php
 
-                                            $offers = explode(',',$project->offering);
+                                            $offers = isset($project) ? explode(',',$project->offering) : "";
                                         
                                         @endphp
                       

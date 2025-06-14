@@ -14,7 +14,7 @@ class Project extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [        
-    	'project_title','progress','added_by'
+    	'builder_id','city_id','project_title','description','progress','area','location','latitude','longitude','logo_url','offering','is_lease','is_active','added_by'
     ];
 
     public function properties()
@@ -30,6 +30,16 @@ class Project extends Model implements HasMedia
 			    }])
 			    ->latest()
 			    ->get();
+	}
+
+	public function offers()
+	{
+	    return $this->hasMany(ProjectOffer::class);
+	}
+
+	public function floorPlan()
+	{
+	    return $this->hasMany(ProjectFloorPlan::class);
 	}
 
 	protected $casts = [

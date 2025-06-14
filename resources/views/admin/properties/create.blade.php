@@ -304,10 +304,10 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Gallery Images</label>
-                                        <input type="file" name="filepond[]" multiple class="form-control" id="filepond">
+                                        <input type="file" name="filepond[]" multiple class="form-control filepond" id="filepond">
                                         <input type="hidden" id="uploaded-files" name="uploaded_files[]" />
                                             <input type="hidden" id="deleted-files" name="deleted_files[]" />
-                                        <div class="uploaded-images file-pond-preview-wrapper" id="uploaded-preview">
+                                        <div class="uploaded-images file-pond-preview-wrapper" id="uploaded-preview" data-upload-type="default" data-allow-reorder="true" data-max-files="10" data-collection="default" data-preview="uploaded-preview">
                                             @if(isset($property))
                                                 @foreach($property->getMedia('images') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">

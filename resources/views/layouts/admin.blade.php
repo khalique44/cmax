@@ -240,6 +240,20 @@ function demoFromHTML() {
 $(document).ready(function() {
     if($("textarea#txtEditor").length > 0){
         CKEDITOR.replace( 'txtEditor' );
+
+        // Wait for CKEditor to be ready
+        CKEDITOR.on('instanceReady', function () {
+            const saved = sessionStorage.getItem('description');
+            if (saved) {
+                CKEDITOR.instances['txtEditor'].setData(saved);
+            }
+
+            // Save content on change
+            CKEDITOR.instances['txtEditor'].on('change', function () {
+                const data = CKEDITOR.instances['txtEditor'].getData();
+                sessionStorage.setItem('description', data);
+            });
+        });
     }
 
      $('.colors').colorpicker({

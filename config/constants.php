@@ -22,8 +22,7 @@ return [
                             'Flats', 
                             'Plots',
                             'Shops', 
-                            'Offices',
-                            'Appartments'
+                            'Offices',                            
                         ],
     'purpose' => [
                             'sell' => 'Sell', 

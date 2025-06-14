@@ -64,12 +64,12 @@
                                         <!-- File Upload -->
                                         <div class="pond-container">
                                             <label>Upload Images</label>
-                                            <input type="file" name="filepond[]" id="filepond" multiple>
+                                            <input type="file" name="filepond[]" id="filepond" multiple class="filepond">
                                             <input type="hidden" id="uploaded-files" name="uploaded_files[]" />
                                             <input type="hidden" id="deleted-files" name="deleted_files[]" />
                                         </div>
 
-                                        <div class="uploaded-images file-pond-preview-wrapper" id="uploaded-preview">
+                                        <div class="uploaded-images file-pond-preview-wrapper" id="uploaded-preview" id="uploaded-preview" data-upload-type="default" data-allow-reorder="true" data-max-files="10" data-collection="default" data-preview="uploaded-preview">
                                             @if(isset($record))
                                                 @foreach($record->getMedia('images') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">

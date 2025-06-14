@@ -48,18 +48,6 @@ class ProjectController extends Controller
                     $progress = config('constants.progress');
                     return  $progress[$project->progress];
                 })
-                ->addColumn('properties', function ($project) {
-                    return $project->properties->map(function ($property) {
-
-                        return [
-                            'property_id' => $property->id,
-                            'title' => $property->property_title,
-                            'price' => $property->price,
-                            'type' => $property->property_type,
-                            'status' => $property->is_active,
-                        ];
-                    })->toArray();
-                })
                 ->rawColumns(['action'])
                 ->toJson();
         }
@@ -93,33 +81,167 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $offering = config('constants.offering');
+
         $validated = $request->validate([
 
             'project_title' => 'required',                 
             'progress' => 'required',            
+            'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'builder_id' => 'required',
+            'city_id' => 'required',
+            'location' => 'required',            
             'images.*' => 'image|max:2048',
+            'offering' => 'required|array|min:1|in:'.implode(",",$offering),
+
             ]
         );
 
+
+
+        $rules = [];
+
+        $offering = $request->has('offering') ? $request->offering : [];
+        
+
+        foreach ($offering as $offer) {
+            if ($request->has($offer)) {
+                $count = count($request->$offer['title'] ?? []);
+                for ($i = 0; $i < $count; $i++) {
+                    $rules["{$offer}.title.$i"] = 'required|string|max:255';
+                    $rules["{$offer}.area.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.area_type.$i"] = 'required';
+                    $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.price_type_from.$i"] = 'required';
+                    $rules["{$offer}.price_type_to.$i"] = 'required';
+                    
+                    // Flats might have bedrooms/bathrooms, plots might not
+                    if (in_array($offer, ['flats', 'offices'])) {
+                        $rules["{$offer}.bedrooms.$i"] = 'required|integer|min:0';
+                        $rules["{$offer}.bathrooms.$i"] = 'required|integer|min:0';
+                    }
+                }
+            }
+        }
+
+        if ($request->has('floorplans')) {
+            $count = count($request->floorplans['title'] ?? []);
+            for ($i = 0; $i < $count; $i++) {
+                $rules["floorplans.title.$i"] = 'required|string|max:255';
+                $rules["floorplans.image.$i"] = 'required|image|max:2048';
+            }
+        }
+
+        $request->validate($rules);
+
+
+
+
         // Using bootstrap switcher which return on/off text
         $request->merge([
+            'offering' => $request->has('offering') ? implode(',', $request->offering) : '',            
             'is_active' => $request->has('is_active') ? 1 : 0,            
             'added_by' => auth('admin')->user()->id,
         ]);
 
-        $project = Project::create($request->except('images','_token'));
+        $logo_url = "";
 
-        if ($request->has('media_ids')) {
-            foreach ($request->media_ids as $mediaId) {
-                $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
-                if ($media) {
-                    $media->model_type = Project::class;
-                    $media->model_id = $project->id;
-                    $media->collection_name = 'images'; // move it to real collection
-                    $media->save();
+        if(!empty($request->project_logo)){
+            $folderName = 'project_logos';
+            $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
+            $fullFileName = $fileName."-".time().'.'.$request->project_logo->getClientOriginalExtension();
+            $fullFileName = str_replace(" ","_",$fullFileName);
+            $request->project_logo->move(public_path('uploads/'.$folderName), $fullFileName);
+            $logo_url = 'uploads/'.$folderName.'/'.$fullFileName;
+        }
+
+        $request->merge([
+            'logo_url' => $logo_url,
+        ]);
+
+        $project = Project::create($request->except('project_logo','project_gallery','payment_plan','_token'));
+
+        foreach ($offering as $offer) {
+            if ($request->has($offer)) {
+                $count = count($request->$offer['title'] ?? []);
+                for ($i = 0; $i < $count; $i++) {
+
+                     $project->offers()->create([
+                        //'project_id' => $project->id,
+                        'offer' => $offer,
+                        'title' => $request->$offer['title'][$i],
+                        'area' => $request->$offer['area'][$i],
+                        'area_type' => $request->$offer['area_type'][$i],
+                        'bedrooms' => $request->$offer['bedrooms'][$i],
+                        'bathrooms' => $request->$offer['bathroom'][$i],
+                        'price_from' => $request->$offer['price_from'][$i],
+                        'price_to' => $request->$offer['price_to'][$i],
+                        'price_from_in_format' => $request->$offer['price_type_from'][$i],
+                        'price_to_in_format' => $request->$offer['price_type_to'][$i],
+       
+                    ]);
+                   
                 }
             }
         }
+
+
+
+        $folderName = 'project_floor_plans_images';
+        $mediaUrl = '';
+
+        if ($request->has('floorplans')) {
+            $count = count($request->floorplans['title'] ?? []);
+            for ($i = 0; $i < $count; $i++) {
+
+                if(!empty($request->floorplans['image'][$i])){
+                    $image = $request->floorplans['image'][$i];
+                    
+                    $fileName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);           
+                    $fullFileName = $fileName."-".time().'.'.$image->getClientOriginalExtension();
+                    $fullFileName = str_replace(" ","_",$fullFileName);
+                    $image->move(public_path('uploads/'.$folderName), $fullFileName);
+                    $mediaUrl = 'uploads/'.$folderName.'/'.$fullFileName;
+                }
+
+
+                $project->floorPlan()->create([
+                    //'project_id' => $project->id,
+                    'title' => $request->floorplans['title'][$i],
+                    'media_url' => $mediaUrl,
+                    
+                ]);
+            }
+        }
+
+
+        if ($request->has('media_ids')) {
+            if (!empty($request->media_ids['project_gallery'])) {
+                foreach ($request->media_ids['project_gallery'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'project_gallery'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
+            if (!empty($request->media_ids['payment_plan'])) {
+                foreach ($request->media_ids['payment_plan'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'payment_plan'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
+        }
+
+
 
         return response()->json([
             'status' => 'success',
@@ -141,9 +263,22 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $users = User::where(['status'=>1,'type'=> User::MEMBER])->orderBy('first_name','asc')->orderBy('last_name','asc')->get();
+        $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');
+        $amenities = Amenity::where('is_active',1)->orderBy('name' , 'asc')->get();
+        $categories = Category::where('is_active',1)->orderBy('name', 'asc')->get();
+        $area_types = config('constants.area_types');
+        $property_types = config('constants.property_types');
+        $bedrooms = config('constants.bedrooms');
+        $bathrooms = config('constants.bathrooms');
+        $purposes = config('constants.purpose');
+        $cities = GeneralHelper::getCitiesByCountry(166);
+        $price_types = config('constants.price_types');
+        $offering = config('constants.offering');       
         
-        return view('admin.projects.create', compact('progress','project'));
+        
+        return view('admin.projects.create', compact('project','users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types'));
     }
 
     /**
@@ -151,46 +286,183 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        $offering = config('constants.offering');
+
         $validated = $request->validate([
 
             'project_title' => 'required',                 
             'progress' => 'required',            
+            'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'builder_id' => 'required',
+            'city_id' => 'required',
+            'location' => 'required',            
             'images.*' => 'image|max:2048',
+            'offering' => 'required|array|min:1|in:'.implode(",",$offering),
+
             ]
         );
 
-        // Using bootstrap switcher which return on/off text
-        $request->merge([
-            'is_active' => $request->has('is_active') ? 1 : 0,
-        ]);
 
-        $project->update($request->except('images','_token'));
 
-        // Remove deleted images
-        $deletedFiles = $request->input('deleted_files', []);
+        $rules = [];
 
-       if (!empty($deletedFiles)) {            
-            foreach ($deletedFiles as $id) {
-                if($id){
-                    $id = (json_decode($id));
-                    Media::whereIn('id', $id)->delete();
-                }
-                
-            }
-        }
+        $offering = $request->has('offering') ? $request->offering : [];
         
 
-        if ($request->has('media_ids')) {
-            foreach ($request->media_ids as $mediaId) {
-                $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
-                if ($media) {
-                    $media->model_type = Project::class;
-                    $media->model_id = $project->id;
-                    $media->collection_name = 'images'; // move it to real collection
-                    $media->save();
+        foreach ($offering as $offer) {
+            if ($request->has($offer)) {
+                $count = count($request->$offer['title'] ?? []);
+                for ($i = 0; $i < $count; $i++) {
+
+                    $offer_id = $request->$offer['offer_id'][$i] ?? null;
+                    // Skip validation for existing records (if you want to ignore these)
+                    if (!empty($offer_id)) {
+                        //continue; // Skip validation for this existing record
+                    }
+
+                    $rules["{$offer}.title.$i"] = 'required|string|max:255';
+                    $rules["{$offer}.area.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.area_type.$i"] = 'required';
+                    $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.price_type_from.$i"] = 'required';
+                    $rules["{$offer}.price_type_to.$i"] = 'required';
+                    
+                    // Flats might have bedrooms/bathrooms, plots might not
+                    if (in_array($offer, ['flats', 'offices'])) {
+                        $rules["{$offer}.bedrooms.$i"] = 'required|integer|min:0';
+                        $rules["{$offer}.bathrooms.$i"] = 'required|integer|min:0';
+                    }
                 }
             }
         }
+
+        if ($request->has('floorplans')) {
+            $count = count($request->floorplans['title'] ?? []);
+            for ($i = 0; $i < $count; $i++) {
+
+                $floorplansId = $request->floorplans['id'][$i] ?? null;
+
+                    // Skip validation for existing records (if you want to ignore these)
+                    if (!empty($floorplansId)) {
+                        //continue; // Skip validation for this existing record
+                    }
+                $rules["floorplans.title.$i"] = 'required|string|max:255';
+                $rules["floorplans.image.$i"] = 'nullable|image|max:2048';
+            }
+        }
+
+        $request->validate($rules);
+
+        // Using bootstrap switcher which return on/off text
+        $request->merge([
+            'offering' => $request->has('offering') ? implode(',', $request->offering) : '',            
+            'is_active' => $request->has('is_active') ? 1 : 0,            
+            'added_by' => auth('admin')->user()->id,
+        ]);
+
+        $logo_url = "";
+
+        if(!empty($request->project_logo)){
+            $folderName = 'project_logos';
+            $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
+            $fullFileName = $fileName."-".time().'.'.$request->project_logo->getClientOriginalExtension();
+            $fullFileName = str_replace(" ","_",$fullFileName);
+            $request->project_logo->move(public_path('uploads/'.$folderName), $fullFileName);
+            $logo_url = 'uploads/'.$folderName.'/'.$fullFileName;
+        }
+
+        $request->merge([
+            'logo_url' => $logo_url,
+        ]);
+
+        $project->update($request->except('project_logo','project_gallery','payment_plan'));
+
+
+        foreach ($offering as $offer) {
+            if ($request->has($offer)) {
+                $count = count($request->$offer['title'] ?? []);
+                for ($i = 0; $i < $count; $i++) {
+                    $offerId = $request->$offer['offer_id'][$i] ?? null;
+                    $project->offers()->updateOrCreate(
+                        ['id' => $offerId],
+                        [
+                        'project_id' => $project->id,
+                        'offer' => $offer,
+                        'title' => $request->$offer['title'][$i],
+                        'area' => $request->$offer['area'][$i],
+                        'area_type' => $request->$offer['area_type'][$i],
+                        'bedrooms' => $request->$offer['bedrooms'][$i],
+                        'bathrooms' => $request->$offer['bathroom'][$i],
+                        'price_from' => $request->$offer['price_from'][$i],
+                        'price_to' => $request->$offer['price_to'][$i],
+                        'price_from_in_format' => $request->$offer['price_type_from'][$i],
+                        'price_to_in_format' => $request->$offer['price_type_to'][$i],
+       
+                    ]);
+                   
+                }
+            }
+        }
+
+
+
+        $folderName = 'project_floor_plans_images';
+        $mediaUrl = '';
+
+        if ($request->has('floorplans')) {
+            $count = count($request->floorplans['title'] ?? []);
+            for ($i = 0; $i < $count; $i++) {
+                $floorplansId = $request->floorplans['id'][$i] ?? null;
+                if(!empty($request->floorplans['image'][$i])){
+                    $image = $request->floorplans['image'][$i];
+                    
+                    $fileName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);           
+                    $fullFileName = $fileName."-".time().'.'.$image->getClientOriginalExtension();
+                    $fullFileName = str_replace(" ","_",$fullFileName);
+                    $image->move(public_path('uploads/'.$folderName), $fullFileName);
+                    $mediaUrl = 'uploads/'.$folderName.'/'.$fullFileName;
+                }
+
+
+                $project->floorPlan()->updateOrCreate(
+                    ['id' => $floorplansId],
+                    [
+                    'project_id' => $project->id,
+                    'title' => $request->floorplans['title'][$i],
+                    'media_url' => $mediaUrl,
+                    
+                ]);
+            }
+        }
+
+
+        if ($request->has('media_ids')) {
+            if (!empty($request->media_ids['project_gallery'])) {
+                foreach ($request->media_ids['project_gallery'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'project_gallery'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
+            if (!empty($request->media_ids['payment_plan'])) {
+                foreach ($request->media_ids['payment_plan'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'payment_plan'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
+        }
+
+
 
         return response()->json([
             'status' => 'success',

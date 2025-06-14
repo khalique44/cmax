@@ -41,12 +41,17 @@ function displayMsg(msgArea, msg, msgType){
 function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
-    //console.log('isJson:',isJson);
+
     var ajaxParams = {
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         method: 'POST',
         url: $('meta[name="admin_url"]').attr('content')+url,
         data: data,
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        success: successCallback,
+        error: ajaxErrorCallback,
         
         beforeSend: function() {
             showAjaxLoader();
@@ -57,7 +62,7 @@ function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
         }
 
-    if(!isJson){
+    /*if(!isJson){
      
      var extraParams  = {
             contentType: false,
@@ -72,7 +77,7 @@ function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
                         success: successCallback,
                         error: ajaxErrorCallback
                     }
-    ajaxParams = Object.assign(moreParams,ajaxParams);
+    ajaxParams = Object.assign(moreParams,ajaxParams);*/
     $.ajax(ajaxParams)
     .always(function(){     
         hideAjaxLoader();
@@ -191,9 +196,11 @@ function propertySuccessCallback(response){
 
 
 $(document).on("submit","form#project-form",function(e){
-    e.preventDefault();    
-   
-    var formData = $(this).serializeArray();
+    e.preventDefault(); 
+
+    var frm = $('form#project-form');
+    var formData = new FormData(frm[0]);   
+
     ajaxPostRequest("/projects",formData,projectSuccessCallback,ajaxErrorCallback,true);    
 
 });
@@ -201,7 +208,8 @@ $(document).on("submit","form#project-form",function(e){
 $(document).on("submit","form#project-form-update",function(e){
     e.preventDefault();    
     var id = $('input[name="project_id"]').val();
-    var formData = $(this).serializeArray();
+    var frm = $('form#project-form-update');
+    var formData = new FormData(frm[0]); 
     ajaxPostRequest("/projects/"+id,formData,projectSuccessCallback,ajaxErrorCallback,true);    
 
 });
@@ -217,8 +225,8 @@ function projectSuccessCallback(response){
         setTimeout(function(){            
             displayMsg(msgArea,response.message,msgType);
             $("form#project-form")[0].reset();
-            FilePond.find(document.querySelector('#filepond')).removeFiles();
-            $("#uploaded-preview").html('');
+            FilePond.find(document.querySelector('.filepond')).removeFiles();
+            $(".uploaded-images").html('');
             if(response.project.id){
                 document.location=window.cmax.adminUrl+"/projects/add-property/"+response.project.id;
             }
@@ -262,7 +270,7 @@ FilePond.registerPlugin(
 );
 
 // Create pond instance
-const pond = FilePond.create(document.getElementById('filepond'), {
+FilePond.setOptions({
         allowMultiple: false,
         maxFileSize: '5MB',
         acceptedFileTypes: ['image/*'],
@@ -273,64 +281,64 @@ const pond = FilePond.create(document.getElementById('filepond'), {
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
-                onload: (res) => {
-
+                onload: function (res) { 
+                    console.log(res)
                     const data = JSON.parse(res);
-                    //console.log('data:',data)
+                    var preview_id = 'uploaded-preview';
+                    if(data.mediaKey == 'project_gallery'){
+                        preview_id = 'gallery-preview';
+                    } else if(data.mediaKey == 'payment_plan'){
+                        preview_id = 'payment-preview';
+                    }
 
+                    const inputElement = document.getElementById(preview_id); // Works now
+
+                    if (!inputElement) return; // Just in case
+
+                    const collection = inputElement.dataset.collection || 'default';
+
+                    // Hidden input
                     const hidden = document.createElement('input');
                     hidden.type = 'hidden';
-                    hidden.name = 'media_ids[]';
-                    hidden.value = parseInt(data.id);
-                    document.querySelector('form.has-filepond').appendChild(hidden);
+                    hidden.name = `media_ids[${collection}][]`;
+                    hidden.value = data.id;
+                    inputElement.closest('form').appendChild(hidden);
 
-                    /*// Show thumbnail preview (optional)
-                    const img = document.createElement('img');
-                    img.src = data.url.replace("storage","storage/app/public");
-                    document.getElementById('uploaded-preview').appendChild(img);*/
+                    // Preview container
+                    const previewContainerId = inputElement.dataset.preview;
+                    if (previewContainerId) {
+                        const container = document.getElementById(previewContainerId);
+                        if (container) {
+                            const wrapper = document.createElement('div');
+                            wrapper.classList.add('preview-box');
+                            wrapper.dataset.mediaId = data.id;
 
-                    const container = document.getElementById('uploaded-preview');
+                            const img = document.createElement('img');
+                            img.src = data.url.replace("storage", "storage/app/public");
 
+                            const removeBtn = document.createElement('span');
+                            removeBtn.classList.add('remove-media');
+                            removeBtn.innerText = 'Remove';
 
-                    // Create wrapper for image + remove icon
-                    const wrapper = document.createElement('div');
-                    wrapper.classList.add('preview-box');
-                    //wrapper.classList.add('file-pond-preview-wrapper');
-                    wrapper.dataset.mediaId = data.id;
-                    
+                            /*removeBtn.onclick = function () {
+                                wrapper.remove();
+                                const hiddenInputs = document.querySelectorAll(`input[name="media_ids[${collection}][]"][value="${data.id}"]`);
+                                hiddenInputs.forEach(i => i.remove());
+                            };*/
 
-                    // Create image element
-                    const img = document.createElement('img');
-                    img.src = data.url.replace("storage", "storage/app/public");
-                    
+                            const thumb = document.createElement('div');
+                            thumb.classList.add('media-thumb');
+                            thumb.appendChild(img);
 
-                    // Create remove icon/button
-                    const removeBtn = document.createElement('span');
-                    wrapper.classList.add('remove-media');
-                    removeBtn.innerHTML = 'Remove'; // X icon
-                    removeBtn.title = 'Remove';
+                            const actions = document.createElement('div');
+                            actions.classList.add('media-remove');
+                            actions.appendChild(removeBtn);
 
-                    // Remove logic
-                    /*removeBtn.onclick = function () {
-                        wrapper.remove();
-                        
-                        // Also remove the hidden input if needed
-                        const inputToRemove = document.querySelector(`input[type="hidden"][value="${data.id}"]`);
-                        if (inputToRemove) inputToRemove.remove();
-                    };*/
-                     const div1 = document.createElement('div');
-                     div1.classList.add('media-thumb');
-                     const div2 = document.createElement('div');
-                     div1.classList.add('media-remove');
-                    // Append everything
-                    div1.appendChild(img);
-                    wrapper.appendChild(div1);
-                    div2.appendChild(removeBtn);
-                    wrapper.appendChild(div2);
-                    container.appendChild(wrapper);
-                    
-                    //window._uploadedFilesToAdd = window._uploadedFilesToAdd || [];
-                    //window._uploadedFilesToAdd.push(data);
+                            wrapper.appendChild(thumb);
+                            wrapper.appendChild(actions);
+                            container.appendChild(wrapper);
+                        }
+                    }
 
                     return data.id;
                 }
@@ -357,7 +365,7 @@ const pond = FilePond.create(document.getElementById('filepond'), {
         
 });
 
-
+FilePond.parse(document.body);
 
 
 function addUploadedFile(filePath) {
@@ -396,7 +404,7 @@ function deleteUploadedFile(mediaId){
 
 }
 
-$(document).on('click', '.remove-media span', function(){
+$(document).on('click', 'span.remove-media', function(){
     var mediaId = $(this).parents('.preview-box').data('media-id');
 
     Swal.fire({

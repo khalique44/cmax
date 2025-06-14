@@ -23,7 +23,7 @@
                     <table id="projectsTable" class="display">
                         <thead>
                         <tr>
-                            <th></th>                            
+                                                      
                             <th>Title</th>                            
                             <th>Progress</th>                             
                             <th>Added At</th>
@@ -53,7 +53,7 @@ function renderActionColumn(id){
 
         $(document).ready(function () {
 
-             function format(d) {
+             /*function format(d) {
                 if (!d.properties.length) return '<em>No properties assigned.</em>';
 
                 let rows = d.properties.map(prop => `
@@ -74,7 +74,7 @@ function renderActionColumn(id){
                         <tbody>${rows}</tbody>
                     </table>
                 `;
-            }
+            }*/
 
             var table = $('#projectsTable').DataTable({
                 processing: true,
@@ -83,12 +83,7 @@ function renderActionColumn(id){
                 pageLength: 5,
                 columns: [
 
-                     {
-                        className: 'dt-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: '',
-                    },
+                     
                    
                     { data: 'project_title', name: 'project_title' },                   
                     { data: 'progress', name: 'progress' }, 
@@ -101,7 +96,7 @@ function renderActionColumn(id){
                 info: true // Show info text (e.g., "Showing 1 to 5 of 25 entries")
             });
 
-            $('#projectsTable tbody').on('click', 'td.dt-control', function () {
+            /*$('#projectsTable tbody').on('click', 'td.dt-control', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
 
@@ -114,7 +109,7 @@ function renderActionColumn(id){
                     row.child(format(row.data())).show();
                     tr.addClass('shown');
                 }
-            });
+            });*/
         });      
 
     </script>

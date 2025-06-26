@@ -60,48 +60,53 @@ $(document).on('changeDate',"div#datepicker2", function(e) {
     
 });
 
-//Är du säker på att du vill ta bort din bild?
-function ajaxPostRequest(url,data,successCallback,isJson){
+function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
+    var contentType = false;
+    var processData = false;
 
-    var ajaxParams = {
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        method: 'POST',
-        url: $('meta[name="home_url"]').attr('content')+url,
-        data: data,
-        
-        beforeSend: function() {
-            showAjaxLoader();
-        }
-    }
-    var extraParams  = {
-           datatype: "json"
-
-        }
-
-    if(!isJson){
-     
-     var extraParams  = {
-            contentType: false,
-            cache: false,
-            processData: false,
-        }
-
+    if(!isJson){       
     
+        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
+        var ajaxParams = {
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            url: $('meta[name="home_url"]').attr('content')+url,
+            data: data,
+            dataType: "json",
+            contentType: false,
+            processData: false,       
+            success: successCallback,
+            error: ajaxErrorCallback,
+            
+            beforeSend: function() {
+                showAjaxLoader();
+            }
+        }
 
-    }
+    }else{
 
-    ajaxParams = Object.assign(extraParams,ajaxParams);
+        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
+        var ajaxParams = {
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            url: $('meta[name="home_url"]').attr('content')+url,
+            data: data,
+            dataType: "json",       
+            success: successCallback,
+            error: ajaxErrorCallback,
+            
+            beforeSend: function() {
+                showAjaxLoader();
+            }
+        }
+    }   
+
 
     $.ajax(ajaxParams)
-    .done(successCallback)
-    .fail( function( reason ) {
-          // Handles errors only
-    })
-    .always(function(){
-     
-      hideAjaxLoader();
+    .always(function(){     
+        hideAjaxLoader();
     });
 }
 
@@ -110,64 +115,25 @@ function successCallback(response) {
     $('select.booking_time').html(response.html); 
 }
 
-
-
-$(document).on('click','button.book_new_time',function(e){
-    e.preventDefault();
-    var booking_time = $('select.booking_time').val();
-    var booking_date = $('input.booking_date').val();
-    var laundry_number = $('select.laundry_number').val();
-    var data = {booking_time:booking_time,booking_date:booking_date,laundry_number:laundry_number};
-    ajaxPostRequest("/laundry_booking",data,bookingCallback,true);
-});
-
-$(document).on("change","select.laundry_number",function(){
-    var laundry_number = $(this).val();
-    if(laundry_number !== ''){
-       $("#datepicker2 td.active.day").trigger("click");
-    }
-});
-
-function bookingCallback(response){
+function ajaxErrorCallback(response){
 
     var  msgArea = $('.ajax-msg');
     var msgType = 'error';
-    if(response.success){
-        msgType = 'success'; 
-        setTimeout(function(){ 
-            $(".close_booking_form").trigger('click');
-            location.reload();
-        },3000);
-    }
 
-    if(typeof response.errors !== 'undefined'){
-        $(response.errors).each(function(i,o){
-             displayMsg(msgArea,o,msgType);
-        })
+    if (response.responseJSON && response.responseJSON.errors){
+        let errors = response.responseJSON.errors;       
+        let html = '<ul >';
+        $.each(errors, function (key, value) {
+            html += `<li>${value[0]}</li>`;
+        });
+        html += '</ul>';
+        displayMsg(msgArea,html,msgType);         
+        
     }else{
-        displayMsg(msgArea,response.msg,msgType);
+
+        displayMsg(msgArea,'Server Error!',msgType);
     }
-
-   
 }
-
-$(document).on('click','button.remove_booking',function(e){
-    e.preventDefault();
-    var booking_id = $(this).data('id'); 
-    $(".data-delete-form").attr('action', $('meta[name="home_url"]').attr('content')+"/laundry_booking/"+booking_id);      
-});
-
-$(document).on('click','a.remove_issue',function(e){
-    e.preventDefault();
-    var issue_id = $(this).data('id'); 
-    $(".data-delete-form").attr('action', $('meta[name="home_url"]').attr('content')+"/report-issue/"+issue_id);      
-});
-
-$(document).on('click','button.btn_delete_attachment',function(e){
-    e.preventDefault();
-    var attachment_id = $(this).data('delete-id'); 
-    $(".data-delete-form").attr('action', $('meta[name="home_url"]').attr('content')+"/report-issue/remove_attachment/"+attachment_id);      
-});
 
 function displayMsg(msgArea, msg, msgType){
 
@@ -195,78 +161,25 @@ function displayMsg(msgArea, msg, msgType){
 }
 
 
-$(document).on("submit","form#report-issue-form",function(e){
-    e.preventDefault();
-    var issue_id = $(this).data("id");
-    issue_id = (typeof issue_id !== 'undefined') ? '/'+issue_id : '';
-    var formData = new FormData(this);   
-    ajaxPostRequest("/report-issue"+issue_id,formData,reportIssueCallback);    
-
-});
-
-
-
-function reportIssueCallback(response){
-    var  msgArea = $('.ajax-msg');
-    var msgType = 'error';
-    if(response.success){
-        msgType = 'success'; 
-        $("form#report-issue-form")[0].reset();
-        setTimeout(function(){            
-            location.reload();
-        },3000);
-    }
-
-    if(typeof response.errors !== 'undefined'){
-        $(response.errors).each(function(i,o){
-             displayMsg(msgArea,o,msgType);
-        })
-    }else{
-        displayMsg(msgArea,response.msg,msgType);
-    }
-}
-
-
-
-$(document).on('click', 'a.display-messages',function(e){   
-    e.preventDefault();
-    ajaxPostRequest("/users/get-messages",[],messagesCallback);
-});
-
-function messagesCallback(response){
-    var  msgArea = $('.ajax-msg');
-    if(response.success){
-
-        $("ul.display-messages-area").html(response.html);
-        $("#messagelighting").modal('show');
-
-    }else{
-
-        displayMsg(msgArea,response.msg);
-    }
-}
-
-$(document).on('submit', 'form#add-comments',function(e){  
+$('#search-area').on('keyup', function(e){
     e.preventDefault(); 
-    var issue_id = $(this).data("id");
-    var is_done = $(this).find("input.is_done:checked").val();
-    is_done = typeof is_done !== 'undefined' ? is_done : 0;
-    var comments = $(this).find("textarea.comments").val();
-    var data = {is_done:is_done,comments:comments};
+    var query = $(this).val();
+    var data = {query:query};
 
-    ajaxPostRequest("/report-issue/add-comment/"+issue_id,data,addCommentCallback,true);
+    ajaxPostRequest("/search-area",data,searchAreaCallback,ajaxErrorCallback,true);
 });
 
-function addCommentCallback(response){
+function searchAreaCallback(response){
     var  msgArea = $('.ajax-msg');
     var msgType = 'error';
-    if(response.success){
+    
         msgType = 'success'; 
-        $("form#add-comments")[0].reset();
-        setTimeout(function(){            
-            location.reload();
-        },3000);
-    }
+        let suggestions = '';
+        response.forEach(function(item){
+            suggestions += '<div class="suggestion-item" style="padding:5px; cursor:pointer; font-size:11px;">'+item+'</div>';
+        });
+        $('#suggestions').html(suggestions).show();
+    
 
     if(typeof response.errors !== 'undefined'){
         $(response.errors).each(function(i,o){
@@ -278,79 +191,206 @@ function addCommentCallback(response){
 }
 
 
-
-$(document).on('submit', 'form#edit-comments',function(e){  
-    e.preventDefault(); 
-    var issue_id = $(this).data("id");
-    var comment_id = $(this).data("comment-id");   
-        var comments = $(this).find("textarea.edit_comments").val();
-    var data = {comments:comments,comment_id:comment_id};
-
-    ajaxPostRequest("/report-issue/edit-comment/"+issue_id,data,editCommentCallback,true);
-});
-
-function editCommentCallback(response){
-    var  msgArea = $('.edit-ajax-msg');
-    var msgType = 'error';
-    if(response.success){
-        msgType = 'success'; 
-        //$("form#edit-comments")[0].reset();
-        setTimeout(function(){            
-            location.reload();
-        },2000);
-    }
-
-    if(typeof response.errors !== 'undefined'){
-        $(response.errors).each(function(i,o){
-             displayMsg(msgArea,o,msgType);
-        });
-    }else{
-        displayMsg(msgArea,response.msg,msgType);
-    }
-}
-
-$(document).on("change","select[name=full_name]",function(){
- var email = ($(this).find(':selected').data('email'));  
-    var phone = ($(this).find(':selected').data('phone'));
-    $("input[name='phone']").val(phone);
-    $("input[name='email']").val(email);
-});
-
-jQuery(function(){
-    $('#laundry-booking-table').DataTable({
-        language : {
-            "zeroRecords": " "             
-        },
-        "order":  [],
-        "pageLength": 100,
-        bFilter: false, 
-        bInfo: false,
-        "bLengthChange": false,
-        "bPaginate": false,
-        "ordering": false
-        //"rowReorder": true
-    });
-
-
-    $(document).on('click','.choose-file-area',function(){
-        $("#attachment").trigger('click');
-    })
-})
 $(document).ready(function(){
-    $("#attachment").change(function(ths) {
-       // try{
-             filename = this.files[0].name;
+    $("select.select2").select2();
+    /*$('#search-box').on('keyup', function(){
+        var query = $(this).val();
+        if(query.length > 1){
+            $.ajax({
+                url: '/search', // Your backend route here
+                type: 'GET',
+                data: { q: query },
+                success: function(data){
+                    let suggestions = '';
+                    data.forEach(function(item){
+                        suggestions += '<div class="suggestion-item" style="padding:5px; cursor:pointer;">'+item+'</div>';
+                    });
+                    $('#suggestions').html(suggestions).show();
+                }
+            });
+        } else {
+            $('#suggestions').hide();
+        }
+    });*/
 
-             if(typeof filename !== 'undefined' && filename !== ''){
-                $(".show-fake-file-name").text(filename)
-            }else{
-                $(".show-fake-file-name").text('Ingen bild vald')
-            }
-        
-             
-        //}catch(e){
-             //
-        //}
-        
+    // When clicking a suggestion
+    $(document).on('click', '.suggestion-item', function(){
+        $('#search-area').val($(this).text());
+        $('#suggestions').hide();
+    });
+
+    // Hide if clicked outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#search-area, #suggestions').length) {
+            $('#suggestions').hide();
+        }
     });
 });
+
+
+
+
+
+// -------------------CMAX code by Rafique ------------------ //
+
+// Function to add or remove "scrolled" class based on scroll position
+function toggleScrolledClass() {
+    if (window.scrollY > 0) {
+        document.body.classList.add('scrolled');
+    } else {
+        document.body.classList.remove('scrolled');
+    }
+}
+// Event listener for scroll event
+window.addEventListener('scroll', toggleScrolledClass);
+
+// For Counter
+$(document).ready(function () {
+
+    $('.counter').each(function () {
+        $(this).prop('Counter', 0).animate({
+            Counter: $(this).text()
+        }, {
+            duration: 4000,
+            easing: 'swing',
+            step: function (now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+    });
+
+});
+
+// Testomonial Carousel Logo
+$('.testo-caro').slick({
+    autoplay: true,
+    autoplaySpeed: 2000,
+    dots: false,
+    prevArrow: false,
+    nextArrow: false,
+    infinite: true,
+    speed: 300,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+ })
+
+//  AOS Animation
+AOS.init({
+    once: true
+});
+
+$(document).ready(function(){
+    $('.btn-showgal').on('click', function(e){
+        e.preventDefault();
+        $('a[data-lightbox="gallery-group"]').first().click();
+    });
+});
+$(document).ready(function(){
+    var navbar = $('#navbar-example2');
+    var stickyOffset = navbar.offset().top;
+
+    $(window).scroll(function(){
+        if ($(window).scrollTop() >= stickyOffset) {
+            navbar.addClass('sticky-nav');
+            if (!$('.placeholder').length) {
+                navbar.before('<div class="placeholder"></div>');
+            }
+        } else {
+            navbar.removeClass('sticky-nav');
+            $('.placeholder').remove();
+        }
+    });
+
+
+});
+
+$(document).on('click','.dropdown-toggle', function(){
+    $('.dropdown-menu').slideToggle();
+});
+
+var slider = document.getElementById('slider');
+noUiSlider.create(slider, {
+    start: [500000, 5000000],
+    connect: true,
+    range: {
+        'min': 50000,
+        'max': 5000000
+    }
+});
+slider.noUiSlider.on('update', function (values, handle) {
+    document.getElementById('slider-value-lower').innerText = Math.round(values[0]);
+    document.getElementById('slider-value-upper').innerText = Math.round(values[1]);
+});
+
+
+$(document).ready(function() {
+
+    function fetchProjects(page = 1) {
+        var formData = $('#filter-form').serialize() + '&page=' + page;
+
+        $.ajax({
+            url: "{{ route('project-search-results') }}",
+            type: "GET",
+            data: formData,
+            success: function(data) {
+                $('#project-list').html(data);
+            }
+        });
+    }
+
+    // Filter form submit
+    $('#filter-form').on('change', 'select, input', function(e) {
+        e.preventDefault();
+        fetchProjects();
+    });
+
+    // Pagination link click
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        fetchProjects(page);
+    });
+
+    $(document).on('change','#minPrice, #maxPrice', function() {
+        var min = parseInt($('#minPrice').val()) || 0;
+        var max = parseInt($('#maxPrice').val()) || 0;
+
+        if (min > max) {
+            $('#priceError').text('Max price must be greater than Min price!');
+        } else {
+            $('#priceError').text('');
+        }
+    });
+
+});
+
+
+
+    function fetchProjects(page = 1) {
+        var formData = $('#filter-form').serialize() + '&page=' + page;
+
+        $.ajax({
+            url: "{{ route('search-results') }}",
+            type: "GET",
+            data: formData,
+            success: function(data) {
+                $('#project-list').html(data);
+            }
+        });
+    }
+
+    // Filter form submit
+    $('#filter-form').on('change', 'select, input', function(e) {
+        e.preventDefault();
+        fetchProjects();
+    });
+
+    // Pagination link click
+    $(document).on('click', '.page-item  a.page-link', function(e) {
+        alert("fffffff")
+        e.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        fetchProjects(page);
+    });
+
+

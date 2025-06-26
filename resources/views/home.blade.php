@@ -3,326 +3,373 @@
   
 @section('content')
 
-@if(!empty($header_image))
 
+  @include('layouts.includes.nav')
 
+  @include('layouts.includes.search-box')
 
-@endif
-    <header class="header-main" <?php echo !empty($header_image) ? 
-    "style='background: url(\"".$header_image."\");'" : ""; ?> >
-        <div class="container">
-            
-            @include('layouts.includes.nav')
-
-            <div class="slid-header pt-md-5 pb-md-4 mx-auto">
-              <div class="row">
-                <div class="col-lg-7 col-md-12 col-sm-12">
-                   <h1 class="display-4 mt-2 mt-md-5 mt-lg-5">@if(!empty($data->title)) {!!html_entity_decode($data->title)!!} @endif</h1>
-                   <p class="lead-c">@if(!empty($data->description)) {!!html_entity_decode($data->description)!!} @endif</p>
-                   <div><a href="http://rosenivara.se/kontakta" class="btn btn-success2">Kontakta Oss</a></div>
-                </div>
-                
-              </div>
-             
-            </div>
-
-        </div>
-    </header>
+  @include('layouts.includes.project-types')
 
       
-    <div class="content">
-        <section class="about pt-md-5">
-          <div class="container">
-          <h1 class="main-heading text-center mt-3">@if(!empty($data->about_us_title)){!!html_entity_decode($data->about_us_title)!!} @endif</h1>
-          <div class="row pt-md-5">
-          <div class="col-md-5">
-              <div class="slider-for">
-                <?php 
-                  if(!empty($aboutUsGallery)) { 
-                    foreach ($aboutUsGallery as $key => $value) {   ?>
-                     
-                    <div>     
-                    <?php if($value->is_video == 'no'){ ?>             
-                      <img src="{!! url('public/') !!}/<?php echo $value->file_url; ?>">
-                      
-                        
-                      <?php }else{ ?>
-
-                        <video width="555" height="415" >
-                            <source src="{!! url('public') !!}/{{$value->file_url}}" type="video/mp4">
-                          
-                            Your browser does not support the video tag.
-                        </video>
-                        <a href="#" class="playlets"><i class="fa-regular fa-circle-play"></i></a>
-
-                      <?php } ?>
-                      
+  
+  
+  <section class="py-5">
+     <div class="container">
+        <div class="row text-center pb-3">
+           <h5 class="sub-h">Discover</h5>
+           <h2 class="main-h">Popular Projects</h2>
+        </div>
+        <div class="row">
+           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+              <div class="project-div position-relative">
+                 <a href="#" class="launch-btn">New Launch</a>
+                 <a href="#">
+                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                 </a>
+                 <div class="p-4">
+                    <a href="#">
+                    <h6>Chapal Courtyard 1</h6>
+                    </a>
+                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
+                    <p class="mb-4">
+                       950 - 1450 Sq ft | Flats
+                    </p>
+                    <hr>
+                    <div class="row mt-4 align-items-center">
+                       <div class="col-8">
+                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
+                       </div>
+                       <div class="col-4 text-end">
+                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                       </div>
                     </div>
-
-                  <?php }
-
-                  } ?>
-                
-             </div>
-             <div class="slider-nav">
-              <?php 
-                if(!empty($aboutUsGallery)) { 
-                    foreach ($aboutUsGallery as $key => $value) {   
-                      if($value->is_video == 'no'){ ?>
-                        <div><img src="{!! url('public') !!}/{{$value->file_url}}"></div>
-                      
-                      <?php 
-
-                      }else{
-
-                        ?>
-                        <div><img src="{!! url('public/assets/images/slide-nav.jpg') !!}"></div>
-                      
-                      <?php
-                      } 
-                  }
-                } ?>
-                
-             </div>
-          </div>
-          <div class="col-md-7 pt-4">
-            @if(!empty($data->about_us_description)) {!!nl2br($data->about_us_description)!!} @endif
-
-              <!--<div class="pt-4 pt-lg-5 pt-md-5"><a href="#" class="btn-success2 pl-5 pr-5">Läs mer</a></div>-->
-          </div>
-
-          </div>
-          </div>
-        </section><!---about sec--->
-
-        <section class="testimonials pt-4 pt-lg-5 pt-md-5">
-          <div class="container">
-            <h1 class="main-heading text-center mt-3 text-light">@if(!empty($data->testimonial_title)){!!html_entity_decode($data->testimonial_title)!!} @endif</h1>
-            <div class="row mt-5 pt-5">
-              <div class="col-md-12">
-                <div class="for-bgtesti">
-                 <div class="testi">
-                  @if(!empty($testimonials))
-                    @foreach($testimonials as $testimonial)
-                     <div>
-                      <div class="testi1">
-                        <div class="test-pic"><img src="{!! url('public/') !!}/{{$testimonial->file_url}}"></div>
-                        <p>{!!html_entity_decode($testimonial->description)!!}</p>
-                        <h3>{{($testimonial->client_name)}} <span>{{($testimonial->designation)}}</span></h3>
-                      </div>
-                     </div>
-                     
-                     @endforeach
-                   @endif
-                </div>
-                </div>
+                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="team pt-md-5 pb-5 mb-5">
-            <div class="container pt-3">
-              <h1 class="main-heading text-center mt-5 mt-lg-5 mt-md-0">@if(!empty($data->team_member_title)){!!html_entity_decode($data->team_member_title)!!} @endif</h1>
-              <p class="text-center pl-2 pr-2 pl-lg-5 pr-lg-5 pl-md-5 pr-md-5">@if(!empty($data->team_member_description)){!!html_entity_decode($data->team_member_description)!!} @endif</p>
-              <div class="row pt-3 pt-lg-5 pt-md-5">
-                <div class="col-md-12">
-                  <div class="teams">
-
-                    @if(!empty($teamMembers))
-                      @foreach($teamMembers as $teamMember)
-
-                        <div>
-                          <div class="team-group">
-                            <div class="team-pic"><img src="{!! url('public/') !!}/{{$teamMember->file_url}}"></div>
-                            <div class="team-content">
-                              <h3>{{($teamMember->member_name)}} <span>{{($teamMember->designation)}}</span></h3>
-                              <p>{{($teamMember->description)}}</p>
-                            </div>
-                          </div>
-                        </div><!--slide-->
-                      
-                      @endforeach
-                    @endif
-
-
-                    
-
-                  </div>
-                </div>
-
+           </div>
+           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+              <div class="project-div position-relative">
+                 <a href="#" class="launch-btn red-bg">Under construction</a>
+                 <a href="#">
+                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                 </a>
+                 <div class="p-4">
+                    <a href="#"><h6>Chapal Courtyard 1</h6></a>
+                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
+                    <p class="mb-4">
+                       950 - 1450 Sq ft | Flats
+                    </p>
+                    <hr>
+                    <div class="row mt-4 align-items-center">
+                       <div class="col-8">
+                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
+                       </div>
+                       <div class="col-4 text-end">
+                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                       </div>
+                    </div>
+                 </div>
               </div>
-            </div>
-        </section>
-
-        <section class="kontakt mt-5 pt-4 pt-lg-5 pt-md-5 pb-0 pb-lg-5 pb-md-5">
-            <div class="container pt-3 pb-5">
-              <h1 class="main-heading text-center">@if(!empty($data->contact_us_title)){!!html_entity_decode($data->contact_us_title)!!} @endif</h1>
-              <p class="text-center">@if(!empty($data->contact_us_slogan)){!!html_entity_decode($data->contact_us_slogan)!!} @endif</p>
-              <div class="row pt-3 pt-lg-5 pt-md-5 justify-content-center">
-                @if(!empty($contactUsData['address']))
-                
-                <div class="col-lg-4 col-md-6">
-                  <div class="box">
-                    <a href="{{$contactUsData['google_map_link']}}" target="_blank">
-                      <div class="row">
-                        <div class="col-md-2"><img src="{!! url('public/assets/images/location.svg') !!}"></div>
-                        <div class="col-md-10">
-                          {!! nl2br(e($contactUsData['address'])) !!}
-                          
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                @endif
-                @if(!empty($contactUsData['phone_number']))
-                <div class="col-lg-4 col-md-6">
-                  <div class="box yel">
-                    <a href="tel:{{$contactUsData['phone_number']}}">
-                      <div class="row">
-                        <div class="col-md-2"><img src="{!! url('public/assets/images/phone-call.svg') !!}"></div>
-                        <div class="col-md-10">
-                          <h4>{{$contactUsData['phone_number']}}</h4>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                @endif
-                @if(!empty($contactUsData['email_address']))
-                <div class="col-lg-4 col-md-7">
-                  <div class="box mt-lg-0 mt-md-4">
-                    <a href="mailto:{{$contactUsData['email_address']}}">
-                      <div class="row">
-                        <div class="col-md-2"><img src="{!! url('public/assets/images/email.svg') !!}"></div>
-                        <div class="col-md-10">
-                          <p class="pt-2">{{$contactUsData['email_address']}}</p>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                @endif
+           </div>
+           <div data-aos="fade-up" class="col-md-4">
+              <div class="project-div position-relative">
+                 <a href="#">
+                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+              </a>
+                 <div class="p-4">
+                    <a href="#">
+                    <h6>Chapal Courtyard 1</h6>
+                 </a>
+                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
+                    <p class="mb-4">
+                       950 - 1450 Sq ft | Flats
+                    </p>
+                    <hr>
+                    <div class="row mt-4 align-items-center">
+                       <div class="col-8">
+                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
+                       </div>
+                       <div class="col-4 text-end">
+                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                       </div>
+                    </div>
+                 </div>
               </div>
-            </div>
-        </section>
+           </div>
+        </div>
+        <div class="row mt-4">
+           <div class="col-md-12 text-center">
+              <a href="#" class="detail-btn d-inline-block">More Details</a>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section class="dream-sec py-5">
+     <div class="container py-5 px-3 px-sm-5">
+        <div class="row">
+           <div class="col-md-12 text-center">
+              <h5 class="sub-h">Unlock Your</h5>
+              <h2 class="main-h">Dream Property</h2>
+           </div>
+        </div>
+        <div class="row mt-4">
+           <div data-aos="fade-up" class="col-md-3 text-center dp-col mb-3 mb-md-0">
+              <div class="dp-div text-center position-relative">
+                 <i class="fa fa-search" aria-hidden="true"></i>
+                 <span class="number">01</span>
+              </div>
+              <h6 class="mt-3">Discover Property</h6>
+              <p class="mb-0">The parties interact with onw another in a digital format,rather than in person or over the phone.</p>
+           </div>
+           <div data-aos="fade-up" class="col-md-3 text-center dp-col mb-3 mb-md-0">
+              <div class="dp-div text-center position-relative">
+                 <i class="fa fa-calendar" aria-hidden="true"></i>
+                 <span class="number">02</span>
+              </div>
+              <h6 class="mt-3">Discover Property</h6>
+              <p class="mb-0">The parties interact with onw another in a digital format,rather than in person or over the phone.</p>
+           </div>
+           <div data-aos="fade-up" class="col-md-3 text-center dp-col mb-3 mb-md-0">
+              <div class="dp-div text-center position-relative">
+                 <i class="fa fa-users" aria-hidden="true"></i>
+                 <span class="number">03</span>
+              </div>
+              <h6 class="mt-3">Discover Property</h6>
+              <p class="mb-0">The parties interact with onw another in a digital format,rather than in person or over the phone.</p>
+           </div>
+           <div data-aos="fade-up" class="col-md-3 text-center dp-col mb-3 mb-md-0">
+              <div class="dp-div text-center position-relative">
+                 <i class="fa fa-home" aria-hidden="true"></i>
+                 <span class="number">04</span>
+              </div>
+              <h6 class="mt-3">Discover Property</h6>
+              <p class="mb-0">The parties interact with onw another in a digital format,rather than in person or over the phone.</p>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section>
+     <div class="container pb-5" style="border-bottom: 1px solid #DCDCEB;">
+        <div class="row align-items-center">
+           <div data-aos="fade-right" class="col-md-4">
+              <h5 class="sub-h">Why choose us?</h5>
+              <h2 class="main-h">Benefits of Our Real Estate Services</h2>
+           </div>
+           <div data-aos="fade-left" class="col-md-8">
+              <div class="row">
+                 <div class="four col-md-4">
+                    <div class="counter-box colored">
+                       <span>$</span><span class="counter">520</span><span>+</span>
+                       <p>Million Real Estate Sold</p>
+                    </div>
+                 </div>
+                 <div class="four col-md-4">
+                    <div class="counter-box">
+                       <span class="counter">2000</span><span>+</span>
+                       <p>Over 2000 5 Star Reviews</p>
+                    </div>
+                 </div>
+                 <div class="four col-md-4">
+                    <div class="counter-box">
+                       <span class="counter">675</span> <span>Sold</span>
+                       <p>Over 2000 5 Star Reviews</p>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section class="py-5">
+     <div class="container">
+        <div class="row text-center pb-3">
+           <h5 class="sub-h">Explore</h5>
+           <h2 class="main-h">Popular Locations</h2>
+        </div>
+        <div class="row">
+           <div data-aos="fade-up" class="col-12 col-md-6 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">8 Properties</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Clifton</p>
+              </div>
+           </a>
+           </div>
+           <div data-aos="fade-up" class="col-6 col-md-3 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div boat-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">2 Properties</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Boat Basin</p>
+              </div>
+              </a>
+           </div>
+           <div data-aos="fade-up" class="col-6 col-md-3 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div scheme-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">1 Property</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Scheme 33</p>
+              </div>
+           </a>
+           </div>
+        </div>
+        <div class="row mt-md-4">
+           <div data-aos="fade-up" class="col-12 col-md-3 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div bahria-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">0 Properties</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Bahria</p>
+              </div>
+           </a>
+           </div>
+           <div data-aos="fade-up" class="col-6 col-md-3 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div defence-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">3 Properties</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Defence</p>
+              </div>
+           </a>
+           </div>
+           <div data-aos="fade-up" class="col-6 col-md-6 mb-3 mb-md-0">
+              <a href="#">
+              <div class="loc-div kemari-div">
+                 <p class="pt-4 ps-4 mb-0 loc-p z-index-9 position-relative">2 Properties</p>
+                 <p class="ps-4 mb-0 loc-h z-index-9 position-relative">Kemari</p>
+              </div>
+           </a>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section class="py-5" data-aos="fade-up">
+     <div class="container py-5 px-3 px-sm-5 testo-con">
+        <div class="row align-items-center">
+           <div class="col-md-6">
+              <img src="{!! url('/public/assets/img/testimonial-img.png') !!}" alt="" width="100%" style="border-radius: 30px;">
+           </div>
+           <div class="col-md-6 ps-5">
+              <div class="row testo-caro">
+                 <div class="col-md-12">
+                    <div class="row align-items-center mt-3 mt-md-0">
+                       <div class="col-2">
+                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
+                       </div>
+                       <div class="col-10">
+                          <h6 class="name">Cameron Williamson</h6>
+                          <p class="mb-0 designation">Designer</p>
+                       </div>
+                    </div>
+                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
+                 </div>
+                 <div class="col-md-12">
+                    <div class="row align-items-center mt-3 mt-md-0">
+                       <div class="col-2">
+                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
+                       </div>
+                       <div class="col-10">
+                          <h6 class="name">Cameron Williamson</h6>
+                          <p class="mb-0 designation">Designer</p>
+                       </div>
+                    </div>
+                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
+                 </div>
+                 <div class="col-md-12">
+                    <div class="row align-items-center mt-3 mt-md-0">
+                       <div class="col-2">
+                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
+                       </div>
+                       <div class="col-10">
+                          <h6 class="name">Cameron Williamson</h6>
+                          <p class="mb-0 designation">Designer</p>
+                       </div>
+                    </div>
+                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section class="py-5">
+     <div class="container">
+        <div class="row text-center pb-3">
+           <h2 class="main-h">Our Latest Blog</h2>
+        </div>
+        <div class="row">
+           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+              <div class="project-div position-relative">
+                 <img src="{!! url('public/assets/img/blog-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                 <div class="p-4 text-center">
+                    <p class="blog-des">Apartment .  March 19, 2024</p>
+                    <h6 class="blog-title">Read Unveils the Best Canadian Cities for Biking</h6>
+                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                 </div>
+              </div>
+           </div>
+           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+              <div class="project-div position-relative">
+                 <img src="{!! url('public/assets/img/blog-2.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                 <div class="p-4 text-center">
+                    <p class="blog-des">Office .  March 19, 2024</p>
+                    <h6 class="blog-title">10 Walkable Cities Where You Can Live Affordably</h6>
+                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                 </div>
+              </div>
+           </div>
+           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+              <div class="project-div position-relative">
+                 <img src="{!! url('public/assets/img/blog-3.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                 <div class="p-4 text-center">
+                    <p class="blog-des">Shop .  March 19, 2024</p>
+                    <h6 class="blog-title">New Apartment Nice in the Best Canadian Cities</h6>
+                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </section>
+  <section class="cta-sec position-relative z-index-9">
+     <div class="container py-5 px-3 px-sm-5">
+        <h5 data-aos="fade-down" class="sub-h text-center" style="color: #fff;">Lets Get Started</h5>
+        <h2 data-aos="fade-down" class="main-h text-center" style="color: #fff;">Property Inquiry Form</h2>
+        <div data-aos="fade-up" class="row mt-4">
+           <div class="col-md-2"></div>
+           <div class="col-md-8">
+              <form action="#" method="POST" class="cta-form">
+                 <div class="row g-3">
+                    <div class="col-md-6">
+                       <input type="text" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="col-md-6">
+                       <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="col-md-6">
+                       <input type="tel" name="phone" class="form-control" placeholder="+92 -" required>
+                    </div>
+                    <div class="col-md-6">
+                       <input type="text" name="property" class="form-control" placeholder="Property Type">
+                    </div>
+                    <div class="col-md-6">
+                       <input type="text" name="budget" class="form-control" placeholder="Budget Range">
+                    </div>
+                    <div class="col-md-6">
+                       <input type="text" name="location" class="form-control" placeholder="Location Preferences">
+                    </div>
+                    <div class="col-12">
+                       <textarea name="message" class="form-control" rows="4" placeholder="Message"></textarea>
+                    </div>
+                    <div class="col-12 text-center">
+                       <button type="submit" class="btn btn-custom px-4 py-2">SUBMIT NOW</button>
+                    </div>
+                 </div>
+              </form>
+           </div>
+           <div class="col-md-2"></div>
+        </div>
+     </div>
+  </section>
 
-    </div>
 
+  @include('layouts.includes.footer')     
 
-    @include('layouts.includes.footer')     
-
-
-    
-
-    <script type="text/javascript" >
-        jQuery(document).ready(function($){
-
-          $(window).scroll(function(){
-              if ($(window).scrollTop() >= 300) {
-                  $('#navbar').addClass('sticky');
-              }
-              else {
-                  $('#navbar').removeClass('sticky');
-              }
-          });
-
-
-             
-          //Check to see if the window is top if not then display button
-          $(window).scroll(function(){
-          // Show button after 100px
-          var showAfter = 100;
-          if ($(this).scrollTop() > showAfter ) { 
-          $('#gotop').fadeIn();
-          } else { 
-          $('#gotop').fadeOut();
-          }
-          });
-
-          //Click event to scroll to top
-          $('#gotop').click(function(){
-          $('html, body').animate({scrollTop : 0},100);
-          return false;
-          });
-
-        });
-
-    </script>
-    <script type="text/javascript">
-        jQuery(document).ready(function($){
-            $('.slider-for').slick({
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: false,
-                dots: false,
-                fade: true,
-                infinite: false,
-                centerMode: true,
-                draggable: false,
-                asNavFor: '.slider-nav'
-            });
-            
-            $('.slider-nav').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                asNavFor: '.slider-for',
-                dots: false,
-                centerMode: true,
-                focusOnSelect: true,
-                responsive: [{
-                      breakpoint: 800,
-                      settings: {
-                        slidesToShow: 4,
-                        slidesToScroll: 1
-                      }
-                    },
-                    {
-                      breakpoint: 580,
-                      settings: {
-                        slidesToShow: 4,
-                        slidesToScroll: 1
-                      }
-                    }
-                  ]
-            });
-
-            $('.testi').slick({
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-                dots: true,
-                prevArrow: '<div class="slick-prev slick-arrow"><span class="fa fa-angle-left"></span><span class="sr-only">Prev</span></div>',
-                nextArrow: '<div class="slick-next slick-arrow"><span class="fa fa-angle-right"></span><span class="sr-only">Next</span></div>'
-
-            });
-
-            $('.teams').slick({
-                slidesToShow: 4,
-                slidesToScroll: 4,
-                arrows: true,
-                dots: false,
-                prevArrow: '<div class="class-to-stylo1"><span class="fa fa-angle-left"></span><span class="sr-only">Prev</span></div>',
-                nextArrow: '<div class="class-to-stylo2"><span class="fa fa-angle-right"></span><span class="sr-only">Next</span></div>',
-                responsive: [{
-                      breakpoint: 800,
-                      settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2
-                      }
-                    },
-                    {
-                      breakpoint: 580,
-                      settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                      }
-                    }
-                  ]
-
-            });
-        });
-    </script> 
        
  @endsection

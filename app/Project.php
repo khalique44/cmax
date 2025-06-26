@@ -8,6 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Project extends Model implements HasMedia
 {
@@ -17,6 +18,18 @@ class Project extends Model implements HasMedia
     	'builder_id','city_id','project_title','description','progress','area','location','latitude','longitude','logo_url','offering','is_lease','is_active','added_by'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($project) {
+		    $slug = Str::slug($project->project_title);
+		    $count = Project::where('slug', 'like', "{$slug}%")->count();
+
+		    $project->slug = $count ? "{$slug}-{$count}" : $slug;
+		});
+    }
+
     public function properties()
 	{
 	    return $this->hasMany(Property::class,'project_id', 'id');
@@ -24,12 +37,7 @@ class Project extends Model implements HasMedia
 
     public static function getAllProjects(){
 
-		return Project::whereHas('properties')
-			    ->with(['properties' => function ($query) {
-			        $query->where('project_id', '!=', 0);
-			    }])
-			    ->latest()
-			    ->get();
+		return Project::with('offers','floorPlan', 'media')->latest()->get();
 	}
 
 	public function offers()
@@ -45,6 +53,11 @@ class Project extends Model implements HasMedia
 	protected $casts = [
         'created_at' => 'date:Y-M-d'
     ];
+
+    public function builder()
+	{
+	    return $this->belongsTo(Builder::class);
+	}
 
     public function registerMediaConversions(Media $media = null): void
 	{

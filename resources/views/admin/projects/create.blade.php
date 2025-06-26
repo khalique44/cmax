@@ -326,7 +326,7 @@
                                                                     @endif
                                                                 @endforeach         
                                                             @endif
-                                                            @if(empty($project->offers))
+                                                            @if(!isset($project) || $project->count() > 0)
                                                                 <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                     <div class="row">
                                                                         <div class="col-md-4">

@@ -1,86 +1,54 @@
-<?php
-
-
-
-$header_logo = App\Http\Helpers\RosenHelper::getOption('header_logo');
-
-
-
-?>
-
-
-
-<nav class="navbar navbar-expand-md navbar-dark" id="navbar">
-
-  <a class="navbar-brand" href="{{ url('/') }}"><img src="@if(!empty($header_logo))  {!! url('public') !!}/{{$header_logo}} @else {!! url('public/assets/images/logo-white.png') !!} @endif"></a>
-
-  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-
-    <span class="navbar-toggler-icon"></span>
-
-  </button>
-
-  <div class="navbar-collapse collapse" id="navbarCollapse" style="">
-
-    <ul class="navbar-nav ml-auto">
-
-      <li class="nav-item active">
-
-        <a class="nav-link" href="{{ url('/home') }}">Hem</a>
-
-      </li>
-
-      <li class="nav-item">
-
-        <a class="nav-link" href="{{ url('/omboende') }}">Om Boende</a>
-
-      </li>
-
-      <li class="nav-item">
-
-        <a class="nav-link" href="{{ url('/forboende') }}">För Boende</a>
-
-      </li>
-
-      <li class="nav-item">
-
-        <a class="nav-link" href="{{ url('/blog') }}">Blogg</a>
-
-      </li>
-      
-      <li class="nav-item">
-
-        <a class="nav-link btn btn-success" href="{{ url('/kontakta') }}">Kontakta Oss</a>
-
-      </li>
-      @auth('web')
-
-      
-      <li class="nav-item"><a class="nav-link btn btn-success btn-inverse" href="{{ url('/logout') }}">{{ __('language.Logga Out') }}</a></li>
-
-      <!-- <li class="nav-item dropdown">
-        <a class="nav-link btn btn-success btn-inverse dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" href="#">{{ __('language.My Account') }}</a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="{{ url('/dashboard') }}">{{ __('language.Dashboard') }}</a></li>
-          <li><a class="dropdown-item" href="{{ url('/logout') }}">{{ __('language.Logga Out') }}</a></li>
-        </ul>
-      </li> -->
-     
-      @endauth
-
-
-      @guest
-
-      <li class="nav-item">
-        <a class="nav-link btn btn-success btn-inverse" href="{{ url('/login') }}">Logga In</a>
-      </li>
-
-      @endguest
-      
-    </ul>
-
-    
-
-  </div>
-
-</nav>
+<div class="header-top">
+   <div class="container">
+      <div class="row">
+         <div class="col-md-6 text-center text-md-start">
+            <span class="pe-3"><a href="tel:923238222015"><i class="fa fa-phone" aria-hidden="true"></i> +92 323 8222015</a></span>
+            <span><a href="mailto:info@cmax.pk"><i class="fa fa-envelope" aria-hidden="true"></i> info@cmax.pk</a></span>
+         </div>
+         <div class="col-md-6 text-center text-md-end">
+            <span class="pe-3"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></span>
+            <span class="pe-3"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></span>
+            <span class="pe-3"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></span>
+            <span class="pe-3"><a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a></span>
+         </div>
+      </div>
+   </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-light">
+   <div class="container">
+      <a class="navbar-brand" href="/">
+      <img src="{!! url('public/assets/img/logo.png') !!}" alt="Jet Freight Logistics">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+         <ul class="navbar-nav my-menu">
+            <li class="nav-item">
+               <a class="nav-link" aria-current="page" href="#">Projects</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Survey</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">About Us</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Careers</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Blogs</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Compare</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#">Properties for Sale</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link menu-btn" href="#">Contact Us</a>
+            </li>
+         </ul>
+      </div>
+   </div>
+</nav>   

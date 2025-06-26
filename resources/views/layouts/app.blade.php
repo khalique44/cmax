@@ -7,67 +7,34 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="https://www.rosenivara.se/public/assets/images/favicon2.png">
+    <link rel="icon" href="{!! url('public/assets/img/favicon.png') !!}">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="home_url" content="{{ url('') }}">
-    <title>Rosen i Vara &#8211; Bra boende i Vara</title>    
-    <!-- Scripts -->
+
+    <title>CMAX.pk Real Estate</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{!! url('public/bootstrap/css/bootstrap.min.css') !!}">
+    <link rel="stylesheet" href="{!! url('public/assets/css/main.css') !!}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" integrity="sha512-Mo79lrQ4UecW8OCcRUZzf0ntfMNgpOFR46Acj2ZtWO8vKhBvD79VCp3VOKSzk6TovLg5evL3Xi3u475Q/jMu4g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Slick Slider -->
+    <!-- Slick Slider CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+    <!-- jQuery (Required for Slick Slider) -->
+    <script src="{!! url('public/assets/js/jquery-3.6.0.min.js') !!}"></script>
     
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">    
-   
-    <link rel="shortcut icon" href="{!! url('public/assets/images/logo-npc.png') !!}" />    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
-    <!-- Font awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
-    <!-- Custom styles for this template -->
-    <link href="{!! url('public/assets/css/style.css') !!}" rel="stylesheet">
-    <link href="{!! url('public/assets/css/datatables/jquery.datatables.min.css') !!}" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <link href="{!! url('public/multi-select/css/multi-select.css')!!}" rel="stylesheet" />
-
-    <!-- <link href="{!! url('public/assets/css/jquery-ui.css') !!}" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    
-    <link rel="shortcut icon" href="{!! url('public/assets/images/logo-npc.png') !!}" />
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{!! url('public/assets/js/jquery.js') !!}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script>
-    <script src="{!! url('public/assets/js/dataTables/datatables.min.js') !!}"></script>
-    <script src="{!! url('public/assets/js/bootstrap.min.js') !!}"></script>
-
-    <!-- <script src="js/smooth-scroll-window-v1.0.0.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <!-- <script src="{!! url('public/assets/js/jquery-ui.js') !!}"></script> -->
-    <script src="{!! url('public/assets/js/jquery-ui.js') !!}"></script>
-    
-    <script src="{!! url('public/assets/js/main.js') !!}"></script>
-
-    @include('layouts.includes.global-style')
-   
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+    <!-- Slick Slider JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="{!! url('public/select2/select2.min.css')!!}" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+   <script src="{!! url('public/select2/select2.js')!!}"></script>
 </head>
-
-
-
-
-
-
-
 
 <body>
     <div id="loader" class="lds-dual-ring hidden overlay"></div>
@@ -75,7 +42,7 @@
     @yield('content')
         
     
+    @yield('app-script')
 </body>
 </html>
 
-@yield('app-script')

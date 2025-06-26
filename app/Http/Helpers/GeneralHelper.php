@@ -166,7 +166,25 @@ class GeneralHelper
     }
 
 
+    public static function getMediaWithPublicDir($url){
+        return str_replace('/storage/', '/public/storage/', $url);
+    }
 
+    public static function detectNumberUnit($number)
+    {
+        $number = (int)$number; // ensure integer
+
+        if ($number >= 10000000) {
+            return ['amount' => number_format($number / 10000000, 0) , 'unit' => 'Crore'];
+        } elseif ($number >= 100000) {
+            return ['amount' => number_format($number / 100000, 0) , 'unit' => 'Lakh'];
+            
+        } elseif ($number >= 1000) {
+            return ['amount' => number_format($number / 1000, 0) , 'unit' => 'Thousand'];            
+        } else {
+            return ['amount' => number_format($number) , 'unit' => 'Hundered'];
+        }
+    }
     /*public static function timeTo24($time){
 
         if(str_contains($time,'AM'){

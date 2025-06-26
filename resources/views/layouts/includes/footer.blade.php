@@ -1,60 +1,58 @@
-<?php
-
-$footer_logo = App\Http\Helpers\RosenHelper::getOption('footer_logo');
-$footer_text_under_logo = App\Http\Helpers\RosenHelper::getOption('footer_text_under_logo');
-$footer_center_column_heading = App\Http\Helpers\RosenHelper::getOption('footer_center_column_heading');
-$footer_last_column_heading = App\Http\Helpers\RosenHelper::getOption('footer_last_column_heading');
-$copy_right_text = App\Http\Helpers\RosenHelper::getOption('copy_right_text');
-$phone_number = App\Http\Helpers\RosenHelper::getOption('phone_number');
-$address = App\Http\Helpers\RosenHelper::getOption('address');
-$email_address = App\Http\Helpers\RosenHelper::getOption('email_address');
-$google_map_link = App\Http\Helpers\RosenHelper::getOption('google_map_link');
-$facebook_url = App\Http\Helpers\RosenHelper::getOption('facebook_url');
-$posts = App\Post::where('status','yes')->latest()->take(5)->get();
-?>
 
 
-<footer class="pt-5" id="footer">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 col1">
-        <img src="@if(!empty($header_logo))  {!! url('public') !!}/{{$header_logo}} @else {!! url('public/assets/images/logo-white.png') !!} @endif" class="mb-4">
-        <p class="text-light">{{$footer_text_under_logo}}</p>
-        <div class="social">
-            <a href="{{$facebook_url}}" class="social1"><i class="fab fa-facebook-f"></i></a>
-          </div>
-      </div>
-      <div class="col-md-4">
-        <h3 class="mb-4">{{$footer_center_column_heading}}</h3>
-        <ul>
-          @if(!empty($posts))
-            @foreach($posts as $post)
-              <li><a href="{{url('blog')}}/{{$post->id}}">{{$post->title}}</a></li>
-            @endforeach
-          @endif
-        </ul>
-
-      </div>
-
-      <div class="col-md-4">
-        <h3 class="mb-4">{{$footer_last_column_heading}}</h3>
-        <p><a href="tel:073-83 00 666"><img src="{!! url('public/assets/images/phone-call1.svg') !!}"> {{$phone_number}}</a></p>
-        <p><a href="mailto:thomasabardin@hotmail.com"><img src="{!! url('public/assets/images/mail1.svg') !!}"> {{$email_address}}</a></p>
-        <p><a href="{{$google_map_link}}" target="_blank"><img src="{!! url('public/assets/images/placeholder.svg') !!}"> {!! nl2br(e($address)) !!}</a></p>
-
-      </div>
-
-
+  <section class="footer-sec">
+    <div class="container">
+        <div class="row">
+           <div class="col-md-3">
+              <a href="/"><img src="{!! url('public/assets/img/footer-logo.png') !!}" alt="" width="auto"></a>
+              <p class="mt-3 foot-st">Get a Local Expert's Opinion on your Home's Value in Today's Market, for Free</p>
+           </div>
+           <div class="col-md-3 ps-md-5">
+              <h4 class="footer-h">Company</h4>
+              <ul class="footer-list">
+                 <li class="mb-2"><a href="#">Our Agents</a></li>
+                 <li class="mb-2"><a href="#">FAQS</a></li>
+                 <li class="mb-2"><a href="#">Testimonials</a></li>
+                 <li class="mb-2"><a href="#">About Us</a></li>
+                 <li class="mb-2"><a href="#">Contact Us</a></li>
+              </ul>
+           </div>
+           <div class="col-md-3">
+              <h4 class="footer-h">Contact</h4>
+              <ul class="footer-list">
+                 <li class="mb-2"><a href="tel: 923338222015">+92 333 8222015</a></li>
+                 <li class="mb-2"><a href="mailto:info@cmax.pk">info@cmax.pk</a></li>
+                 <li class="mb-2"><a href="#">CMAX Real Estate, Saddar<br>Karachi</a></li>
+              </ul>
+           </div>
+           <div class="col-md-3">
+              <h4 class="footer-h">Get The Latest Information</h4>
+              <form class="sub-form">
+                 <input type="email" id="email" name="email" placeholder="Email Address" required>
+                 <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              </form>
+           </div>
+        </div>
     </div>
-    
-  </div>
-  <div class="bottom-bar mt-4 py-3">
-      <div class="text-light text-center">
-          {{$copy_right_text}}
-      </div>
-    </div>
-</footer>
+  </section>
+  <section class="py-3 footer-bottom">
+     <div class="container">
+        <div class="row align-item-center pt-3">
+           <div class="col-md-6 text-center text-md-start">
+              <span class="foot-st">Copyright 2025 Real Estate. All Rights Reserved</span>
+           </div>
+           <div class="col-md-6 text-center text-md-end">
+              <a href="#">Terms & Conditions</a>
+              <a href="#" class="ms-5">Privacy Policy</a>
+           </div>
+        </div>
+     </div>
+  </section>
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+  <script src="{!! url('public/bootstrap/js/bootstrap.bundle.min.js') !!}"></script>
+  <script src="{!! url('public/assets/js/main.js') !!}?v={{ time() }}"></script>
 
-<a href="#" id="gotop"><i class="fa-solid fa-chevron-up"></i></a>
+
 
 

@@ -170,9 +170,14 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
 
 Auth::routes();
 
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/blog', 'BlogController@index')->name('index');
 Route::get('/blog/{id}', 'BlogController@show')->name('show');
+Route::post('/search-area', 'HomeController@searchArea')->name('search-area');
+Route::get('/projects/search-results', 'ProjectController@searchResults')->name('search-results');
+Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
+
 
 
 

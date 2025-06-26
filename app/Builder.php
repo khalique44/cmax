@@ -22,6 +22,11 @@ class Builder extends Model implements HasMedia
         'created_at' => 'date:Y-M-d'
     ];
 
+    public function project()
+    {
+        return $this->hasOne(Project::class);
+    }
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')->width(200)->sharpen(10);

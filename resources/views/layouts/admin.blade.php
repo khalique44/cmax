@@ -28,7 +28,7 @@
     <!-- SweetAlert2 JS -->
     <script src="{!! url('public/assets/js/sweetalert2@11.js') !!}"></script>
     
-    <link rel="shortcut icon" href="{!! url('public/assets/images/favicon.png') !!}" />
+    <link rel="icon" href="{!! url('public/assets/img/favicon.png') !!}">
 
     <!-- FilePond Styles -->
     <link href="{!! url('public/assets/filepond/css/filepond.css') !!}" rel="stylesheet" />

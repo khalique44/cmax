@@ -228,7 +228,7 @@ function projectSuccessCallback(response){
             FilePond.find(document.querySelector('.filepond')).removeFiles();
             $(".uploaded-images").html('');
             if(response.project.id){
-                document.location=window.cmax.adminUrl+"/projects/add-property/"+response.project.id;
+                document.location=window.cmax.adminUrl+"/projects/"+response.project.id+"/edit";
             }
 
         },1000);

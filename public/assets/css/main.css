@@ -943,9 +943,11 @@ span.number {
 #price-range { margin: 10px 0; }
 
 .dropdown-price-range-toggle::after{
+    content: "▼"; /* or "" */
     float: right;
-    margin: 10px 5px 0 0;
+    margin: 5px 5px 0 0;
     color: #aaa;
+    font-size: 10px;
 }
 
 .banner-form .type-number {

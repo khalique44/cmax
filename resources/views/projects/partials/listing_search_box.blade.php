@@ -47,9 +47,9 @@
                        </div>
                        <div class="col-md-3">
                           <label class="form-label">Price Range</label>
-                          <div class="dropdown">
-                            <div class="dropdown-toggle">Select Price Range</div>
-                            <div class="dropdown-menu">
+                          <div class="dropdown-price-range">
+                            <div class="dropdown-price-range-toggle">Select Price Range</div>
+                            <div class="dropdown-price-range-menu">
                                 
                                 <div class="row" >
                                   <span id="priceError" class="text-danger"></span>

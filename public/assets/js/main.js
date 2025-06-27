@@ -287,40 +287,47 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
     var navbar = $('#navbar-example2');
-    var stickyOffset = navbar.offset().top;
+    if(navbar.length > 0){
 
-    $(window).scroll(function(){
-        if ($(window).scrollTop() >= stickyOffset) {
-            navbar.addClass('sticky-nav');
-            if (!$('.placeholder').length) {
-                navbar.before('<div class="placeholder"></div>');
+        var stickyOffset = navbar.offset().top;
+
+        $(window).scroll(function(){
+            if ($(window).scrollTop() >= stickyOffset) {
+                navbar.addClass('sticky-nav');
+                if (!$('.placeholder').length) {
+                    navbar.before('<div class="placeholder"></div>');
+                }
+            } else {
+                navbar.removeClass('sticky-nav');
+                $('.placeholder').remove();
             }
-        } else {
-            navbar.removeClass('sticky-nav');
-            $('.placeholder').remove();
-        }
-    });
+        });
+
+    }
+    
 
 
 });
 
-$(document).on('click','.dropdown-toggle', function(){
-    $('.dropdown-menu').slideToggle();
+$(document).on('click','.dropdown-price-range-toggle', function(){
+    $('.dropdown-price-range-menu').slideToggle();
 });
 
 var slider = document.getElementById('slider');
-noUiSlider.create(slider, {
-    start: [500000, 5000000],
-    connect: true,
-    range: {
-        'min': 50000,
-        'max': 5000000
-    }
-});
-slider.noUiSlider.on('update', function (values, handle) {
-    document.getElementById('slider-value-lower').innerText = Math.round(values[0]);
-    document.getElementById('slider-value-upper').innerText = Math.round(values[1]);
-});
+if(slider){
+    noUiSlider.create(slider, {
+        start: [500000, 5000000],
+        connect: true,
+        range: {
+            'min': 50000,
+            'max': 5000000
+        }
+    });
+    slider.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('slider-value-lower').innerText = Math.round(values[0]);
+        document.getElementById('slider-value-upper').innerText = Math.round(values[1]);
+    });
+}
 
 
 $(document).ready(function() {

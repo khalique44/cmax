@@ -472,7 +472,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $project = Project::with('media')->findOrFail($id);
+        $project = Project::with('media')->findOrFail($project->id);
 
         foreach ($project->media as $media) {
             Storage::disk('public')->delete($media->file_path);

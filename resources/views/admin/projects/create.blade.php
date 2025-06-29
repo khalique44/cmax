@@ -145,7 +145,7 @@
                                             <input type="hidden" id="deleted-files" name="deleted_files[]" />
                                         <div class="uploaded-images file-pond-preview-wrapper" id="gallery-preview" data-upload-type="gallery" data-allow-reorder="true"   data-preview="gallery-preview" data-collection="project_gallery">
                                             @if(isset($project))
-                                                @foreach($project->getMedia('images') as $media)
+                                                @foreach($project->getMedia('project_gallery') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
                                                     <div>
                                                         <img src="{{ str_replace('storage','storage/app/public',$media->getUrl('thumb')) }}" alt="uploaded">
@@ -160,7 +160,7 @@
                                          
                                                 @if(isset($project))
                                                 @php
-                                                $existingImages = $project->getMedia('images')->map(function ($media) {
+                                                $existingImages = $project->getMedia('project_gallery')->map(function ($media) {
                                                     return [
                                                         'source' => $media->id,
                                                         'options' => [
@@ -479,7 +479,7 @@
                                         @endif
 
                                     </div>
-                                    @if(empty($project->floorPlan))
+                                    @if(!$project->floorPlan && $project->floorPlan->count() == 1)
                                         <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                             <div class="row">
                                                 <div class="col-md-4">

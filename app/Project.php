@@ -25,8 +25,8 @@ class Project extends Model implements HasMedia
         static::saving(function ($project) {
 		    $slug = Str::slug($project->project_title);
 		    $count = Project::where('slug', 'like', "{$slug}%")->count();
-
-		    $project->slug = $count ? "{$slug}-{$count+1}" : $slug;
+		    $count = $count+1;
+		    $project->slug = $count ? "{$slug}-{$count}" : $slug;
 		});
     }
 

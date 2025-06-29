@@ -121,8 +121,10 @@ $(document).on("submit","form#builder-form",function(e){
 
 $(document).on("submit","form#builder-form-update",function(e){
     e.preventDefault();    
-   var builder_id = $('input[name="builder_id"]').val();
-    var formData = $(this).serializeArray();
+    var builder_id = $('input[name="builder_id"]').val();
+    //var formData = $(this).serializeArray();
+    var frm = $('form#builder-form-update');
+    var formData = new FormData(frm[0]);
     ajaxPostRequest("/builders/"+builder_id,formData,builderSuccessCallback,ajaxErrorCallback,true);    
 
 });

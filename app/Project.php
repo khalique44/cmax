@@ -26,7 +26,7 @@ class Project extends Model implements HasMedia
 		    $slug = Str::slug($project->project_title);
 		    $count = Project::where('slug', 'like', "{$slug}%")->count();
 
-		    $project->slug = $count ? "{$slug}-{$count}" : $slug;
+		    $project->slug = $count ? "{$slug}-{$count+1}" : $slug;
 		});
     }
 

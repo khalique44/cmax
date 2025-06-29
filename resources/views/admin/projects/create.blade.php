@@ -479,7 +479,7 @@
                                         @endif
 
                                     </div>
-                                    @if(!$project->floorPlan && $project->floorPlan->count() == 1)
+                                    @if(!$project->floorPlan && $project->floorPlan->count() == 0)
                                         <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                             <div class="row">
                                                 <div class="col-md-4">

@@ -166,7 +166,7 @@ $(document).on("submit","form#property-form-update",function(e){
     e.preventDefault();    
     var id = $('input[name="property_id"]').val();
     var formData = $(this).serializeArray();
-    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,true);    
+    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,false);    
 
 });
 

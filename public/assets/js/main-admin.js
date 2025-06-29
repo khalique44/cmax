@@ -41,47 +41,43 @@ function displayMsg(msgArea, msg, msgType){
 function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
-    var contentType = false;
-    var processData = false;
 
-    if(!isJson){       
-    
-        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
-        var ajaxParams = {
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            method: 'POST',
-            url: $('meta[name="home_url"]').attr('content')+url,
-            data: data,
-            dataType: "json",
+    var ajaxParams = {
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        method: 'POST',
+        url: $('meta[name="admin_url"]').attr('content')+url,
+        data: data,
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        success: successCallback,
+        error: ajaxErrorCallback,
+        
+        beforeSend: function() {
+            showAjaxLoader();
+        }
+    }
+    var extraParams  = {
+           datatype: "json"
+
+        }
+
+    /*if(!isJson){
+     
+     var extraParams  = {
             contentType: false,
-            processData: false,       
-            success: successCallback,
-            error: ajaxErrorCallback,
-            
-            beforeSend: function() {
-                showAjaxLoader();
-            }
-        }
+            cache: false,
+            processData: false,
+        } 
+    }
 
-    }else{
+    ajaxParams = Object.assign(extraParams,ajaxParams);
 
-        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
-        var ajaxParams = {
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            method: 'POST',
-            url: $('meta[name="home_url"]').attr('content')+url,
-            data: data,
-            dataType: "json",       
-            success: successCallback,
-            error: ajaxErrorCallback,
-            
-            beforeSend: function() {
-                showAjaxLoader();
-            }
-        }
-    }   
-
-
+    var moreParams = {
+                        success: successCallback,
+                        error: ajaxErrorCallback
+                    }
+    ajaxParams = Object.assign(moreParams,ajaxParams);*/
     $.ajax(ajaxParams)
     .always(function(){     
         hideAjaxLoader();
@@ -166,7 +162,7 @@ $(document).on("submit","form#property-form-update",function(e){
     e.preventDefault();    
     var id = $('input[name="property_id"]').val();
     var formData = $(this).serializeArray();
-    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,false);    
+    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,true);    
 
 });
 

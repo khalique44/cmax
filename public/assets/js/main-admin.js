@@ -295,7 +295,7 @@ FilePond.setOptions({
 
                     if (!inputElement) return; // Just in case
 
-                    const collection = inputElement.dataset.collection || 'default';
+                    const collection = inputElement.dataset.collection || 'images';
 
                     // Hidden input
                     const hidden = document.createElement('input');

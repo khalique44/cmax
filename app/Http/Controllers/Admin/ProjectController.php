@@ -475,7 +475,7 @@ class ProjectController extends Controller
         $project = Project::with('media')->findOrFail($project->id);
 
         foreach ($project->media as $media) {
-            Storage::disk('public')->delete($media->file_path);
+            //Storage::disk('public')->delete('/assets/'.$media->file_name);
         }
 
         $project->delete();

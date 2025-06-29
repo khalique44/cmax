@@ -243,7 +243,7 @@
                                                                                 <div class="col-md-4">
                                                                                     <div class="form-group">
                                                                                         <label class="form-label">Area <span>*</span></label>
-                                                                                        <input type="number" name="{{$offer}}[area][]" class="form-control" value="{{ $savedOffer->area }}">
+                                                                                        <input type="text" name="{{$offer}}[area][]" class="form-control" value="{{ $savedOffer->area }}">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-4">
@@ -338,7 +338,7 @@
                                                                         <div class="col-md-4">
                                                                             <div class="form-group">
                                                                                 <label class="form-label">Area <span>*</span></label>
-                                                                                <input type="number" name="{{$offer}}[area][]" class="form-control" >
+                                                                                <input type="text" name="{{$offer}}[area][]" class="form-control" >
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-4">

@@ -41,43 +41,47 @@ function displayMsg(msgArea, msg, msgType){
 function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
+    var contentType = false;
+    var processData = false;
 
-    var ajaxParams = {
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        method: 'POST',
-        url: $('meta[name="admin_url"]').attr('content')+url,
-        data: data,
-        dataType: "json",
-        contentType: false,
-        processData: false,
-        success: successCallback,
-        error: ajaxErrorCallback,
-        
-        beforeSend: function() {
-            showAjaxLoader();
-        }
-    }
-    var extraParams  = {
-           datatype: "json"
-
-        }
-
-    /*if(!isJson){
-     
-     var extraParams  = {
+    if(!isJson){       
+    
+        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
+        var ajaxParams = {
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            url: $('meta[name="home_url"]').attr('content')+url,
+            data: data,
+            dataType: "json",
             contentType: false,
-            cache: false,
-            processData: false,
-        } 
-    }
+            processData: false,       
+            success: successCallback,
+            error: ajaxErrorCallback,
+            
+            beforeSend: function() {
+                showAjaxLoader();
+            }
+        }
 
-    ajaxParams = Object.assign(extraParams,ajaxParams);
+    }else{
 
-    var moreParams = {
-                        success: successCallback,
-                        error: ajaxErrorCallback
-                    }
-    ajaxParams = Object.assign(moreParams,ajaxParams);*/
+        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
+        var ajaxParams = {
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            url: $('meta[name="home_url"]').attr('content')+url,
+            data: data,
+            dataType: "json",       
+            success: successCallback,
+            error: ajaxErrorCallback,
+            
+            beforeSend: function() {
+                showAjaxLoader();
+            }
+        }
+    }   
+
+
     $.ajax(ajaxParams)
     .always(function(){     
         hideAjaxLoader();

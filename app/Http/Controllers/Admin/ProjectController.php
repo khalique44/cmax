@@ -105,7 +105,7 @@ class ProjectController extends Controller
                 $count = count($request->$offer['title'] ?? []);
                 for ($i = 0; $i < $count; $i++) {
                     $rules["{$offer}.title.$i"] = 'required|string|max:255';
-                    $rules["{$offer}.area.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.area.$i"] = 'required|string|min:0';
                     $rules["{$offer}.area_type.$i"] = 'required';
                     $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
                     $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
@@ -317,7 +317,7 @@ class ProjectController extends Controller
                     }
 
                     $rules["{$offer}.title.$i"] = 'required|string|max:255';
-                    $rules["{$offer}.area.$i"] = 'required|numeric|min:0';
+                    $rules["{$offer}.area.$i"] = 'required|string|min:0';
                     $rules["{$offer}.area_type.$i"] = 'required';
                     $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
                     $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';

@@ -38,10 +38,6 @@ class ProjectController extends Controller
                                         </a>
                                         <a type="button" href="#" class="delete-rec btn btn-sm btn-danger" data-route="/admin/projects/'.$project->id.'" data-tableid="projectsTable"   data-id="'.$project->id.'">
                                             Delete
-                                        </a>
-                                        <a type="button" href="'.url("admin/projects/add-property/$project->id/").'" class="btn btn-sm btn-success" >
-                                            <i class="fa fa-house-medical"></i>
-                                            Add Property
                                         </a>';
                 })
                 ->editColumn('progress', function($project) {

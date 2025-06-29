@@ -438,77 +438,110 @@
                                     <label><strong>Floor Plans</strong></label>
                                   
                                     <div class="repeatable-fields">
-                                        @if(!empty($project->floorPlan))
-                                            @foreach($project->floorPlan as $floorPlan)
 
+                                        @if(isset($project))
+                                            @if($project->floorPlan->count() > 0)
+                                                @foreach($project->floorPlan as $floorPlan)
+
+                                                    <div class="repeatable-group border p-3 mb-3 rounded bg-light">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                  <label class="form-label">Title<span>*</span></label>
+                                                                  <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" value="{{ $floorPlan->title }}" >
+                                                              </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                  <label class="form-label">Upload Image<span>*</span></label>
+                                                                  <input type="file" name="floorplans[image][]" class="form-control" accept="image/*" >
+                                                                  <input type="hidden" name="floorplans[id][]" value="{{$floorPlan->id}}">
+                                                              </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-4">                       
+                                                                <div class="form-group">
+                                                                    @if(!empty($floorPlan->media_url))
+                                                                        <a href="{!! url('public') !!}/{{$floorPlan->media_url}}" target="_blank" class="available-image-area">
+                                                                            
+                                                                            <img src="{!! url('public') !!}/{{$floorPlan->media_url}}" class="logo" title="Project Logo" alt="Logo" width="50%">                                                    
+                                                                        </a>                                          
+                                                                    @endif
+                                                                </div>                                                      
+                                                            </div>
+                                                            
+                                                            <div class="text-end mt-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-group" data-floorplan-id="{{$floorPlan->id}}">Remove</button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                @endforeach
+                                            @else
                                                 <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                     <div class="row">
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                               <label class="form-label">Title<span>*</span></label>
-                                                              <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" value="{{ $floorPlan->title }}" >
+                                                              <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" value="" >
                                                           </div>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                               <label class="form-label">Upload Image<span>*</span></label>
                                                               <input type="file" name="floorplans[image][]" class="form-control" accept="image/*" >
-                                                              <input type="hidden" name="floorplans[id][]" value="{{$floorPlan->id}}">
+                                                              <input type="hidden" name="floorplans[id][]" value="">
                                                           </div>
                                                         </div>
                                                         
                                                         <div class="col-md-4">                       
                                                             <div class="form-group">
-                                                                @if(!empty($floorPlan->media_url))
-                                                                    <a href="{!! url('public') !!}/{{$floorPlan->media_url}}" target="_blank" class="available-image-area">
-                                                                        
-                                                                        <img src="{!! url('public') !!}/{{$floorPlan->media_url}}" class="logo" title="Project Logo" alt="Logo" width="50%">                                                    
-                                                                    </a>                                          
-                                                                @endif
+                                                                
                                                             </div>                                                      
                                                         </div>
                                                         
                                                         <div class="text-end mt-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-group" data-floorplan-id="{{$floorPlan->id}}">Remove</button>
+                                                            <button type="button" class="btn btn-danger btn-sm remove-group" data-floorplan-id="">Remove</button>
                                                         </div>
 
                                                     </div>
                                                 </div>
+                                            @endif
+                                        @else                                   
+                                        
+                                            <div class="repeatable-group border p-3 mb-3 rounded bg-light">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                          <label class="form-label">Title<span>*</span></label>
+                                                          <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" value="" >
+                                                      </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                          <label class="form-label">Upload Image<span>*</span></label>
+                                                          <input type="file" name="floorplans[image][]" class="form-control" accept="image/*" >
+                                                          <input type="hidden" name="floorplans[id][]" value="">
+                                                      </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-4">                       
+                                                        <div class="form-group">
+                                                            
+                                                        </div>                                                      
+                                                    </div>
+                                                    
+                                                    <div class="text-end mt-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-group" data-floorplan-id="">Remove</button>
+                                                    </div>
 
-                                            @endforeach
+                                                </div>
+                                            </div>
                                         @endif
 
                                     </div>
-                                    @if(!$project->floorPlan && $project->floorPlan->count() == 0)
-                                        <div class="repeatable-group border p-3 mb-3 rounded bg-light">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                      <label class="form-label">Title<span>*</span></label>
-                                                      <input type="text" name="floorplans[title][]" class="form-control" placeholder="Enter floor title" value="" >
-                                                  </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                      <label class="form-label">Upload Image<span>*</span></label>
-                                                      <input type="file" name="floorplans[image][]" class="form-control" accept="image/*" >
-                                                      <input type="hidden" name="floorplans[id][]" value="">
-                                                  </div>
-                                                </div>
-                                                
-                                                <div class="col-md-4">                       
-                                                    <div class="form-group">
-                                                        
-                                                    </div>                                                      
-                                                </div>
-                                                
-                                                <div class="text-end mt-2">
-                                                    <button type="button" class="btn btn-danger btn-sm remove-group" data-floorplan-id="">Remove</button>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                     @endif
+                                    
                                     <button type="button" class="btn btn-primary mt-2 btn-sm add-more"><i class="fa fa-plus"></i> Add More</button>
                                 </div>
                             </div>

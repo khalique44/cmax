@@ -160,7 +160,7 @@ class BuilderController extends Controller
 
         
         if ($request->has('media_ids')) {
-            foreach ($request->media_ids as $mediaId) {
+            foreach ($request->media_ids['default'] as $mediaId) {
                 $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
                 if ($media) {
                     $media->model_type = Builder::class;

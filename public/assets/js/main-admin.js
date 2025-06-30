@@ -84,6 +84,50 @@ function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
     });
 }
 
+function ajaxPostRequest2(url,data,successCallback,ajaxErrorCallback,isJson){
+
+    isJson = typeof isJson !== 'undefined' ? isJson : false;
+
+    var ajaxParams = {
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        method: 'POST',
+        url: $('meta[name="admin_url"]').attr('content')+url,
+        data: data,    
+        
+        success: successCallback,
+        error: ajaxErrorCallback,
+        
+        beforeSend: function() {
+            showAjaxLoader();
+        }
+    }
+    var extraParams  = {
+           datatype: "json"
+
+        }
+
+    if(!isJson){
+     
+     var extraParams  = {
+            contentType: false,
+            cache: false,
+            processData: false,
+        } 
+    }
+
+    ajaxParams = Object.assign(extraParams,ajaxParams);
+
+    var moreParams = {
+                        success: successCallback,
+                        error: ajaxErrorCallback
+                    }
+    ajaxParams = Object.assign(moreParams,ajaxParams);
+    $.ajax(ajaxParams)
+    .always(function(){     
+        hideAjaxLoader();
+    });
+}
+
 
 
 
@@ -297,7 +341,7 @@ FilePond.setOptions({
 
                     if (!inputElement) return; // Just in case
 
-                    const collection = inputElement.dataset.collection || 'images';
+                    const collection = inputElement.dataset.collection || 'default';
 
                     // Hidden input
                     const hidden = document.createElement('input');

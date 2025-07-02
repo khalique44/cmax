@@ -17,8 +17,8 @@
                     </ol>
                </div>
                <div class="position-relative">
-                    <a href="#" class="launch-btn red-bg position-static">Under construction</a>
-                    <a href="#" class="launch-btn position-static">Appartments</a>
+                    <a href="#" class="launch-btn red-bg position-static">{{ $progress[$project->progress] }}</a>
+                    <a href="#" class="launch-btn position-static">{{ $project->offering }}</a>
                </div>
                <h1 class="mt-2 mainhead-inner">{{ $project->project_title }}</h1>
                <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location }} <a href="#">See on the Map</a></p>
@@ -62,20 +62,7 @@
                       </div>
                     </div>
                   @endforeach
-                    <!-- <div class="col-md-6">
-                      <div class="galleria-inside">
-                        <a href="{{ asset('public/assets/img/gallry3.jpg') }}" data-lightbox="gallery-group"><img src="{{ asset('public/assets/img/gallry3.jpg') }}" alt="" class="w-100"></a></div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="galleria-inside">
-                        <a href="{{ asset('public/assets/img/gallry4.jpg') }}" data-lightbox="gallery-group"><img src="{{ asset('public/assets/img/gallry4.jpg') }}" alt="" class="w-100"></a></div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="galleria-inside ">
-                        <a href="{{ asset('public/assets/img/gallry5.jpg') }}" data-lightbox="gallery-group"><img src="{{ asset('public/assets/img/gallry5.jpg') }}" alt="" class="w-100"></a>
-                        
-                      </div>
-                    </div> -->
+                    
                 </div>
             </div>
         </div>
@@ -95,25 +82,44 @@
                           </li>
                           <li class="nav-item">
                             <a class="nav-link" href="#unitt">Unit Types</a>
-                          </li>
-                          <li class="nav-item dropdown">
-                            <a class="nav-link" href="#features">Features</a>
-                          </li>
+                          </li>                          
                           <li class="nav-item dropdown">
                             <a class="nav-link" href="#location">Location</a>
                           </li>
+                         
+                          @if( $project->floorPlan->count() > 0 )
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#floorplan">Floor Plan</a>
+                              </li>
+                          @endif
                         </ul>
                       </nav>
                 </div>
 
                 <div data-spy="scroll" data-target="#navbar-example2" data-offset="0" class="scrollspy-example" tabindex="0">
-                    <div class="sec-gal mt-5" id="overview">
-                        <h3 class="mb-3">Propert Overview</h3>
-                        <p>Experience the best with our premium listing. Contact us to learn more and see why it’s exceptional. Discover standout features and how they align perfectly with your needs. We’re excited to showcase this offer and guide you through the next steps to secure your ideal property with confidence and ease.</p>
+                    <div class="sec-gal mt-5 description-container" id="overview">
+                        <h3 class="mb-3">Project Overview</h3>
+                        @php
+                            $limit = config('constants.project_text_limit'); // Limit characters
+                            $description = $project->description;
+                        @endphp
+                        <div class="">
+                            <div class="short-description">
+                                {!! \Illuminate\Support\Str::limit($description, $limit) !!}
+                            
+                            </div>
+                            <div class="full-description" style="display: none;">
+                                {!! $description !!}
+                            </div>
+
+                            @if(strlen($description) > $limit)
+                                <a href="javascript:void(0);" class="toggle-description text-primary">Show more</a>
+                            @endif
+                        </div>
                     </div>
                     
-                    <div class="sec-gal mt-4" id="poverview">
-                        <h3 class="mb-3">Propert Overview</h3>
+                    <!-- <div class="sec-gal mt-4" id="poverview">
+                        <h3 class="mb-3">Project Overview</h3>
                         <ul class="listwith">
                             <li><span>Property Id</span> 57C6</li>
                             <li><span>Rooms</span> 3, 4 & 5</li>
@@ -123,110 +129,145 @@
                             <li><span>Types</span> Apartment</li>
                             <li><span>Price Range</span> 1 crore - 1 crore 80 lakh </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div class="sec-gal mt-4" id="unitt">
-                        <h3 class="mb-3">Unit Types</h3>
-                        <div class="sqrft">
-                            <span>Type A - 541 Sq ft</span>
-                            <span>Type B - 541 Sq ft</span>
-                            <span>Type C - 541 Sq ft</span>
-                            <span>2 Bedroom, Lounge & Drawing</span>
-                        </div>
+                        @php
+                            $offering = explode(",",$project->offering);
+                        @endphp
+                        @foreach($offering as $offer)
+                            <h3 class="mb-3">{{ $offer }} <span class="offer-price">{{ \App\Http\Helpers\GeneralHelper::formatCurrency($project->offers->min('price_from')) }} to {{ \App\Http\Helpers\GeneralHelper::formatCurrency($project->offers->max('price_to')) }}</span></h3>
+                            <!-- <div class="sqrft">
+                                <span>Type A - 541 Sq ft</span>
+                                <span>Type B - 541 Sq ft</span>
+                                <span>Type C - 541 Sq ft</span>
+                                <span>2 Bedroom, Lounge & Drawing</span>
+                            </div>
 
-                        <ul class="listwith">
-                            <li><span>Property Id</span> 57C6</li>
-                            <li><span>Rooms</span> 2, 3 & 4</li>
-                            <li><span>Location</span> Scheme 33, Karachi</li>
-                            <li><span>Added Times	1 Years</span> 57C6</li>
-                            <li><span>Progress</span> Underconstruction</li>
-                            <li><span>Types</span> Apartment</li>
-                        </ul>
+                            <ul class="listwith">
+                                <li><span>Property Id</span> 57C6</li>
+                                <li><span>Rooms</span> 2, 3 & 4</li>
+                                <li><span>Location</span> Scheme 33, Karachi</li>
+                                <li><span>Added Times	1 Years</span> 57C6</li>
+                                <li><span>Progress</span> Underconstruction</li>
+                                <li><span>Types</span> Apartment</li>
+                            </ul> -->
 
-                        <div>
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Payment Plan</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Floor Plan</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Unit Types</button>
-                                </li>
-                              </ul>
-                              <div class="tab-content pt-4" id="myTabContent">
-                                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    <h5>Payment Plan</h5>
-                                </div>
-                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    <h5>Floor Plan</h5>
-                                </div>
-                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                    <h5>Unit Types</h5>
-                                </div>
-                              </div>
-                        </div>
+                            <div>
+                                <ul class="nav nav-tabs" id="myTab-{{ $offer }}" role="tablist">
+                                    @if(!empty($project->offers))
+                                        @foreach($project->offers as $key => $savedOffer)
+                                            @if($savedOffer->offer == strtolower($offer))
+                                                <li class="nav-item" role="presentation">
+                                                  <button class="nav-link {{ ($key == 0) ? 'active' : '' }}" id="offer-tab-{{ $savedOffer->id }}" data-bs-toggle="tab" data-bs-target="#home-offer-tab-{{ $savedOffer->id }}" type="button" role="tab" aria-controls="home-offer-tab-{{ $savedOffer->id }}" aria-selected="true">{{ $savedOffer->title }}</button>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                    
+                                  </ul>
+                                  <div class="tab-content pt-4" id="myTabContent-{{ $offer }}">
+                                    @if(!empty($project->offers))
+                                        @foreach($project->offers as $key => $savedOffer)
+                                            @if($savedOffer->offer == strtolower($offer))
+                                                <div class="tab-pane fade {{ ($key == 0) ? 'show active' : '' }}" id="home-offer-tab-{{ $savedOffer->id }}" role="tabpanel" aria-labelledby="offer-tab-{{ $savedOffer->id }}">
+                                                    <ul class="listwith">
+                                                        <li><span>Area Size</span> {{ $savedOffer->area }} {{ $savedOffer->area_type }}</li>
+                                                        @if($offer != 'Plots' && $offer != 'Offices' && $offer != 'Shops')
+                                                            <li><span>BedRooms</span> {{ $savedOffer->bedrooms }}</li>
+                                                            <li><span>BathRooms</span> {{ $savedOffer->bathrooms }}</li>
+                                                        @endif
+                                                        <li><span>Price</span> 
+                                                            <strong>
+                                                                @if($savedOffer->price_from != $savedOffer->price_to)
 
-                    </div>
+                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_from) }}
+                                                                     {{ $savedOffer->price_from_in_format }} to
+                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_to) }} {{ $savedOffer->price_to_in_format }}
+                                                                @else
+                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_from) }}
+                                                                    {{ $savedOffer->price_from_in_format }}
 
-                    <div class="sec-gal mt-4" id="features">
-                        <h3 class="mb-3">Amenities & Facilities</h3>
-                        <ul class="checked_list">
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Prayer Area
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Park
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Play Area
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Commerical Area
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Hospital
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Educational Area
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Educational Area
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="sec-gal mt-4" id="features">
-                        <h3 class="mb-3">Utilities</h3>
-                        <ul class="checked_list">
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Electricity
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Gas
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Water
-                            </li>
-                            <li>
-                                <i class="fa fa-check-circle"></i>
-                                Maintanence
-                            </li>
+                                                                @endif
+                                                            </strong>
+
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                    
+                                    
+                                  </div>
+                            </div>
+                        @endforeach
+
+                    </div> 
+
+                    <div class="sec-gal mt-4" id="location">
+                        <h3 class="mb-3">Project Location</h3>
+                        <div class="inside-map pt-4">
+                            @php 
+                                $latitude = $project->latitude;
+                                $longitude = $project->longitude;
+                            @endphp
+                            <iframe 
+                                width="100%" 
+                                height="300" 
+                                frameborder="0" 
+                                style="border:0"
+                                src="https://www.google.com/maps?q={{ $latitude }},{{ $longitude }}&hl=es;z=14&output=embed"
+                                allowfullscreen
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                             
-                        </ul>
-                    </div>
+                        </div>
+                    </div>                 
+                    
+                    @if($project->floorPlan->count() > 0)
+                        <div class="sec-gal mt-4" id="floorplan">
+                            <h3 class="mb-3">Floor Plans</h3>
+                            <div>
+                                <ul class="nav nav-tabs" id="myTab-floorplan" role="tablist">
+                                    
+                                    @foreach($project->floorPlan as $key => $floorPlan)
+                                        
+                                        <li class="nav-item" role="presentation">
+                                          <button class="nav-link {{ ($key == 0) ? 'active' : '' }}" id="floorplan-tab-{{ $floorPlan->id }}" data-bs-toggle="tab" data-bs-target="#home-floorplan-tab-{{ $floorPlan->id }}" type="button" role="tab" aria-controls="home-floorplan-tab-{{ $floorPlan->id }}" aria-selected="true">{{ $floorPlan->title }}</button>
+                                        </li>
+                                        
+                                    @endforeach
+                                    
+                                    
+                                  </ul>
+                                  <div class="tab-content pt-4" id="myTabContent-floorplan">
+                                    
+                                    @foreach($project->floorPlan as $key => $floorPlan)
+                                        
+                                        <div class="tab-pane fade {{ ($key == 0) ? 'show active' : '' }}" id="home-floorplan-tab-{{ $floorPlan->id }}" role="tabpanel" aria-labelledby="floorplan-tab-{{ $floorPlan->id }}">
+                                            <div>
+                                                @if($floorPlan->media_url)
+                                                    <a href="{{ asset('public/'.$floorPlan->media_url) }}" data-lightbox="gallery-group" class="card-img">
+                                                        
+                                                            <img src="{{ asset('public/'.$floorPlan->media_url) }}" alt="" width="50%">
+                                                        
+                                                        
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        
+                                    @endforeach   
+                                    
+                                  </div>
+                            </div>
+                        </div>
+                    @endif
 
-                    <div class="sec-gal mt-4" id="features">
-                        <h3 class="mb-3">Project Attachments</h3>
+                    <!-- <div class="sec-gal mt-4" id="attachments">
+                        <h3 class="mb-3">Attachments</h3>
                         
                         <div class="down-btn pt-3">
                             <a href="#" class="btn btn-red">
@@ -234,14 +275,9 @@
                                 Download Attachment</a>
                         </div>
 
-                    </div>
+                    </div> -->
 
-                    <div class="sec-gal mt-4" id="location">
-                        <h3 class="mb-3">Project Location</h3>
-                        <div class="inside-map pt-4">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d212134.3798621259!2d66.73185119453126!3d24.827262700000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb3393e94175b1b%3A0x3a801b93118d7332!2sCmax.pk%20Scheme%2033%20Karachi!5e1!3m2!1sen!2s!4v1746400095231!5m2!1sen!2s" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div>
-                    </div>
+                    
 
                 </div>
 

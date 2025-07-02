@@ -185,6 +185,11 @@ class GeneralHelper
             return ['amount' => number_format($number) , 'unit' => 'Hundered'];
         }
     }
+
+
+    public static function formatCurrency($amount, $symbol = 'PKR', $decimals = 0) {
+        return $symbol . ' ' . number_format($amount, $decimals);
+    }
     /*public static function timeTo24($time){
 
         if(str_contains($time,'AM'){

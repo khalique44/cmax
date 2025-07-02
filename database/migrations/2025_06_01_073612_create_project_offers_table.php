@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id');
             $table->enum('offer', ['flats','offices','plots','shops']);
             $table->string('title')->nullable();            
-            $table->decimal('area', 8, 2)->nullable(); 
+            $table->decimal('area', 8, 0)->nullable(); 
             $table->string('area_type')->nullable(); 
             $table->string('bedrooms')->nullable();
             $table->string('bathrooms')->nullable();
-            $table->decimal('price_from', 15, 2)->nullable();
-            $table->decimal('price_to', 15, 2)->nullable();
+            $table->decimal('price_from', 15, 0)->nullable();
+            $table->decimal('price_to', 15, 0)->nullable();
             $table->string('price_from_in_format')->nullable();
             $table->string('price_to_in_format')->nullable();
             $table->softDeletes();

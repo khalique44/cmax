@@ -39,8 +39,9 @@ class ProjectController extends Controller
     public function show(string $slug)
     {
         $project = Project::with('offers','floorPlan','builder')->where('slug',$slug)->firstOrFail();
+        $progress = config('constants.progress');
 
-        return view('projects.details', compact('project'));
+        return view('projects.details', compact('project','progress'));
     }
 
     /**

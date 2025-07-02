@@ -5,7 +5,7 @@
         <div class="col-md-12 mb-3 mb-4">
             <div class="project-div position-relative row g-0">
                 <div class="col-md-4">
-                    <a href="#" class="launch-btn">New Launch</a>
+                    <a href="#" class="launch-btn">{{ $progress[$project->progress] }}</a>
                     <a href="#" class="card-img">
                         @if($project->logo_url)
                             <img src="{{ asset('public/'.$project->logo_url) }}" alt="" width="100%">

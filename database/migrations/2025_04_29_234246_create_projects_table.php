@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('project_title');
             $table->enum('progress', ['under_construction', 'new_launch', 'ready']);
-            $table->decimal('area', 8, 2);
+            $table->decimal('area', 8, 0);
             $table->string('location');
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();

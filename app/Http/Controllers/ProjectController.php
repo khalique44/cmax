@@ -39,9 +39,10 @@ class ProjectController extends Controller
     public function show(string $slug)
     {
         $project = Project::with('offers','floorPlan','builder')->where('slug',$slug)->firstOrFail();
+        $related_projects = Project::with('offers','floorPlan','builder')->where('builder_id',$project->builder_id)->take(3)->get();
         $progress = config('constants.progress');
 
-        return view('projects.details', compact('project','progress'));
+        return view('projects.details', compact('project','progress','related_projects'));
     }
 
     /**

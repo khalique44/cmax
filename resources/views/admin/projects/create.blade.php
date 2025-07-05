@@ -325,8 +325,8 @@
                                                                         </div>   
                                                                     @endif
                                                                 @endforeach         
-                                                            @endif
-                                                            @if(!isset($project) || $project->count() > 0)
+                                                            @else
+                                                           
                                                                 <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                     <div class="row">
                                                                         <div class="col-md-4">

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('area_type')->nullable(); 
             $table->string('bedrooms')->nullable();
             $table->string('bathrooms')->nullable();
-            $table->decimal('price_from', 15, 0)->nullable();
-            $table->decimal('price_to', 15, 0)->nullable();
+            $table->decimal('price_from', 15, 2)->nullable();
+            $table->decimal('price_to', 15, 2)->nullable();
             $table->string('price_from_in_format')->nullable();
             $table->string('price_to_in_format')->nullable();
             $table->softDeletes();

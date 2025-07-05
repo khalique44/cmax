@@ -25,7 +25,9 @@
 
             </div>
             <div class="col-md-5 text-end">
-                <h2 class="Starting-price mb-4"><span>Starting From</span>{{ $project->offers->min('price_from') }} {{ $project->offers->first()->price_from_in_format }} </h2>
+                <h2 class="Starting-price mb-4"><span>Starting From</span>
+                    {{ $project->price_range['min']['amount'] .' '. $project->price_range['min']['unit'] }} 
+                </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="call-btn mb-2">
                         <a href="tel:{{ $project->builder->mobile_number }}">
@@ -49,19 +51,27 @@
             $remainingImages = $gallery->slice(1);  // Skip the first media
           @endphp
 
-            <div class="col-md-6"><a href="{{   \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" data-lightbox="gallery-group"><img src="{{   \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="" class="w-100"></a></div>
+            <div class="col-md-6">
+                @if(!empty($firstImage))
+                    <a href="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" data-lightbox="gallery-group">
+                        <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="" class="w-100">
+                    </a>
+                @endif
+            </div>
             <div class="col-md-6">
                 <div class="row">
-                  @foreach($remainingImages as $key => $media)
-                    <div class="col-md-6">
-                      <div class="galleria-inside">
-                          <a href="{{   \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" data-lightbox="gallery-group"><img src="{{   \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" alt="" class="w-100"></a>
-                          @if($project->getMedia('project_gallery')->count() == $key+1)
-                            <a href="#" class="btn-showgal"><img src="{{ asset('public/assets/img/gallery-iconwhite.png') }}" alt=""> Show all photos</a>
-                          @endif
-                      </div>
-                    </div>
-                  @endforeach
+                    @if(!empty($remainingImages))
+                      @foreach($remainingImages as $key => $media)
+                        <div class="col-md-6">
+                          <div class="galleria-inside">
+                              <a href="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" data-lightbox="gallery-group"><img src="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" alt="" class="w-100"></a>
+                              @if($project->getMedia('project_gallery')->count() == $key+1)
+                                <a href="#" class="btn-showgal"><img src="{{ asset('public/assets/img/gallery-iconwhite.png') }}" alt=""> Show all photos</a>
+                              @endif
+                          </div>
+                        </div>
+                      @endforeach
+                    @endif
                     
                 </div>
             </div>
@@ -135,7 +145,10 @@
                             $offering = explode(",",$project->offering);
                         @endphp
                         @foreach($offering as $offer)
-                            <h3 class="mb-3">{{ $offer }} <span class="offer-price">{{ \App\Http\Helpers\GeneralHelper::formatCurrency($project->offers->min('price_from')) }} to {{ \App\Http\Helpers\GeneralHelper::formatCurrency($project->offers->max('price_to')) }}</span></h3>
+                            <h3 class="mb-3">{{ $offer }} <span class="offer-price">
+
+                                {{ $project->min_max }}
+                                </span></h3>
                             <!-- <div class="sqrft">
                                 <span>Type A - 541 Sq ft</span>
                                 <span>Type B - 541 Sq ft</span>
@@ -180,11 +193,11 @@
                                                             <strong>
                                                                 @if($savedOffer->price_from != $savedOffer->price_to)
 
-                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_from) }}
+                                                                    {{ GeneralHelper::cleanDecimal($savedOffer->price_from) }}
                                                                      {{ $savedOffer->price_from_in_format }} to
-                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_to) }} {{ $savedOffer->price_to_in_format }}
+                                                                    {{ $savedOffer->price_to }} {{ $savedOffer->price_to_in_format }}
                                                                 @else
-                                                                    {{ \App\Http\Helpers\GeneralHelper::formatCurrency($savedOffer->price_from) }}
+                                                                    {{ GeneralHelper::cleanDecimal($savedOffer->price_from) }}
                                                                     {{ $savedOffer->price_from_in_format }}
 
                                                                 @endif
@@ -328,93 +341,61 @@
         
      </div>
   </section>
-  
-  <section class="py-5">
-    <div class="container">
-       <div class="row text-center pb-3">
-          <h5 class="sub-h">See More</h5>
-          <h2 class="main-h">Related Projects</h2>
-       </div>
-       <div class="row">
-          <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-             <div class="project-div position-relative">
-                <a href="#" class="launch-btn">New Launch</a>
-                <a href="#">
-                <img src="{{ asset('public/assets/img/pp-1.png') }}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                </a>
-                <div class="p-4">
-                   <a href="#">
-                   <h6>Chapal Courtyard 1</h6>
-                   </a>
-                   <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                   <p class="mb-4">
-                      950 - 1450 Sq ft | Flats
-                   </p>
-                   <hr>
-                   <div class="row mt-4 align-items-center">
-                      <div class="col-8">
-                         <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                      </div>
-                      <div class="col-4 text-end">
-                         <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                      </div>
-                   </div>
+@if($related_projects->count() > 0)
+    <section class="py-5">
+        <div class="container">
+           <div class="row text-center pb-3">
+              <h5 class="sub-h">See More</h5>
+              <h2 class="main-h">Related Projects</h2>
+           </div>
+           <div class="row">
+            @foreach($related_projects as $key => $related_project)
+            @php
+                $gallery = $related_project->getMedia('project_gallery');
+                $firstImage = $gallery->first();  // Get the first media
+                $remainingImages = $gallery->slice(1);  // Skip the first media
+            @endphp
+                <div data-aos="fade-up" class="col-md-4 {{ ($key <= 1) ? 'mb-3 mb-md-0' : '' }}">
+                    <div class="project-div position-relative">
+                        <a href="#" class="launch-btn">{{ $related_project->offering }}</a>
+                        <a href="{{ route('project.show', $related_project->slug) }}">
+                            @if(!empty($firstImage))
+                                <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                            @else
+                                <img src="{{ asset('public/assets/img/no-image_1024x786x.png') }}" alt="No Image" style="border-radius: 20px 20px 0px 0px;" width="100%">
+                                
+                            @endif
+                            
+                        </a>
+                        <div class="p-4">
+                           <a href="{{ route('project.show', $related_project->slug) }}">
+                           <h6>{{ $related_project->project_title }}</h6>
+                           </a>
+                           <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $related_project->location }}</p>
+                           <p class="mb-4">
+                              {{ $related_project->offers->min('area') }} - {{ $related_project->offers->max('area') }} {{ $related_project->offers->first()->area_type }} | {{ $related_project->offering }}
+                           </p>
+                           <hr>
+                           <div class="row mt-4 align-items-center">
+                              <div class="col-8">
+                                 <h6 class="crore-h">
+                                    {{ $related_project->price_range['min']['amount'] .' '. $related_project->price_range['min']['unit'] }}
+                                     <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
+                              </div>
+                              <div class="col-4 text-end">
+                                 <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                    </div>
                 </div>
-             </div>
-          </div>
-          <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-             <div class="project-div position-relative">
-                <a href="#" class="launch-btn red-bg">Under construction</a>
-                <a href="#">
-                <img src="{{ asset('public/assets/img/pp-1.png') }}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                </a>
-                <div class="p-4">
-                   <a href="#"><h6>Chapal Courtyard 1</h6></a>
-                   <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                   <p class="mb-4">
-                      950 - 1450 Sq ft | Flats
-                   </p>
-                   <hr>
-                   <div class="row mt-4 align-items-center">
-                      <div class="col-8">
-                         <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                      </div>
-                      <div class="col-4 text-end">
-                         <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-          <div data-aos="fade-up" class="col-md-4">
-             <div class="project-div position-relative">
-                <a href="#">
-                <img src="{{ asset('public/assets/img/pp-1.png') }}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-             </a>
-                <div class="p-4">
-                   <a href="#">
-                   <h6>Chapal Courtyard 1</h6>
-                </a>
-                   <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                   <p class="mb-4">
-                      950 - 1450 Sq ft | Flats
-                   </p>
-                   <hr>
-                   <div class="row mt-4 align-items-center">
-                      <div class="col-8">
-                         <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                      </div>
-                      <div class="col-4 text-end">
-                         <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-      
-    </div>
- </section>
+            @endforeach
+              
+           </div>
+          
+        </div>
+    </section>
+@endif
 
   @include('layouts.includes.footer')     
        

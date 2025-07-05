@@ -178,8 +178,8 @@ h1, h2, h3, h4, h5 {
     display: inline-block;
     border-radius: 50px;
     position: absolute;
-    top: 5%;
-    left: 5%;
+    top: 2%;
+    left: 3%;
 }
 .first-heading{
     display: inline-flex;
@@ -772,6 +772,7 @@ span.number {
     padding: 0;
     padding-top: 17px;
     justify-content: space-between;
+    width: 100%;
 }
 .sec-gal .listwith li{
     width: 47%;
@@ -780,7 +781,7 @@ span.number {
 }
 
 .sec-gal .listwith li span{
-    width: 50%;
+    width: 30%;
     display: inline-block;
     font-weight: 600;
     color: #111;

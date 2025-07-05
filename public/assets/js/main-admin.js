@@ -318,7 +318,7 @@ FilePond.registerPlugin(
 // Create pond instance
 FilePond.setOptions({
         allowMultiple: false,
-        maxFileSize: '5MB',
+        maxFileSize: '10MB',
         acceptedFileTypes: ['image/*'],
         server: {
             process: {

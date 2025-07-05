@@ -83,19 +83,23 @@ class ProjectController extends Controller
 
             'project_title' => 'required',                 
             'progress' => 'required',            
-            'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'builder_id' => 'required',
             'city_id' => 'required',
             'location' => 'required',            
-            'images.*' => 'image|max:2048',
+            'images.*' => 'image|max:10240',
             'offering' => 'required|array|min:1|in:'.implode(",",$offering),
 
+            ],
+            [                
+                'project_logo.max' => 'The logo must not be larger than 10 MB.',
             ]
         );
 
 
 
         $rules = [];
+        $messages = [];
 
         $offering = $request->has('offering') ? $request->offering : [];
         
@@ -125,14 +129,13 @@ class ProjectController extends Controller
             $count = count($request->floorplans['title'] ?? []);
             for ($i = 0; $i < $count; $i++) {
                 $rules["floorplans.title.$i"] = 'required|string|max:255';
-                $rules["floorplans.image.$i"] = 'required|image|max:2048';
+                $rules["floorplans.image.$i"] = 'required|image|max:10240';
+                $messages["floorplans.image.$i.max"] = "Image $i must not be greater than 10 MB.";
             }
-        }
-
-        $request->validate($rules);
+        }       
 
 
-
+        $request->validate($rules, $messages);
 
         // Using bootstrap switcher which return on/off text
         $request->merge([
@@ -288,19 +291,23 @@ class ProjectController extends Controller
 
             'project_title' => 'required',                 
             'progress' => 'required',            
-            'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'builder_id' => 'required',
             'city_id' => 'required',
             'location' => 'required',            
             'images.*' => 'image|max:2048',
             'offering' => 'required|array|min:1|in:'.implode(",",$offering),
 
+            ],
+            [                
+                'project_logo.max' => 'The logo must not be larger than 10 MB.',
             ]
         );
 
 
 
         $rules = [];
+        $messages = [];
 
         $offering = $request->has('offering') ? $request->offering : [];
         
@@ -344,11 +351,12 @@ class ProjectController extends Controller
                         //continue; // Skip validation for this existing record
                     }
                 $rules["floorplans.title.$i"] = 'required|string|max:255';
-                $rules["floorplans.image.$i"] = 'nullable|image|max:2048';
+                $rules["floorplans.image.$i"] = 'nullable|image|max:10240';
+                $messages["floorplans.image.$i.max"] = "Image $i must not be greater than 10 MB.";
             }
         }
 
-        $request->validate($rules);
+        $request->validate($rules, $messages);
 
         // Using bootstrap switcher which return on/off text
         $request->merge([

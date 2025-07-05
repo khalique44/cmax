@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Helpers;
+use Illuminate\Support\Collection;
 use App\GlobalSetting;
 use Carbon\Carbon;
 use App\Country;
@@ -175,21 +176,82 @@ class GeneralHelper
         $number = (int)$number; // ensure integer
 
         if ($number >= 10000000) {
-            return ['amount' => number_format($number / 10000000, 0) , 'unit' => 'Crore'];
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 10000000, 2)) , 'unit' => 'Crore'];
         } elseif ($number >= 100000) {
-            return ['amount' => number_format($number / 100000, 0) , 'unit' => 'Lakh'];
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 100000, 2)) , 'unit' => 'Lakh'];
             
         } elseif ($number >= 1000) {
-            return ['amount' => number_format($number / 1000, 0) , 'unit' => 'Thousand'];            
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 1000, 2)) , 'unit' => 'Thousand'];            
         } else {
             return ['amount' => number_format($number) , 'unit' => 'Hundered'];
         }
     }
 
+    public static function cleanDecimal($value): string
+    {
+        // Convert to float just in case
+        $value = floatval($value);
 
-    public static function formatCurrency($amount, $symbol = 'PKR', $decimals = 0) {
-        return $symbol . ' ' . number_format($amount, $decimals);
+        // If value is a whole number like 5.00 → return 5 (no decimal)
+        if (fmod($value, 1) === 0.0) {
+            return (string) intval($value);
+        }
+
+        // Otherwise, return with 2 decimal points
+        return number_format($value, 2, '.', '');
     }
+
+
+
+    public static function formatCurrency($amount, $symbol = 'PKR') {
+        return $symbol . ' ' . $amount;
+    }
+
+    public static function parsePriceString($price, $format){
+
+        $format = strtolower(trim($format));        
+
+        if ($format == 'crore') {
+            return (float) $price * 10000000;
+        }
+
+        if ($format == 'lakh') {
+            return (float) $price * 100000;
+        }
+
+        return  $price; // fallback for raw numbers
+    }
+
+    public static function formatPriceRange(Collection $offers): array
+    {
+        if ($offers->isEmpty()) {
+            return ['min' => null, 'max' => null];
+        }
+
+        $allValues = [];
+
+        foreach ($offers as $offer) {
+            if (!empty($offer->price_from)) {
+                $allValues[] = GeneralHelper::parsePriceString($offer->price_from,$offer->price_from_in_format);
+            }
+            if (!empty($offer->price_to)) {
+                $allValues[] = GeneralHelper::parsePriceString($offer->price_to, $offer->price_to_in_format);
+            }
+        }
+
+        if (empty($allValues)) {
+            return ['min' => null, 'max' => null];
+        }
+
+        $min = min($allValues);
+        $max = max($allValues);
+
+        return  [
+            'min' => GeneralHelper::detectNumberUnit($min),
+            'max' => GeneralHelper::detectNumberUnit($max),
+        ];
+    }
+
     /*public static function timeTo24($time){
 
         if(str_contains($time,'AM'){

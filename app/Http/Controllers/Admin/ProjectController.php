@@ -33,8 +33,11 @@ class ProjectController extends Controller
 
             return DataTables::of($projects)
                 ->addColumn('action', function ($project) {
-                    return '<a class="btn btn-sm btn-primary" href="'.url("admin/projects/$project->id/edit").'" class="btn-sm btn-success action-button">
+                    return '<a class="btn btn-sm btn-primary" href="'.url("admin/projects/$project->id/edit").'" >
                                             Edit
+                                        </a>
+                                        <a class="btn btn-sm btn-success" target="_blank" href="'.url("/project/$project->slug/").'" >
+                                            View
                                         </a>
                                         <a type="button" href="#" class="delete-rec btn btn-sm btn-danger" data-route="/admin/projects/'.$project->id.'" data-tableid="projectsTable"   data-id="'.$project->id.'">
                                             Delete

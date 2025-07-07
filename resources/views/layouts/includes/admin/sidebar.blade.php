@@ -93,6 +93,28 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-bs-toggle="collapse" href="#collapse6" role="button" aria-expanded="false" aria-controls="collapse6">
+                        
+                            <i class="fa fa-file"></i>
+                            <strong>CMS Pages</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse6" class="panel-collapse collapse {!! str_contains($url,'/admin/cms-pages') ? 'show' : '' !!}">
+                    <div class="panel-body">
+                        <div class="accordions-content-link">
+                            <ul>
+                                <li><a href="{{url('admin/cms-pages/about-us/')}}">About Us</a></li>
+                                <li><a href="{{url('admin/cms-pages/contact-us/')}}">Contact Us</a></li>
+                                <li><a href="{{url('admin/cms-pages/career/')}}">Career</a></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>    
                     
 

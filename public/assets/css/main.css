@@ -853,6 +853,90 @@ span.number {
     height: 100%;
     width: auto;
 }
+.contact-form input.form-control{
+    height: 50px;
+}
+.contact-form .form-control{
+    border-color: #212121;
+    border-radius: 10px;
+}
+.contact-form .btn-red{
+    padding-left: 55px;
+    padding-right: 55px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.contact-form .btn-red:hover{
+    background-color: #212121;
+}
+.sub-h4{
+    font-size: 28px;
+    font-weight: bold;
+    color: #110229;
+}
+.contact-details{
+    background: #CD2227;
+    padding: 25px 14px;
+    border-radius: 20px;
+    height: 100%;
+}
+.contact-details .labeltext{
+    font-size: 13px;
+    color: #eee;
+}
+.contact-details p{
+    color: #fff;
+    font-size: 21px;
+}
+.news-block .content-block h3{
+    color: #110229;
+}
+.news-block img{
+    height: 478px;
+    object-fit: cover;
+}
+.news-block .content-block p{
+    color: #1A1A1A;
+}
+.news-smalblocl img{
+    border-radius: 8px;
+}
+.news-smalblocl p{
+    font-size: 13px;
+    margin-bottom: 0;
+}
+.carers-banner{
+    background-image: url('../img/career-banner.jpg');
+    background-position: top;
+}
+.career-sec ul li{
+    padding-bottom: 10px;
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.upload-btn-wrapper .btn {
+  /* border: 2px solid gray; */
+  color: #111;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  display: block;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
 /* Media Query */
 @media only screen and (max-width: 1500px) {
     .my-menu li a{

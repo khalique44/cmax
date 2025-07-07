@@ -80,7 +80,7 @@ function renderActionColumn(id){
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('projects.data') }}",
-                pageLength: 5,
+                pageLength: 10,
                 columns: [
 
                      

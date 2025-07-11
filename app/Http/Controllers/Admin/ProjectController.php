@@ -368,7 +368,7 @@ class ProjectController extends Controller
             'added_by' => auth('admin')->user()->id,
         ]);
 
-        $logo_url = "";
+        
 
         if(!empty($request->project_logo)){
             $folderName = 'project_logos';
@@ -377,11 +377,11 @@ class ProjectController extends Controller
             $fullFileName = str_replace(" ","_",$fullFileName);
             $request->project_logo->move(public_path('uploads/'.$folderName), $fullFileName);
             $logo_url = 'uploads/'.$folderName.'/'.$fullFileName;
-        }
 
-        $request->merge([
-            'logo_url' => $logo_url,
-        ]);
+            $request->merge([
+                'logo_url' => $logo_url,
+            ]);
+        }        
 
         $project->update($request->except('project_logo','project_gallery','payment_plan'));
 
@@ -429,15 +429,21 @@ class ProjectController extends Controller
                     $fullFileName = str_replace(" ","_",$fullFileName);
                     $image->move(public_path('uploads/'.$folderName), $fullFileName);
                     $mediaUrl = 'uploads/'.$folderName.'/'.$fullFileName;
+                    $project->floorPlan()->updateOrCreate(
+                        ['id' => $floorplansId],
+                        [
+                    
+                        'media_url' => $mediaUrl,
+                        
+                        ]
+                    );
                 }
-
 
                 $project->floorPlan()->updateOrCreate(
                     ['id' => $floorplansId],
                     [
                     'project_id' => $project->id,
-                    'title' => $request->floorplans['title'][$i],
-                    'media_url' => $mediaUrl,
+                    'title' => $request->floorplans['title'][$i],                  
                     
                 ]);
             }

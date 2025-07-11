@@ -62,10 +62,10 @@
                 <div class="row">
                     @if(!empty($remainingImages))
                       @foreach($remainingImages as $key => $media)
-                        <div class="col-md-6">
+                        <div class="col-md-6" {!! ($key > 4) ? "style='display:none;'" : "" !!}>
                           <div class="galleria-inside">
                               <a href="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" data-lightbox="gallery-group"><img src="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" alt="" class="w-100"></a>
-                              @if($project->getMedia('project_gallery')->count() == $key+1)
+                              @if($key == 4)
                                 <a href="#" class="btn-showgal"><img src="{{ asset('public/assets/img/gallery-iconwhite.png') }}" alt=""> Show all photos</a>
                               @endif
                           </div>
@@ -186,8 +186,8 @@
                                                     <ul class="listwith">
                                                         <li><span>Area Size</span> {{ $savedOffer->area }} {{ $savedOffer->area_type }}</li>
                                                         @if($offer != 'Plots' && $offer != 'Offices' && $offer != 'Shops')
-                                                            <li><span>BedRooms</span> {{ $savedOffer->bedrooms }}</li>
-                                                            <li><span>BathRooms</span> {{ $savedOffer->bathrooms }}</li>
+                                                            <li><span>Bedrooms</span> {{ $savedOffer->bedrooms }}</li>
+                                                            <li><span>Bathrooms</span> {{ $savedOffer->bathrooms }}</li>
                                                         @endif
                                                         <li><span>Price</span> 
                                                             <strong>

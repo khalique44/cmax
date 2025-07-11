@@ -27,7 +27,7 @@ class Project extends Model implements HasMedia
 	        $slug = Str::slug($project->project_title);
 
 	        // Check if slug already exists excluding the current project (if it's being updated)
-	        $query = Project::where('slug', 'like', "{$slug}%");
+	        $query = Project::where('slug', "{$slug}");
 
 	        // Exclude self on update
 	        if ($project->exists) {

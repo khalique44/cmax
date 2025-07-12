@@ -19,7 +19,7 @@ class TemporaryUpload extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')              // Better compression and quality
         //->fit('contain', 300)    // Preserves aspect ratio inside bounds
-        ->format('webp')
+        //->format('webp')
         ->width(200)
         ->quality(85)                 // 80–90 is usually perfect
         ->nonQueued();

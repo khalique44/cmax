@@ -5,6 +5,7 @@
 /storage/*.key
 /storage/app/*
 /storage/framework/views/*
+/storage/media-library/*
 vendor
 .vscode
 .idea

@@ -115,7 +115,7 @@
                         @endphp
                         <div class="">
                             <div class="short-description">
-                                {!! \Illuminate\Support\Str::limit($description, $limit) !!}
+                                {!! \Illuminate\Support\Str::limit(strip_tags($description), $limit) !!}
                             
                             </div>
                             <div class="full-description" style="display: none;">

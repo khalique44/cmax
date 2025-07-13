@@ -17,9 +17,17 @@ class TemporaryUpload extends Model implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
     {
+        //dd($media);
+       $format = 'jpg'; // default fallback
+
+        if ($media) {
+            $format = $media->extension; // returns 'png', 'webp', etc.
+        }
+
+        
         $this->addMediaConversion('thumb')              // Better compression and quality
         //->fit('contain', 300)    // Preserves aspect ratio inside bounds
-        //->format('webp')
+        ->format($format)
         ->width(200)
         ->quality(85)                 // 80–90 is usually perfect
         ->nonQueued();

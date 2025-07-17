@@ -196,6 +196,35 @@ function builderSuccessCallback(response){
 }
 
 
+$(document).on("submit","form#cmspages",function(e){
+    e.preventDefault();   
+    var pg_name = $(".pg_name").val();
+    var frm = $('form#cmspages');
+    var formData = new FormData(frm[0]);
+    ajaxPostRequest("/cms-pages/"+pg_name,formData,cmsSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function cmsSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){     
+
+            displayMsg(msgArea,response.message,msgType);           
+
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
+    }
+    
+}
+
 $(document).on("submit","form#property-form",function(e){
     e.preventDefault();    
    

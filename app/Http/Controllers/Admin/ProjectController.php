@@ -244,6 +244,20 @@ class ProjectController extends Controller
         }
 
 
+        // Remove deleted images
+        $deletedFiles = $request->input('deleted_files', []);
+
+       if (!empty($deletedFiles)) {            
+            foreach ($deletedFiles as $id) {
+                if($id){
+                    $id = (json_decode($id));
+                    Media::whereIn('id', $id)->delete();
+                }
+                
+            }
+        }
+
+
 
         return response()->json([
             'status' => 'success',
@@ -475,6 +489,19 @@ class ProjectController extends Controller
             }
         }
 
+
+        // Remove deleted images
+        $deletedFiles = $request->input('deleted_files', []);
+
+       if (!empty($deletedFiles)) {            
+            foreach ($deletedFiles as $id) {
+                if($id){
+                    $id = (json_decode($id));
+                    Media::whereIn('id', $id)->delete();
+                }
+                
+            }
+        }
 
 
         return response()->json([

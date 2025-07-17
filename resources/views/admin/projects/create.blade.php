@@ -148,7 +148,7 @@
                                                 @foreach($project->getMedia('project_gallery') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
                                                     <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl('thumb')) }}" alt="uploaded">
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
                                                     </div>
                                                     <div>
                                                         <span title="Remove" class="remove-media " >Remove</span>
@@ -171,7 +171,7 @@
                                                                 'type' => $media->mime_type,
                                                             ],
                                                             'metadata' => [
-                                                                'poster' => $media->getUrl('thumb') // or getFullUrl()
+                                                                'poster' => $media->getUrl() // or getFullUrl()
                                                             ]
                                                         ]
                                                     ];
@@ -557,7 +557,7 @@
                                                 @foreach($project->getMedia('payment_plan') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
                                                     <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl('thumb')) }}" alt="uploaded">
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
                                                     </div>
                                                     <div>
                                                         <span title="Remove" class="remove-media " >Remove</span>
@@ -580,7 +580,7 @@
                                                                 'type' => $media->mime_type,
                                                             ],
                                                             'metadata' => [
-                                                                'poster' => $media->getUrl('thumb') // or getFullUrl()
+                                                                'poster' => $media->getUrl() // or getFullUrl()
                                                             ]
                                                         ]
                                                     ];

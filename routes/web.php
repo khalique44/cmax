@@ -165,6 +165,13 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         });
 
 
+        Route::get('cms-pages/about-us','CmsPage@aboutUs')->name('cmspages.aboutus');
+        Route::get('cms-pages/career','CmsPage@career')->name('cmspages.career');
+        Route::post('cms-pages/save-about-us','CmsPage@saveAboutUs')->name('cmspages.save-aboutus');
+        Route::post('cms-pages/save-career','CmsPage@saveCareer')->name('cmspages.save-career');
+        
+
+
     });
 });
 
@@ -177,6 +184,8 @@ Route::get('/blog/{id}', 'BlogController@show')->name('show');
 Route::post('/search-area', 'HomeController@searchArea')->name('search-area');
 Route::get('/projects/search-results', 'ProjectController@searchResults')->name('search-results');
 Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
+Route::get('/about-us', 'CmsPage@showAboutUs')->name('aboutus.show');
+Route::get('/career', 'CmsPage@showCareer')->name('career.show');
 
 
 

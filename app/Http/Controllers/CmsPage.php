@@ -136,4 +136,33 @@ class CmsPage extends Controller
 
             ));
     }
+
+    public function showContactUs(){
+
+        $contact_title = GeneralHelper::getOption('contact_title');
+        $contact_header_image = GeneralHelper::getOption('contact_header_image');
+        $contact_phone_number = GeneralHelper::getOption('contact_phone_number');
+        $contact_email_address = GeneralHelper::getOption('contact_email_address');        
+        $contact_address = GeneralHelper::getOption('contact_address');
+        $contact_embed_map = GeneralHelper::getOption('contact_embed_map');
+        
+        $contact_meta_title = GeneralHelper::getOption('contact_meta_title');
+        $contact_meta_description = GeneralHelper::getOption('contact_meta_description');
+        $contact_meta_keywords = GeneralHelper::getOption('contact_meta_keywords');
+
+        return view('cms_pages.contact_us',compact(
+            'contact_title',
+            'contact_header_image',
+            'contact_phone_number',
+            'contact_email_address',
+            'contact_address',
+            'contact_embed_map',
+              
+            'contact_meta_title',
+            'contact_meta_description',
+            'contact_meta_keywords',
+        
+
+            ));
+    }
 }

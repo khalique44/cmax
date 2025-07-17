@@ -167,8 +167,10 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
 
         Route::get('cms-pages/about-us','CmsPage@aboutUs')->name('cmspages.aboutus');
         Route::get('cms-pages/career','CmsPage@career')->name('cmspages.career');
+        Route::get('cms-pages/contact-us','CmsPage@contactUs')->name('cmspages.contactus');
         Route::post('cms-pages/save-about-us','CmsPage@saveAboutUs')->name('cmspages.save-aboutus');
         Route::post('cms-pages/save-career','CmsPage@saveCareer')->name('cmspages.save-career');
+        Route::post('cms-pages/save-contact-us','CmsPage@saveContactUs')->name('cmspages.save-contactus');
         
 
 
@@ -186,6 +188,7 @@ Route::get('/projects/search-results', 'ProjectController@searchResults')->name(
 Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
 Route::get('/about-us', 'CmsPage@showAboutUs')->name('aboutus.show');
 Route::get('/career', 'CmsPage@showCareer')->name('career.show');
+Route::get('/contact-us', 'CmsPage@showContactUs')->name('contactus.show');
 
 
 

@@ -1,4 +1,9 @@
-
+@php
+  $contact_phone_number = GeneralHelper::getOption('contact_phone_number');
+  $contact_email_address = GeneralHelper::getOption('contact_email_address');        
+  $contact_address = GeneralHelper::getOption('contact_address');
+  $copy_right_text = GeneralHelper::getOption('copy_right_text');
+@endphp
 
   <section class="footer-sec">
     <div class="container">
@@ -13,16 +18,16 @@
                  <li class="mb-2"><a href="#">Our Agents</a></li>
                  <li class="mb-2"><a href="#">FAQS</a></li>
                  <li class="mb-2"><a href="#">Testimonials</a></li>
-                 <li class="mb-2"><a href="#">About Us</a></li>
-                 <li class="mb-2"><a href="#">Contact Us</a></li>
+                 <li class="mb-2"><a href="{{route('aboutus.show')}}">About Us</a></li>
+                 <li class="mb-2"><a href="{{route('contactus.show')}}">Contact Us</a></li>
               </ul>
            </div>
            <div class="col-md-3">
               <h4 class="footer-h">Contact</h4>
               <ul class="footer-list">
-                 <li class="mb-2"><a href="tel: 923338222015">+92 333 8222015</a></li>
-                 <li class="mb-2"><a href="mailto:info@cmax.pk">info@cmax.pk</a></li>
-                 <li class="mb-2"><a href="#">CMAX Real Estate, Saddar<br>Karachi</a></li>
+                 <li class="mb-2"><a href="tel:{{$contact_phone_number}}">{{$contact_phone_number}}</a></li>
+                 <li class="mb-2"><a href="mailto:{{$contact_email_address}}">{{$contact_email_address}}</a></li>
+                 <li class="mb-2"><a href="#">{{$contact_address}}</a></li>
               </ul>
            </div>
            <div class="col-md-3">
@@ -39,7 +44,7 @@
      <div class="container">
         <div class="row align-item-center pt-3">
            <div class="col-md-6 text-center text-md-start">
-              <span class="foot-st">Copyright 2025 Real Estate. All Rights Reserved</span>
+              <span class="foot-st">{{ $copy_right_text }}</span>
            </div>
            <div class="col-md-6 text-center text-md-end">
               <a href="#">Terms & Conditions</a>

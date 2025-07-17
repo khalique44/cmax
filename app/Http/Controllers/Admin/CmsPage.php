@@ -251,4 +251,77 @@ class CmsPage extends Controller
             
         ]);
     }
+
+
+    public function contactUs(){
+
+        $contact_title = GeneralHelper::getOption('contact_title');
+        $contact_header_image = GeneralHelper::getOption('contact_header_image');
+        $contact_phone_number = GeneralHelper::getOption('contact_phone_number');
+        $contact_email_address = GeneralHelper::getOption('contact_email_address');        
+        $contact_address = GeneralHelper::getOption('contact_address');
+        $contact_embed_map = GeneralHelper::getOption('contact_embed_map');
+        
+        $contact_meta_title = GeneralHelper::getOption('contact_meta_title');
+        $contact_meta_description = GeneralHelper::getOption('contact_meta_description');
+        $contact_meta_keywords = GeneralHelper::getOption('contact_meta_keywords');
+
+        return view('admin.cms_pages.contact_us.edit',compact(
+            'contact_title',
+            'contact_header_image',
+            'contact_phone_number',
+            'contact_email_address',
+            'contact_address',
+            'contact_embed_map',
+              
+            'contact_meta_title',
+            'contact_meta_description',
+            'contact_meta_keywords',
+        
+
+            ));
+    }
+
+    public function saveContactUs(Request $request){
+
+        $request->validate([
+            'contact_title' => 'required|max:255',
+            'contact_phone_number' => 'required|max:15',
+            'contact_email_address' => 'required|email|max:255',
+            'contact_address' => 'required|max:255',
+            'contact_embed_map' => 'required|max:510',
+            'contact_header_image' => 'mimes:jpeg,png,jpg,gif,svg|max:5000|dimensions:max_width=1920,max_height=915',
+           
+        ]);        
+        
+        GeneralHelper::setOption('contact_title',$request->contact_title);
+        GeneralHelper::setOption('contact_phone_number',$request->contact_phone_number);
+        GeneralHelper::setOption('contact_email_address',$request->contact_email_address);        
+        GeneralHelper::setOption('contact_address',$request->contact_address);
+        GeneralHelper::setOption('contact_embed_map',$request->contact_embed_map);
+        
+        
+        GeneralHelper::setOption('contact_meta_title',$request->contact_meta_title);
+        GeneralHelper::setOption('contact_meta_description',$request->contact_meta_description);
+        GeneralHelper::setOption('contact_meta_keywords',$request->contact_meta_keywords);
+
+        $folderName = 'contact_us_images';
+
+        if(!empty($request->contact_header_image)){
+            
+            $fileName = pathinfo($request->contact_header_image->getClientOriginalName(), PATHINFO_FILENAME);           
+            $fullFileName = $fileName."-".time().'.'.$request->contact_header_image->getClientOriginalExtension();
+            $fullFileName = str_replace(" ","_",$fullFileName);
+            $request->contact_header_image->move(public_path('uploads/'.$folderName), $fullFileName);
+            $url = 'uploads/'.$folderName.'/'.$fullFileName;
+            GeneralHelper::setOption('contact_header_image',$url);
+        }
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Settings Saved Successfully!',
+            
+        ]);
+    }
 }

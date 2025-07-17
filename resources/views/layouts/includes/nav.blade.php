@@ -31,10 +31,10 @@
                <a class="nav-link" href="#">Survey</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">About Us</a>
+               <a class="nav-link" href="{{route('aboutus.show')}}">About Us</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Careers</a>
+               <a class="nav-link" href="{{route('career.show')}}">Careers</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="#">Blogs</a>
@@ -46,7 +46,7 @@
                <a class="nav-link" href="#">Properties for Sale</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link menu-btn" href="#">Contact Us</a>
+               <a class="nav-link menu-btn" href="{{route('contactus.show')}}">Contact Us</a>
             </li>
          </ul>
       </div>

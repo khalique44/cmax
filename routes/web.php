@@ -83,6 +83,7 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
             Route::resource('general_settings','GeneralSettingController');
             Route::resource('posts','PostController');
             Route::post('posts/update_position','PostController@updatePosition');
+            Route::get('blog-data', 'PostController@getPosts')->name('blog.data');
         });
 
         Route::group(['prefix'=>'contact_us','namespace'=>'ContactUs'], function (){
@@ -184,6 +185,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/blog', 'BlogController@index')->name('index');
 Route::get('/blog/{id}', 'BlogController@show')->name('show');
 Route::post('/search-area', 'HomeController@searchArea')->name('search-area');
+Route::get('/projects', 'ProjectController@index')->name('allprojects');
 Route::get('/projects/search-results', 'ProjectController@searchResults')->name('search-results');
 Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
 Route::get('/about-us', 'CmsPage@showAboutUs')->name('aboutus.show');

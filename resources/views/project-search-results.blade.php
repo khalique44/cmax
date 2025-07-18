@@ -23,7 +23,7 @@
              <!-- <p>1 to 8 out of 25 projects</p> -->
             </div>
             <div class="row property-listing" id="project-list">
-
+              
              @include('projects.partials.project_list')
 
             </div>

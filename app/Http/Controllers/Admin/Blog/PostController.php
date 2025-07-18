@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Blog;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\DataTables;
 
 class PostController extends Controller
 {
@@ -18,6 +19,29 @@ class PostController extends Controller
         $records = Post::orderBy('position','asc')->get();
         $this->reGeneratePositions();
         return view('admin.blog.content.index',compact('records'));
+    }
+
+    public function getPosts(Request $request)
+    {
+        if ($request->ajax()) {
+            $posts = Post::getAllPosts();
+
+            return DataTables::of($posts)
+                ->addColumn('action', function ($post) {
+                    return '<a class="btn btn-sm btn-primary" href="'.url("admin/blog/$post->id/edit").'" >
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-sm btn-success" target="_blank" href="'.url("/blog/$post->id/").'" >
+                                            View
+                                        </a>
+                                        <a type="button" href="#" class="delete-rec btn btn-sm btn-danger" data-route="/admin/blog/'.$post->id.'" data-tableid="blogTable"   data-id="'.$post->id.'">
+                                            Delete
+                                        </a>';
+                })
+                
+                ->rawColumns(['action'])
+                ->toJson();
+        }
     }
 
     /**

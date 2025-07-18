@@ -5,114 +5,82 @@
         <div class="right-section-content">
             <div class="admin-sec-btn-area">
                 <div class="report-title-section">
-                    <h4>Blogg</h4>
+                    <h4>Blog</h4>
                 </div>
                 <div class="database-btn">
-                    <a href="{{ url('admin/blog/posts/create') }}" data-toggle="" data-target="#search-db-model"  class="BE-btn">Add</a>
+                    <a href="{{ url('admin/blog/posts/create') }}" data-toggle="" data-target="#search-db-model"  class="btn btn-success"><i class="fa fa-plus"></i> Add</a> <br><br>
                 </div>
             </div>
+
+            @include('layouts.partials.messages')
 
             <div class="database-table-section">
                 <div class="db-table-content table-responsive">
                     <!-- Main Table Start-->
-                    <table id="table_main" class="display" style="width:100%">
+                    <table id="blogTable" class="display">
                         <thead>
                         <tr>
-                            <th>Position</th>
+                                                      
+                            <!-- <th>Position</th> -->
                             <th>Title</th>
                             <th>Image</th>
                             <th>Short Description</th>
                             <th>Status</th>
+                            <th>Date</th>
                             <th>Action</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach($records as $key => $record)
-                            <tr data-entry-id="{{ $record->id }}">
-
-                                <td class="cursor-pointer" >{{($key+1)}}</td>
-                                <td>{{ $record->title }}</td>
-                                <td>
-                                    
-
-                                     @if(!empty($record->file_url))
-                                    <a href="{!! url('public') !!}/{{$record->file_url}}" target="_blank">
-                                        
-                                       
-                                        <img src="{!! url('public') !!}/{{$record->file_url}}" class="logo" alt="Logo" width="50%">
-                                        
-
-                                    </a>
-                                    @endif
-
-                                </td>    
-                                <td>
-
-                                    {{ $record->short_description }}
-
-
-                                </td>                           
-                                <td>
-
-                                    @if($record->status == 'yes') 
-                                    <span class="label label-success">Yes</span>
-                                    @else
-                                    <span class="label label-danger">No</span>
-                                    @endif
-
-
-                                </td>
-                                <td>
-
-                                    <a href="{{ url('admin/blog/posts/') }}/{{ $record->id }}/edit/" class="text-success" title="Edit Record"><i class="fa fa-pencil"></i></a>
-
-
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
+                       
                     </table>
                 </div>
+                
+
             </div>
+
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            let datatable = $('#table_main').DataTable({
-                "order": [0,'asc'],
-                "pageLength": 100,
-                "rowReorder": true,
-                dom: 'Bfrtip',
-                buttons: [
-                    //'copyHtml5',
-                    //'excelHtml5',
-                    'csvHtml5',
-                    'pdfHtml5'
-                ],
-                "lengthMenu": [[100, "All", 50, 25], [100, "All", 50, 25]]
-            });
+<script>
 
-            datatable.on('row-reorder', function (e, details) {
-                if(details.length) {
-                    let rows = [];
-                    details.forEach(element => {
-                        rows.push({
-                            id: $(element.node).data('entry-id'),
-                            position: element.newData
-                        });
-                        console.log(element.newData, $(element.node).data('entry-id'))
-                    });
+$(document).ready(function () {
 
-                    $.ajax({
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        method: 'POST',
-                        url: "{{ url('admin/blog/posts/update_position') }}",
-                        data: { rows }
-                    }).done(function () { datatable.draw(); });
-                }
+    var table = $('#blogTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{route('blog.data')}}",
+        pageLength: 10,
+        columns: [
 
-            });
-        });
-    </script>
+             
+           
+            { data: 'title', name: 'title' },                   
+            { data: 'header_image', name: 'header_image' }, 
+            { data: 'short_description', name: 'short_description' }, 
+            { data: 'status', name: 'status' },
+            { data: 'created_at', name: 'created_at' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ],
+        paging: true, // Ensure pagination is enabled
+        searching: true, // Enable search
+        ordering: true, // Enable sorting
+        info: true // Show info text (e.g., "Showing 1 to 5 of 25 entries")
+    });
+
+    /*$('#projectsTable tbody').on('click', 'td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            // Row is already open
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });*/
+});      
+
+</script>
 @endsection
 

@@ -12,97 +12,24 @@
 
       
   
-  
-  <section class="py-5">
-     <div class="container">
-        <div class="row text-center pb-3">
-           <h5 class="sub-h">Discover</h5>
-           <h2 class="main-h">Popular Projects</h2>
-        </div>
-        <div class="row">
-           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-              <div class="project-div position-relative">
-                 <a href="#" class="launch-btn">New Launch</a>
-                 <a href="#">
-                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                 </a>
-                 <div class="p-4">
-                    <a href="#">
-                    <h6>Chapal Courtyard 1</h6>
-                    </a>
-                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                    <p class="mb-4">
-                       950 - 1450 Sq ft | Flats
-                    </p>
-                    <hr>
-                    <div class="row mt-4 align-items-center">
-                       <div class="col-8">
-                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                       </div>
-                       <div class="col-4 text-end">
-                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-           </div>
-           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-              <div class="project-div position-relative">
-                 <a href="#" class="launch-btn red-bg">Under construction</a>
-                 <a href="#">
-                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                 </a>
-                 <div class="p-4">
-                    <a href="#"><h6>Chapal Courtyard 1</h6></a>
-                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                    <p class="mb-4">
-                       950 - 1450 Sq ft | Flats
-                    </p>
-                    <hr>
-                    <div class="row mt-4 align-items-center">
-                       <div class="col-8">
-                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                       </div>
-                       <div class="col-4 text-end">
-                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-           </div>
-           <div data-aos="fade-up" class="col-md-4">
-              <div class="project-div position-relative">
-                 <a href="#">
-                 <img src="{!! url('public/assets/img/pp-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-              </a>
-                 <div class="p-4">
-                    <a href="#">
-                    <h6>Chapal Courtyard 1</h6>
-                 </a>
-                    <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> 42 Avenue O, Brooklyn</p>
-                    <p class="mb-4">
-                       950 - 1450 Sq ft | Flats
-                    </p>
-                    <hr>
-                    <div class="row mt-4 align-items-center">
-                       <div class="col-8">
-                          <h6 class="crore-h">1 Crore <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
-                       </div>
-                       <div class="col-4 text-end">
-                          <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                       </div>
-                    </div>
-                 </div>
-              </div>
-           </div>
-        </div>
-        <div class="row mt-4">
-           <div class="col-md-12 text-center">
-              <a href="#" class="detail-btn d-inline-block">More Details</a>
-           </div>
-        </div>
-     </div>
-  </section>
+  @if($popular_projects->count() > 0)
+    <section class="py-5">
+       <div class="container">
+          <div class="row text-center pb-3">
+             <h5 class="sub-h">Discover</h5>
+             <h2 class="main-h">Popular Projects</h2>
+          </div>
+          <div class="row">
+             @include('projects.partials.short_list',['projects' => $popular_projects])
+          </div>
+          <div class="row mt-4">
+             <div class="col-md-12 text-center">
+                <a href="{{route('search-results')}}" class="detail-btn d-inline-block">More Details</a>
+             </div>
+          </div>
+       </div>
+    </section>
+  @endif
   <section class="dream-sec py-5">
      <div class="container py-5 px-3 px-sm-5">
         <div class="row">
@@ -330,7 +257,7 @@
   
 
   @include('layouts.includes.inquiry-form')
-  
+
   @include('layouts.includes.footer')     
 
        

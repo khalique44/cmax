@@ -383,7 +383,7 @@ $(document).ready(function() {
         var formData = $('#filter-form').serialize() + '&page=' + page;
 
         $.ajax({
-            url: "{{ route('search-results') }}",
+            url: "/projects/search-results",
             type: "GET",
             data: formData,
             success: function(data) {
@@ -396,7 +396,7 @@ $(document).ready(function() {
 
     // Pagination link click
     $(document).on('click', '.page-item  a.page-link', function(e) {
-        alert("fffffff")
+        
         e.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
         fetchProjects(page);

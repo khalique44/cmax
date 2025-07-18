@@ -14,7 +14,18 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::with('offers','floorPlan','builder')->where('is_active', true)->paginate(3);
+        $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
+        $progress = config('constants.progress');
+        $property_types = config('constants.property_types');
+        $bedrooms = config('constants.bedrooms');
+        $offering = config('constants.offering');
+        $searchedData    = '';
+
+        //$projects = $projects->paginate(3);
+
+        
+        return view('project-search-results',compact('builders','progress','property_types','bedrooms','projects','offering','searchedData'));
     }
 
     /**
@@ -135,16 +146,17 @@ class ProjectController extends Controller
 
         $projects = $projects->paginate(3);
         //dd(\DB::getQueryLog());
-
-        if ($request->ajax()) {
-            return view('projects.partials.project_list', compact('projects'))->render();
-        }
-
         $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');
         $property_types = config('constants.property_types');
         $bedrooms = config('constants.bedrooms');
         $offering = config('constants.offering');
+
+        if ($request->ajax()) {
+            return view('projects.partials.project_list', compact('builders','progress','property_types','bedrooms','projects','offering','searchedData'))->render();
+        }
+
+        
 
         
         return view('project-search-results',compact('builders','progress','property_types','bedrooms','projects','offering','searchedData'));

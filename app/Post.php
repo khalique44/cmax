@@ -43,4 +43,9 @@ class Post extends Model
     public static function getRecordsWihPosition(){
         return self::orderBy('position','asc')->get();
     }
+
+    public static function getAllPosts(){
+
+        return Post::latest()->get();
+    }
 }

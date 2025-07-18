@@ -38,6 +38,7 @@ class HomeController extends Controller
         $property_types = config('constants.property_types');
         $bedrooms = config('constants.bedrooms');
         $offering = config('constants.offering');
+        $popular_projects = Project::with('offers','floorPlan','builder')->where('is_popular',true)->take(3)->get();
 
         if(!empty($data->header_image)){
             
@@ -45,7 +46,7 @@ class HomeController extends Controller
             $header_image = url('public') .'/'.$data->header_image;
           } 
         }
-        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering'));
+        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects'));
         
         //return '<H2>Coming Soon</H2';
     }

@@ -24,7 +24,7 @@
                             <!-- <th>Position</th> -->
                             <th>Title</th>
                             <th>Image</th>
-                            <th>Short Description</th>
+                            
                             <th>Status</th>
                             <th>Date</th>
                             <th>Action</th>
@@ -53,8 +53,8 @@ $(document).ready(function () {
              
            
             { data: 'title', name: 'title' },                   
-            { data: 'header_image', name: 'header_image' }, 
-            { data: 'short_description', name: 'short_description' }, 
+            { data: 'file_url', name: 'file_url' }, 
+            //{ data: 'short_description', name: 'short_description' }, 
             { data: 'status', name: 'status' },
             { data: 'created_at', name: 'created_at' },
             { data: 'action', name: 'action', orderable: false, searchable: false }

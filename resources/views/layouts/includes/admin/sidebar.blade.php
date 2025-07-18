@@ -115,6 +115,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-bs-toggle="collapse" href="#collapse7" role="button" aria-expanded="false" aria-controls="collapse7">
+                        
+                            <i class="fa fa-file"></i>
+                            <strong>Blog</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse7" class="panel-collapse collapse {!! str_contains($url,'/admin/blog') ? 'show' : '' !!}">
+                    <div class="panel-body">
+                        <div class="accordions-content-link">
+                            <ul>
+                                <li><a href="{{url('admin/blog/posts')}}">All Posts</a></li>
+                                <li><a href="{{url('admin/blog/posts/create')}}">Add New Post</a></li>                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>    
                     
 

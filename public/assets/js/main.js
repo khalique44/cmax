@@ -337,15 +337,22 @@ $(document).ready(function() {
     // Filter form submit
     $('#filter-form').on('change', 'select, input', function(e) {
         e.preventDefault();
-        fetchProjects();
+        
+            fetchProjects();
+        
     });
 
     // Pagination link click
-    $(document).on('click', '.pagination a', function(e) {
+    /*$(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
-        fetchProjects(page);
-    });
+        if($(this).parents(".blog-posts").length > 0){
+            
+            fetchPosts(page)
+        }else{
+            fetchProjects(page);
+        }
+    });*/
 
     $(document).on('change','#minPrice, #maxPrice', function() {
         var min = parseInt($('#minPrice').val()) || 0;
@@ -379,27 +386,55 @@ $(document).ready(function() {
 
 
 
-    function fetchProjects(page = 1) {
-        var formData = $('#filter-form').serialize() + '&page=' + page;
-
-        $.ajax({
-            url: "/projects/search-results",
-            type: "GET",
-            data: formData,
-            success: function(data) {
-                $('#project-list').html(data);
-            }
-        });
-    }
-
-
-
-    // Pagination link click
-    $(document).on('click', '.page-item  a.page-link', function(e) {
-        
-        e.preventDefault();
-        var page = $(this).attr('href').split('page=')[1];
-        fetchProjects(page);
+function fetchProjects(page = 1) {
+    var formData = $('#filter-form').serialize() + '&page=' + page;
+    showAjaxLoader();
+    $.ajax({
+        url: "/projects/search-results",
+        type: "GET",
+        data: formData,
+        success: function(data) {
+            $('#project-list').html(data);
+            hideAjaxLoader();
+        }
     });
+}
+
+
+
+
+
+function fetchPosts(page = 1) {
+    var formData = 'page=' + page;
+    showAjaxLoader();
+    $.ajax({
+        url: "/blog",
+        type: "GET",
+        data: formData,
+        success: function(data) {
+            $('#blog-posts-list').html(data);
+            hideAjaxLoader();
+        }
+    });
+}
+
+// Pagination link click
+$(document).on('click', '.page-item  a.page-link', function(e) {
+
+
+    
+    e.preventDefault();
+    var page = $(this).attr('href').split('page=')[1];
+    console.log('length:',$(this).parents(".blog-posts").length);
+    if($(this).parents(".blog-posts").length > 0){
+        
+        fetchPosts(page)
+    }else{
+        fetchProjects(page);
+    }
+    
+});
+
+
 
 

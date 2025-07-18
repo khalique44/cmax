@@ -182,7 +182,7 @@ Auth::routes();
 
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/blog', 'BlogController@index')->name('index');
+Route::get('/blog', 'BlogController@index')->name('blog.list');
 Route::get('/blog/{id}', 'BlogController@show')->name('show');
 Route::post('/search-area', 'HomeController@searchArea')->name('search-area');
 Route::get('/projects', 'ProjectController@index')->name('allprojects');

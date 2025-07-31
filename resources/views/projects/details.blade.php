@@ -21,7 +21,7 @@
                     <a href="#" class="launch-btn position-static">{{ $project->offering }}</a>
                </div>
                <h1 class="mt-2 mainhead-inner">{{ $project->project_title }}</h1>
-               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location }} <a href="#">See on the Map</a></p>
+               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location }} <a href="#location">See on the Map</a></p>
 
             </div>
             <div class="col-md-5 text-end">

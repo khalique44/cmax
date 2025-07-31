@@ -79,8 +79,9 @@ class BuilderController extends Controller
         $builder = Builder::create($request->except('images','_token'));
 
         if ($request->has('media_ids')) {
-            foreach ($request->media_ids as $mediaId) {
-                $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+            
+            foreach ($request->media_ids['default'] as $mediaId) {
+                $media = Media::find($mediaId);
                 if ($media) {
                     $media->model_type = Builder::class;
                     $media->model_id = $builder->id;

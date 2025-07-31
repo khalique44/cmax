@@ -48,7 +48,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('builders.data') }}",
-                 pageLength: 5,
+                 pageLength: 10,
                 columns: [
                    
                     { data: 'id', name: 'id' },

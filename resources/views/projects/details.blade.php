@@ -46,6 +46,7 @@
 
         <div class="row galleria mt-3">
           @php
+            $paymentPlans = $project->getMedia('payment_plan');                        
             $gallery = $project->getMedia('project_gallery');
             $firstImage = $gallery->first();  // Get the first media
             $remainingImages = $gallery->slice(1);  // Skip the first media
@@ -102,6 +103,14 @@
                                 <a class="nav-link" href="#floorplan">Floor Plan</a>
                               </li>
                           @endif
+
+                          @if( $paymentPlans->count() > 0 )
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#paymentplan">Payment Plan</a>
+                              </li>
+                          @endif
+
+                          
                         </ul>
                       </nav>
                 </div>
@@ -110,6 +119,7 @@
                     <div class="sec-gal mt-5 description-container" id="overview">
                         <h3 class="mb-3">Project Overview</h3>
                         @php
+
                             $limit = config('constants.project_text_limit'); // Limit characters
                             $description = $project->description;
                         @endphp
@@ -262,7 +272,7 @@
                                         <div class="tab-pane fade {{ ($key == 0) ? 'show active' : '' }}" id="home-floorplan-tab-{{ $floorPlan->id }}" role="tabpanel" aria-labelledby="floorplan-tab-{{ $floorPlan->id }}">
                                             <div>
                                                 @if($floorPlan->media_url)
-                                                    <a href="{{ asset('public/'.$floorPlan->media_url) }}" data-lightbox="gallery-group" class="card-img">
+                                                    <a href="{{ asset('public/'.$floorPlan->media_url) }}" data-lightbox="gallery-group3" class="card-img">
                                                         
                                                             <img src="{{ asset('public/'.$floorPlan->media_url) }}" alt="" width="50%">
                                                         
@@ -276,6 +286,35 @@
                                     
                                   </div>
                             </div>
+                        </div>
+                    @endif
+
+                    @if($paymentPlans->count() > 0)
+                        <div class="sec-gal mt-4" id="paymentplan">
+                            <h3 class="mb-3">Payment Plan</h3>
+                            <ul class="paymentplan-area">
+                               
+   
+                                    
+                                    @foreach($paymentPlans as $key => $paymentPlan)
+                                        
+                                        <li class="show active" id="home-paymentplan-tab-{{ $paymentPlan->id }}" role="" >
+                                           
+                                            @if($paymentPlan->getUrl())
+                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl()) }}" data-lightbox="gallery-group2" class="card-img">
+                                                    
+                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl()) }}" alt="" >
+                                                    
+                                                    
+                                                </a>
+                                            @endif
+                                            
+                                        </li>
+                                        
+                                    @endforeach   
+                                    
+                           
+                            </ul>
                         </div>
                     @endif
 

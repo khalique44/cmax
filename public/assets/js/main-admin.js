@@ -157,8 +157,8 @@ function successCallback(response){
 
 $(document).on("submit","form#builder-form",function(e){
     e.preventDefault();    
-   
-    var formData = $(this).serializeArray();
+    var frm = $('form#builder-form');
+    var formData = new FormData(frm[0]);
     ajaxPostRequest("/builders",formData,builderSuccessCallback,ajaxErrorCallback,true);    
 
 });

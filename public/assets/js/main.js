@@ -166,7 +166,20 @@ $('#search-area').on('keyup', function(e){
     var query = $(this).val();
     var data = {query:query};
 
-    ajaxPostRequest("/search-area",data,searchAreaCallback,ajaxErrorCallback,true);
+    //ajaxPostRequest("/search-area",data,searchAreaCallback,ajaxErrorCallback,true);
+    $('#suggestions').html('<i class="fa fa-spinner fa-spin"></i>').show();
+    var formData = {query:query};
+    //showAjaxLoader();
+    $.ajax({
+        url: "/search-area",
+        type: "POST",
+        data: formData,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            searchAreaCallback(data);
+            //hideAjaxLoader();
+        }
+    });
 });
 
 function searchAreaCallback(response){
@@ -174,6 +187,7 @@ function searchAreaCallback(response){
     var msgType = 'error';
     
         msgType = 'success'; 
+
         let suggestions = '';
         response.forEach(function(item){
             suggestions += '<div class="suggestion-item" style="padding:5px; cursor:pointer; font-size:11px;">'+item+'</div>';

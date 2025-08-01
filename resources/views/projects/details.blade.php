@@ -30,12 +30,12 @@
                 </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="call-btn mb-2">
-                        <a href="tel:{{ $project->builder->mobile_number }}">
+                        <a href="tel:{{ $project->builder->mobile_number ?? '' }}">
                             <img src="{{ asset('public/assets/img/phone-icon.svg') }}" alt="">
                             Call</a>
                     </div>
                     <div class="whatsapp-btn mb-3">
-                        <a href="tel:{{ $project->builder->mobile_number }}">
+                        <a href="tel:{{ $project->builder->mobile_number ?? '' }}">
                             <img src="{{ asset('public/assets/img/whatsapp-icon.svg') }}" alt="">
                             Whatsapp</a>
                     </div>

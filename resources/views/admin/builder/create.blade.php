@@ -63,7 +63,7 @@
                                         <!-- File Upload -->
                                         <div class="pond-container">
                                             <label>Upload Images</label>
-                                            <input type="file" name="filepond[]" id="filepond" multiple class="filepond">
+                                            <input type="file" name="filepond[]" id="filepond"  class="filepond">
                                         </div>
 
                                         <div class="uploaded-images file-pond-preview-wrapper" id="uploaded-preview" data-upload-type="default" data-allow-reorder="true" data-max-files="10" data-collection="default" data-preview="uploaded-preview">

@@ -18,7 +18,7 @@
                     <div class="p-4">
                         <a href="#"><h6>{{ $project->project_title }}</h6></a>
                         <div class="logo-builder">
-                            @if(($project->builder->getFirstMediaUrl('images')))
+                            @if($project->builder->hasMedia('images'))
                                 <img src="{{ \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($project->builder->getFirstMediaUrl('images')) }}" alt="Builder Image"  >
                             @else
                                  <img src="{{ asset('public/assets/img/logo-builder.gif') }}" alt="Builder Image">               

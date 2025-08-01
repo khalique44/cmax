@@ -17,11 +17,11 @@
                     </ol>
                </div>
                <div class="position-relative">
-                    <a href="#" class="launch-btn red-bg position-static">{{ $progress[$project->progress] }}</a>
-                    <a href="#" class="launch-btn position-static">{{ $project->offering }}</a>
+                    <a href="#" class="launch-btn red-bg position-static">{{ $progress[$project->progress] ?? '' }}</a>
+                    <a href="#" class="launch-btn position-static">{{ $project->offering ?? '' }}</a>
                </div>
                <h1 class="mt-2 mainhead-inner">{{ $project->project_title }}</h1>
-               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location }} <a href="#location">See on the Map</a></p>
+               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location ?? '' }} <a href="#location">See on the Map</a></p>
 
             </div>
             <div class="col-md-5 text-end">
@@ -30,12 +30,12 @@
                 </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="call-btn mb-2">
-                        <a href="tel:{{ $project->builder->mobile_number ?? '' }}">
+                        <a href="tel:{{ $project->builder->mobile_number ?? '#' }}">
                             <img src="{{ asset('public/assets/img/phone-icon.svg') }}" alt="">
                             Call</a>
                     </div>
                     <div class="whatsapp-btn mb-3">
-                        <a href="tel:{{ $project->builder->mobile_number ?? '' }}">
+                        <a href="tel:{{ $project->builder->mobile_number ?? '#' }}">
                             <img src="{{ asset('public/assets/img/whatsapp-icon.svg') }}" alt="">
                             Whatsapp</a>
                     </div>
@@ -258,7 +258,7 @@
                                     @foreach($project->floorPlan as $key => $floorPlan)
                                         
                                         <li class="nav-item" role="presentation">
-                                          <button class="nav-link {{ ($key == 0) ? 'active' : '' }}" id="floorplan-tab-{{ $floorPlan->id }}" data-bs-toggle="tab" data-bs-target="#home-floorplan-tab-{{ $floorPlan->id }}" type="button" role="tab" aria-controls="home-floorplan-tab-{{ $floorPlan->id }}" aria-selected="true">{{ $floorPlan->title }}</button>
+                                          <button class="nav-link {{ ($key == 0) ? 'active' : '' }}" id="floorplan-tab-{{ $floorPlan->id }}" data-bs-toggle="tab" data-bs-target="#home-floorplan-tab-{{ $floorPlan->id }}" type="button" role="tab" aria-controls="home-floorplan-tab-{{ $floorPlan->id }}" aria-selected="true">{{ $floorPlan->title ?? '' }}</button>
                                         </li>
                                         
                                     @endforeach

@@ -18,12 +18,8 @@
                     <div class="p-4">
                         <a href="#"><h6>{{ $project->project_title }}</h6></a>
                         <div class="logo-builder">
-                            @php 
-                                $builderMedia = $project->builder->getMedia('default');
-                                var_dump($builderMedia);
-                            @endphp
-                            @if(($project->builder->getFirstMediaUrl('default')))
-                                <img src="{{ \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($project->builder->getFirstMediaUrl('default')) }}" alt="Builder Image"  >
+                            @if(($project->builder->getFirstMediaUrl('images')))
+                                <img src="{{ \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($project->builder->getFirstMediaUrl('images')) }}" alt="Builder Image"  >
                             @else
                                  <img src="{{ asset('public/assets/img/logo-builder.gif') }}" alt="Builder Image">               
                             @endif

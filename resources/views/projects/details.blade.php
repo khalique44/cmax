@@ -292,10 +292,8 @@
                     @if($paymentPlans->count() > 0)
                         <div class="sec-gal mt-4" id="paymentplan">
                             <h3 class="mb-3">Payment Plan</h3>
-                            <ul class="paymentplan-area">
-                               
-   
-                                    
+                            <ul class="paymentplan-area">                           
+                                       
                                     @foreach($paymentPlans as $key => $paymentPlan)
                                         
                                         <li class="show active" id="home-paymentplan-tab-{{ $paymentPlan->id }}" role="" >

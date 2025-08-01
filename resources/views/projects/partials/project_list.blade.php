@@ -7,10 +7,16 @@
                 <div class="col-md-4">
                     <a href="#" class="launch-btn">{{ $progress[$project->progress] }}</a>
                     <a href="#" class="card-img">
-                        @if($project->logo_url)
-                            <img src="{{ asset('public/'.$project->logo_url) }}" alt="" width="100%">
+                        @php
+                                                  
+                            $gallery = $project->getMedia('project_gallery');
+                            $firstImage = $gallery->first();  // Get the first media
+                             
+                        @endphp
+                        @if(!empty($firstImage))
+                            <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="" width="100%">
                         @else
-                            <img src="{{ asset('public/assets/img/pp-1.png') }}" alt="" width="100%">
+                            <img src="{{ asset('public/assets/img/no-image-1080x1080.png') }}" alt="" width="100%">
                         @endif
                     </a>
                 </div>
@@ -18,10 +24,10 @@
                     <div class="p-4">
                         <a href="#"><h6>{{ $project->project_title }}</h6></a>
                         <div class="logo-builder">
-                            @if($project->builder && $project->builder->hasMedia('images'))
-                                <img src="{{ \App\Http\Helpers\GeneralHelper::getMediaWithPublicDir($project->builder->getFirstMediaUrl('images')) }}" alt="Builder Image"  >
+                            @if($project->logo_url)
+                                <img src="{{ asset('public/'.$project->logo_url) }}" alt="Builder Image"  >
                             @else
-                                 <img src="{{ asset('public/assets/img/logo-builder.gif') }}" alt="Builder Image">               
+                                 <img src="{{ asset('public/assets/img/no-image-1080x1080.png') }}" alt="Builder Image">               
                             @endif
 
                         </div>

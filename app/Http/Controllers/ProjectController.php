@@ -93,6 +93,7 @@ class ProjectController extends Controller
         $priceFrom       = GeneralHelper::detectNumberUnit($priceFrom);
         $priceTo         = GeneralHelper::detectNumberUnit($priceTo);
         $searchedData    = $request->all();
+        
         \DB::enableQueryLog();
 
 

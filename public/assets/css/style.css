@@ -79,6 +79,13 @@ p.loc-txt {
     
     width: 91%;
 }
+.font-size-12{
+  font-size: 12px;
+}
+.suggestion-item:hover{
+  background-color: #1049AB;
+  color: #fff;
+}
 /* ------ End code by KHL ------ */
 
 

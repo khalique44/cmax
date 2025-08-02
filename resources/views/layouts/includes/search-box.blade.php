@@ -31,7 +31,7 @@
                              <div class="row">
                                 <div class="col-md-3">
                                    <label class="form-label">Area</label>
-                                   <input type="text" class="form-control" value="" id="search-area" name="search-area" placeholder="Search Area">
+                                   <input type="text" class="form-control font-size-12" value="" id="search-area" name="search-area" placeholder="Search Area">
                                    <div id="suggestions" style="border:1px solid #ddd; display:none; position:absolute; background:#fff; z-index:999;"></div>
 
                                 </div>

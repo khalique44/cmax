@@ -7,7 +7,8 @@
                     <div class="row">
                        <div class="col-md-3">
                           <label class="form-label">Area</label>
-                          <input type="text" class="form-control" value="{{ $searchedData && $searchedData['search-area'] ?? '' }}" readonly>
+                          <input type="text" class="form-control" id="search-area" name="search-area" placeholder="Search Area" value="{{ $searchedData && $searchedData['search-area'] ? $searchedData['search-area'] : '' }}" >
+                          <div id="suggestions" style="border:1px solid #ddd; display:none; position:absolute; background:#fff; z-index:999;"></div>
                        </div>
                        <div class="col-md-3">
 

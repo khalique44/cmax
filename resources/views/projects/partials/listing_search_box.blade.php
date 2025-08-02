@@ -130,6 +130,9 @@
                              <option selected>Select</option>
                           </select>
                        </div>
+                       <div class="col-md-12 text-center">
+                         <button type="submit" class="btn btn-primary mt-3 w-25"><i class="fa fa-search" aria-hidden="true"></i></button>
+                       </div>
                     </div>
                  </div>
               </div>

@@ -172,7 +172,7 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::post('cms-pages/save-about-us','CmsPage@saveAboutUs')->name('cmspages.save-aboutus');
         Route::post('cms-pages/save-career','CmsPage@saveCareer')->name('cmspages.save-career');
         Route::post('cms-pages/save-contact-us','CmsPage@saveContactUs')->name('cmspages.save-contactus');
-        
+        Route::resource('testimonials','TestimonialController');
 
 
     });

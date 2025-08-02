@@ -221,36 +221,21 @@
            <h2 class="main-h">Our Latest Blog</h2>
         </div>
         <div class="row">
-           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-              <div class="project-div position-relative">
-                 <img src="{!! url('public/assets/img/blog-1.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                 <div class="p-4 text-center">
-                    <p class="blog-des">Apartment .  March 19, 2024</p>
-                    <h6 class="blog-title">Read Unveils the Best Canadian Cities for Biking</h6>
-                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                 </div>
-              </div>
-           </div>
-           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-              <div class="project-div position-relative">
-                 <img src="{!! url('public/assets/img/blog-2.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                 <div class="p-4 text-center">
-                    <p class="blog-des">Office .  March 19, 2024</p>
-                    <h6 class="blog-title">10 Walkable Cities Where You Can Live Affordably</h6>
-                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                 </div>
-              </div>
-           </div>
-           <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
-              <div class="project-div position-relative">
-                 <img src="{!! url('public/assets/img/blog-3.png') !!}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
-                 <div class="p-4 text-center">
-                    <p class="blog-des">Shop .  March 19, 2024</p>
-                    <h6 class="blog-title">New Apartment Nice in the Best Canadian Cities</h6>
-                    <a href="#" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                 </div>
-              </div>
-           </div>
+          @if(!empty($latestPosts))
+            @foreach($latestPosts as $key => $latestPost)
+             <div data-aos="fade-up" class="col-md-4 mb-3 mb-md-0">
+                <div class="project-div position-relative">
+                   <img src="{!! url('public') !!}/{{$latestPost->file_url ?? 'assets/img/blog-1.png'}}" alt="" width="100%" style="border-radius: 20px 20px 0px 0px;">
+                   <div class="p-4 text-center">
+                      <p class="blog-des">{!! $latestPost->formatted_created_at  !!}</p>
+                      <h6 class="blog-title">{!! $latestPost->title !!}</h6>
+                      <a href="{{url('blog')}}/{{$latestPost->id}}" class="read-more-btn d-inline-block">Read More <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                   </div>
+                </div>
+             </div>
+            @endforeach
+           @endif
+           
         </div>
      </div>
   </section>

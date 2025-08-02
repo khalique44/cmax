@@ -6,7 +6,7 @@
             <div class="project-div position-relative row g-0">
                 <div class="col-md-4">
                     <a href="#" class="launch-btn">{{ $progress[$project->progress] }}</a>
-                    <a href="#" class="card-img">
+                    <a href="{{ route('project.show', $project->slug) }}" class="card-img">
                         @php
                                                   
                             $gallery = $project->getMedia('project_gallery');
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-8">
                     <div class="p-4">
-                        <a href="#"><h6>{{ $project->project_title }}</h6></a>
+                        <a href="{{ route('project.show', $project->slug) }}"><h6>{{ $project->project_title }}</h6></a>
                         <div class="logo-builder">
                             @if($project->logo_url)
                                 <img src="{{ asset('public/'.$project->logo_url) }}" alt="Builder Image"  >

@@ -21,7 +21,7 @@
 
           <div class="row news-smalblocl border-bottom mb-2 pb-2">
             <div class="col-4">
-              <a href="{{url('blog')}}/{{$latestPost->id}}" ><img src="{!! url('public') !!}/{{$latestPost->file_url}}" alt="" class="w-100"></a>
+              <a href="{{url('blog')}}/{{$latestPost->id}}" ><img src="{!! url('public') !!}/{{$latestPost->file_url ?? 'assets/img/blog-1.png'}}" alt="" class="w-100"></a>
             </div>
             <div class="col-8">
               <h6><a href="{{url('blog')}}/{{$latestPost->id}}" > {!! $latestPost->title !!}</a></h6>

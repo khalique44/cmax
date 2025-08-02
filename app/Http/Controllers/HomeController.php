@@ -8,6 +8,7 @@ use App\Testimonial;
 use App\TeamMember;
 use App\Project;
 use App\Builder;
+use App\Post;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -39,6 +40,10 @@ class HomeController extends Controller
         $bedrooms = config('constants.bedrooms');
         $offering = config('constants.offering');
         $popular_projects = Project::with('offers','floorPlan','builder')->where('is_popular',true)->take(3)->get();
+        $latestPosts = Post::where('status', 'yes')
+        ->latest()  // created_at DESC
+        ->take(3)
+        ->get();
 
         if(!empty($data->header_image)){
             
@@ -46,7 +51,7 @@ class HomeController extends Controller
             $header_image = url('public') .'/'.$data->header_image;
           } 
         }
-        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects'));
+        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects','latestPosts'));
         
         //return '<H2>Coming Soon</H2';
     }
@@ -59,7 +64,7 @@ class HomeController extends Controller
                 ->pluck('location') // Only fetch 'location' column
                 ->unique()          // Remove duplicates (if any)
                 ->take(50);         // Limit results (optional)
-
+        $results = collect($results)->values(); // resets keys        
         return response()->json($results);
     }
 

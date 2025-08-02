@@ -335,7 +335,7 @@
                              </div>
                           </div>
                           <div class="col-md-12 text-end">
-                             <button type="submit" class="btn btn-primary mt-3"><i class="fa fa-search" aria-hidden="true"></i></button>
+                             <button type="submit" class="btn btn-primary mt-3"><i class="fa fa-search" aria-hidden="true" title="Search"></i></button>
                           </div>
                        </div>
                     </form>

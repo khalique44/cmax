@@ -22,6 +22,7 @@ function displayMsg(msgArea, msg, msgType){
     }
 
     msgType = (msgType == 'error') ? 'danger' : msgType;
+    var msgIcon = (msgType == 'error' || msgType == 'danger') ? 'error' : 'success';
 
     if(jQuery('.custom-msg-area').length > 0){
 
@@ -33,6 +34,16 @@ function displayMsg(msgArea, msg, msgType){
 
         msgArea.html('<div class="alert alert-'+msgType+'" role="alert">'+msg+'</div>').show();
         $('html, body').animate({ scrollTop: msgArea.offset().top}, 100);
+
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: msgIcon,
+            title: msg,
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true
+        });
 
     }
 
@@ -364,6 +375,8 @@ FilePond.setOptions({
                         preview_id = 'gallery-preview';
                     } else if(data.mediaKey == 'payment_plan'){
                         preview_id = 'payment-preview';
+                    } else if(data.mediaKey == 'project_progress'){
+                        preview_id = 'project-progress-preview';
                     }
 
                     const inputElement = document.getElementById(preview_id); // Works now

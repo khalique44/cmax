@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-5 text-end">
                 <h2 class="Starting-price mb-4"><span>Starting From</span>
-                    {{ $project->price_range['min']['amount'] .' '. $project->price_range['min']['unit'] }} 
+                    {{ $project->price_range['min']['amount'] ?? '' .' '. $project->price_range['min']['unit'] ?? '' }} 
                 </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="call-btn mb-2">
@@ -47,6 +47,7 @@
         <div class="row galleria mt-3">
           @php
             $paymentPlans = $project->getMedia('payment_plan');                        
+            $projectProgress = $project->getMedia('project_progress');                        
             $gallery = $project->getMedia('project_gallery');
             $firstImage = $gallery->first();  // Get the first media
             $remainingImages = $gallery->slice(1);  // Skip the first media
@@ -93,7 +94,12 @@
                           </li>
                           <li class="nav-item">
                             <a class="nav-link" href="#unitt">Unit Types</a>
-                          </li>                          
+                          </li> 
+                          @if( $project->features->count() > 0 )
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#features">Features</a>
+                              </li>
+                          @endif                         
                           <li class="nav-item dropdown">
                             <a class="nav-link" href="#location">Location</a>
                           </li>
@@ -109,6 +115,14 @@
                                 <a class="nav-link" href="#paymentplan">Payment Plan</a>
                               </li>
                           @endif
+
+                          @if( $projectProgress->count() > 0 )
+                              <li class="nav-item dropdown">
+                                <a class="nav-link" href="#progress">Progress</a>
+                              </li>
+                          @endif
+
+                          
 
                           
                         </ul>
@@ -228,6 +242,21 @@
 
                     </div> 
 
+                    @if($project->features->count() > 0)
+                        <div class="sec-gal mt-4" id="features">
+                            <h3 class="mb-3">Features</h3>
+                            <ul class="checked_list">
+                                @foreach($project->features as $key => $feature)
+                                    <li>
+                                        <i class="fa {{ !empty($feature->icon) ? $feature->icon : 'fa-check-circle'}}"></i>
+                                        {{ $feature->name ?? ''}}
+                                    </li>
+                                @endforeach
+                                
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="sec-gal mt-4" id="location">
                         <h3 class="mb-3">Project Location</h3>
                         <div class="inside-map pt-4">
@@ -247,7 +276,9 @@
                             </iframe>
                             
                         </div>
-                    </div>                 
+                    </div>   
+
+                                  
                     
                     @if($project->floorPlan->count() > 0)
                         <div class="sec-gal mt-4" id="floorplan">
@@ -315,6 +346,35 @@
                             </ul>
                         </div>
                     @endif
+
+                    @if($projectProgress->count() > 0)
+                        <div class="sec-gal mt-4" id="progress">
+                            <h3 class="mb-3">Progress</h3>
+                            <ul class="paymentplan-area">                           
+                                       
+                                    @foreach($projectProgress as $key => $progress)
+                                        
+                                        <li class="show active" id="home-paymentplan-tab-{{ $progress->id }}" role="" >
+                                           
+                                            @if($progress->getUrl())
+                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl()) }}" data-lightbox="gallery-group2" class="card-img">
+                                                    
+                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl()) }}" alt="" >
+                                                    
+                                                    
+                                                </a>
+                                            @endif
+                                            
+                                        </li>
+                                        
+                                    @endforeach   
+                                    
+                           
+                            </ul>
+                        </div>
+                    @endif
+
+                    
 
                     <!-- <div class="sec-gal mt-4" id="attachments">
                         <h3 class="mb-3">Attachments</h3>

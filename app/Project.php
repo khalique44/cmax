@@ -61,6 +61,11 @@ class Project extends Model implements HasMedia
 	    return $this->hasMany(ProjectFloorPlan::class);
 	}
 
+	public function features()
+	{
+	     return $this->belongsToMany(Feature::class, 'project_features', 'project_id', 'feature_id');
+	}
+
 	protected $casts = [
         'created_at' => 'date:Y-M-d'
     ];

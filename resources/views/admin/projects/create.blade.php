@@ -132,57 +132,11 @@
                                        <div id="map" style="height: 300px; width: 100%;" class="m-2"></div>
                                     </div> 
                                 </div>                                  
-
+                            </div>
                                 
 
 
-                            <div class="row">                            
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-label">Gallery Images</label>
-                                        <input type="file" name="project_gallery[]" multiple class="form-control filepond"  >
-                                        <input type="hidden" id="uploaded-files" name="uploaded_files[]" data-max-files="10" />
-                                            <input type="hidden" id="deleted-files" name="deleted_files[]" />
-                                        <div class="uploaded-images file-pond-preview-wrapper" id="gallery-preview" data-upload-type="gallery" data-allow-reorder="true"   data-preview="gallery-preview" data-collection="project_gallery">
-                                            @if(isset($project))
-                                                @foreach($project->getMedia('project_gallery') as $media)
-                                                <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
-                                                    <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
-                                                    </div>
-                                                    <div>
-                                                        <span title="Remove" class="remove-media " >Remove</span>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            @endif
-
-                                         
-                                                @if(isset($project))
-                                                @php
-                                                $existingImages = $project->getMedia('project_gallery')->map(function ($media) {
-                                                    return [
-                                                        'source' => $media->id,
-                                                        'options' => [
-                                                            'type' => 'local',
-                                                            'file' => [
-                                                                'name' => $media->file_name,
-                                                                'size' => $media->size,
-                                                                'type' => $media->mime_type,
-                                                            ],
-                                                            'metadata' => [
-                                                                'poster' => $media->getUrl() // or getFullUrl()
-                                                            ]
-                                                        ]
-                                                    ];
-                                                });
-                                                @endphp
-                                                @endif
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -210,7 +164,7 @@
 
                                 
                             </div>    
-
+                            
                             <div class="row">
                                 <div class="accordion" id="project-offers">
 
@@ -432,7 +386,27 @@
                                     @endforeach
 
                                 </div>
-                            </div>        
+                            </div> 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Features</label>
+                      
+                                        <ul class="list-inline property-form-ul">
+                                            @foreach($features as $feature)
+
+                                                <li class="feature-{{ $feature->id }} list-inline-item">
+                                                <input type="checkbox" class="btn-check" name="features[]" id="feature-{{ $feature->id }}" autocomplete="off" value="{{ $feature->id }}" {{ isset($project) && $project->features->contains($feature->id) ? 'checked' : '' }} >
+                                                    <label class="btn btn-light" for="feature-{{$feature->id}}">{{$feature->name}}</label>
+                                                    
+                                                </li>
+                                                
+                                            @endforeach
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>       
                             <div class="row p-3">
                                 <div class="repeatable-wrapper" id="floorplans-wrapper">
                                     <label><strong>Floor Plans</strong></label>
@@ -570,6 +544,102 @@
                                                 @if(isset($project))
                                                 @php
                                                 $existingImages2 = $project->getMedia('payment_plan')->map(function ($media) {
+                                                    return [
+                                                        'source' => $media->id,
+                                                        'options' => [
+                                                            'type' => 'local',
+                                                            'file' => [
+                                                                'name' => $media->file_name,
+                                                                'size' => $media->size,
+                                                                'type' => $media->mime_type,
+                                                            ],
+                                                            'metadata' => [
+                                                                'poster' => $media->getUrl() // or getFullUrl()
+                                                            ]
+                                                        ]
+                                                    ];
+                                                });
+                                                @endphp
+                                                @endif
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">                            
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Progress</label>
+                                        <input type="file" name="project_progress[]" multiple class="form-control filepond" id="project_progress" >
+                                        <input type="hidden" id="uploaded-files4" name="uploaded_files4[]" />
+                                            <input type="hidden" id="deleted-files4" name="deleted_files4[]" />
+                                        <div class="uploaded-images file-pond-preview-wrapper" id="project-progress-preview" data-upload-type="project_progress" data-allow-reorder="true" data-max-files="10" data-collection="project_progress" data-preview="project-progress-preview">
+                                            @if(isset($project))
+                                                @foreach($project->getMedia('project_progress') as $media)
+                                                <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
+                                                    <div>
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
+                                                    </div>
+                                                    <div>
+                                                        <span title="Remove" class="remove-media " >Remove</span>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            @endif
+
+                                         
+                                                @if(isset($project))
+                                                @php
+                                                $existingImages2 = $project->getMedia('project_progress')->map(function ($media) {
+                                                    return [
+                                                        'source' => $media->id,
+                                                        'options' => [
+                                                            'type' => 'local',
+                                                            'file' => [
+                                                                'name' => $media->file_name,
+                                                                'size' => $media->size,
+                                                                'type' => $media->mime_type,
+                                                            ],
+                                                            'metadata' => [
+                                                                'poster' => $media->getUrl() // or getFullUrl()
+                                                            ]
+                                                        ]
+                                                    ];
+                                                });
+                                                @endphp
+                                                @endif
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">                            
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Gallery Images</label>
+                                        <input type="file" name="project_gallery[]" multiple class="form-control filepond"  >
+                                        <input type="hidden" id="uploaded-files" name="uploaded_files[]" data-max-files="10" />
+                                            <input type="hidden" id="deleted-files" name="deleted_files[]" />
+                                        <div class="uploaded-images file-pond-preview-wrapper" id="gallery-preview" data-upload-type="gallery" data-allow-reorder="true"   data-preview="gallery-preview" data-collection="project_gallery">
+                                            @if(isset($project))
+                                                @foreach($project->getMedia('project_gallery') as $media)
+                                                <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
+                                                    <div>
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
+                                                    </div>
+                                                    <div>
+                                                        <span title="Remove" class="remove-media " >Remove</span>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            @endif
+
+                                         
+                                                @if(isset($project))
+                                                @php
+                                                $existingImages = $project->getMedia('project_gallery')->map(function ($media) {
                                                     return [
                                                         'source' => $media->id,
                                                         'options' => [

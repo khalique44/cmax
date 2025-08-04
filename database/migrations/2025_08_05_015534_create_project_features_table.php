@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_amunities', function (Blueprint $table) {
+        Schema::create('project_features', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('feature_id');                        
+            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('amenity_id');  
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('property_amunities');
+        Schema::dropIfExists('project_features');
     }
 };

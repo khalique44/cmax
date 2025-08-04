@@ -9,6 +9,7 @@ use App\Amenity;
 use App\Category;
 use App\Builder;
 use App\User;
+use App\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
@@ -69,10 +70,11 @@ class ProjectController extends Controller
         $purposes = config('constants.purpose');
         $cities = GeneralHelper::getCitiesByCountry(166);
         $price_types = config('constants.price_types');
-        $offering = config('constants.offering');       
+        $offering = config('constants.offering');    
+        $features = Feature::where('is_active',1)->orderBy('name' , 'asc')->get();
         
         
-        return view('admin.projects.create', compact('users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types'));
+        return view('admin.projects.create', compact('users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features'));
     }
 
     /**
@@ -163,6 +165,7 @@ class ProjectController extends Controller
         ]);
 
         $project = Project::create($request->except('project_logo','project_gallery','payment_plan','_token'));
+        $project->features()->sync($request->input('features', []));
 
         foreach ($offering as $offer) {
             if ($request->has($offer)) {
@@ -241,6 +244,17 @@ class ProjectController extends Controller
                     }
                 }
             }
+            if (!empty($request->media_ids['project_progress'])) {
+                foreach ($request->media_ids['project_progress'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'project_progress'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
         }
 
 
@@ -292,9 +306,10 @@ class ProjectController extends Controller
         $cities = GeneralHelper::getCitiesByCountry(166);
         $price_types = config('constants.price_types');
         $offering = config('constants.offering');       
+        $features = Feature::where('is_active',1)->orderBy('name' , 'asc')->get();      
         
         
-        return view('admin.projects.create', compact('project','users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types'));
+        return view('admin.projects.create', compact('project','users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features'));
     }
 
     /**
@@ -327,6 +342,7 @@ class ProjectController extends Controller
         $messages = [];
 
         $offering = $request->has('offering') ? $request->offering : [];
+        $features = $request->has('features') ? $request->features : [];
         
 
         foreach ($offering as $offer) {
@@ -398,6 +414,9 @@ class ProjectController extends Controller
         }        
 
         $project->update($request->except('project_logo','project_gallery','payment_plan'));
+        if ($request->has('features')) {
+            $project->features()->sync($request->input('features'));
+        }
 
 
         foreach ($offering as $offer) {
@@ -424,8 +443,7 @@ class ProjectController extends Controller
                    
                 }
             }
-        }
-
+        }     
 
 
         $folderName = 'project_floor_plans_images';
@@ -483,6 +501,17 @@ class ProjectController extends Controller
                         $media->model_type = Project::class;
                         $media->model_id = $project->id;
                         $media->collection_name = 'payment_plan'; // move it to real collection
+                        $media->save();
+                    }
+                }
+            }
+            if (!empty($request->media_ids['project_progress'])) {
+                foreach ($request->media_ids['project_progress'] as $mediaId) {
+                    $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId);
+                    if ($media) {
+                        $media->model_type = Project::class;
+                        $media->model_id = $project->id;
+                        $media->collection_name = 'project_progress'; // move it to real collection
                         $media->save();
                     }
                 }

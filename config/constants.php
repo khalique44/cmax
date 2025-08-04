@@ -23,6 +23,7 @@ return [
                             'Plots',
                             'Shops', 
                             'Offices',                            
+                            'Villas',                            
                         ],
     'purpose' => [
                             'sell' => 'Sell', 
@@ -50,6 +51,16 @@ return [
     'date_format' => env('DATE_FROMAT', 'd-M-Y'),
 
     'bedrooms' => ['Studio',1,2,3,4,5,6,7,8,9,10,'10+'],
+    
     'bathrooms' => [1,2,3,4,5,6,'6+'],
-    'project_text_limit' => 200
+
+    'project_text_limit' => 200,
+
+    'project_features' => [
+                            'Prayer Area', 
+                            'Park',
+                            'Commerical Area', 
+                            'Hospital',                            
+                            'Educational Area',                            
+                        ],
 ];

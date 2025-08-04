@@ -117,9 +117,6 @@
                                         <ul class="list-inline property-form-ul">
                                             @foreach($amenities as $amenity)
 
-
-
-
                                                 <li class="amenity-{{ $amenity->property_type }} list-inline-item">
                                                 <input type="checkbox" class="btn-check" name="amenities[]" id="amenity-{{ $amenity->id }}" autocomplete="off" value="{{ $amenity->id }}" {{ isset($property) && $property->amenities->contains($amenity->id) ? 'checked' : '' }} >
                                                     <label class="btn btn-light" for="amenity-{{$amenity->id}}">{{$amenity->name}}</label>

@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_amunities', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('feature_id');                        
+        Schema::create('features', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('icon');
+            $table->enum('property_type', ['home', 'commercial', 'plot'])->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('property_amunities');
+        Schema::dropIfExists('features');
     }
 };

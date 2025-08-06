@@ -166,55 +166,7 @@
         </div>
      </div>
   </section>
-  <section class="py-5" data-aos="fade-up">
-     <div class="container py-5 px-3 px-sm-5 testo-con">
-        <div class="row align-items-center">
-           <div class="col-md-6">
-              <img src="{!! url('/public/assets/img/testimonial-img.png') !!}" alt="" width="100%" style="border-radius: 30px;">
-           </div>
-           <div class="col-md-6 ps-5">
-              <div class="row testo-caro">
-                 <div class="col-md-12">
-                    <div class="row align-items-center mt-3 mt-md-0">
-                       <div class="col-2">
-                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
-                       </div>
-                       <div class="col-10">
-                          <h6 class="name">Cameron Williamson</h6>
-                          <p class="mb-0 designation">Designer</p>
-                       </div>
-                    </div>
-                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
-                 </div>
-                 <div class="col-md-12">
-                    <div class="row align-items-center mt-3 mt-md-0">
-                       <div class="col-2">
-                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
-                       </div>
-                       <div class="col-10">
-                          <h6 class="name">Cameron Williamson</h6>
-                          <p class="mb-0 designation">Designer</p>
-                       </div>
-                    </div>
-                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
-                 </div>
-                 <div class="col-md-12">
-                    <div class="row align-items-center mt-3 mt-md-0">
-                       <div class="col-2">
-                          <img src="{!! url('public/assets/img/icon-test.png.png') !!}" alt="" width="100%">
-                       </div>
-                       <div class="col-10">
-                          <h6 class="name">Cameron Williamson</h6>
-                          <p class="mb-0 designation">Designer</p>
-                       </div>
-                    </div>
-                    <p class="mb-0 mt-3">Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.</p>
-                 </div>
-              </div>
-           </div>
-        </div>
-     </div>
-  </section>
+ 
   <section class="py-5">
      <div class="container">
         <div class="row text-center pb-3">

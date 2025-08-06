@@ -10,8 +10,8 @@
   <section class="py-5">
     <div class="container">
       <div class="row">
-        @include('projects.partials.listing_left_sidebar')
-          <div class="col-md-9">
+        <!-- @include('projects.partials.listing_left_sidebar') -->
+          <div class="col-md-12">
             <div class="text-left pb-3">
               <div class="breadcrumbs">
                <ol class="breadcrumbs">

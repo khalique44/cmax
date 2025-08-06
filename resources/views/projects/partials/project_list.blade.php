@@ -25,7 +25,7 @@
                         <a href="{{ route('project.show', $project->slug) }}"><h6>{{ $project->project_title }}</h6></a>
                         <div class="logo-builder">
                             @if($project->logo_url)
-                                <img src="{{ asset('public/'.$project->logo_url) }}" alt="Builder Image"  >
+                                <img src="{{ asset('public/'.$project->logo_url) }}" alt="Project Image"  >
                             @else
                                  <img src="{{ asset('public/assets/img/no-image-1080x1080.png') }}" alt="Builder Image">               
                             @endif

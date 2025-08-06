@@ -374,7 +374,36 @@
                         </div>
                     @endif
 
-                    
+                    @if($project->builder)
+                        <div class="sec-gal mt-4" id="devloped_by">
+                            <h3 class="mb-3">Developed By</h3>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                            
+                                        @php 
+                                            $builderImages = $project->builder->getMedia('images');
+                                            $firstImage = $builderImages->first();
+
+                                        @endphp
+                                        <div class="display-builder-logo">
+                                            <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="Builder Image" class="img-fluid mx-auto d-block" 
+    style="max-width: 180px;">  
+                                        </div>             
+                                       
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>{{ $project->builder->builder_name ?? '' }}</h5>
+                                        
+                                        
+                                        <p class="mb-1"> {!! $project->builder->email ? 'Email: '. $project->builder->email : '' !!}</p>
+                                        <p class=""> {!! $project->builder->address ? 'Address: '. $project->builder->address : '' !!}</p>
+                                        
+                                        
+                                    </div>
+                                </div>
+                        </div>
+                    @endif
 
                     <!-- <div class="sec-gal mt-4" id="attachments">
                         <h3 class="mb-3">Attachments</h3>
@@ -425,7 +454,7 @@
                             </div>
                             
                             <div class="form-group mt-3">
-                                <button class="btn btn-red w-100">Project In This Budget</button>
+                                <button class="btn btn-red w-100">Submit</button>
                             </div>
                         </form>
 

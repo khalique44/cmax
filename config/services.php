@@ -38,5 +38,7 @@ return [
     'authorize' => [
         'login' => env('AUTHORIZE_PAYMENT_API_LOGIN_ID'),
         'key' => env('AUTHORIZE_PAYMENT_TRANSACTION_KEY')
-    ]
+    ],
+    // adde by KHL
+    'google_map_api' => env('GOOGLE_MAP_API'),
 ];

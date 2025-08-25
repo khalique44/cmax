@@ -35,7 +35,7 @@
     <link href="{!! url('public/assets/filepond/css/filepond-plugin-image-preview.css') !!}" rel="stylesheet" />
     <!-- Include Google Places API JS -->
 
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_API') }}&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_map_api') }}&libraries=places"></script>
     
 
     <style>

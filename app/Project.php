@@ -16,7 +16,7 @@ class Project extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [        
-    	'builder_id','city_id','project_title','description','progress','area','location','latitude','longitude','logo_url','offering','is_lease','is_active','added_by'
+    	'builder_id','city_id','area_id','sub_area_id','project_title','description','progress','area','location','latitude','longitude','logo_url','offering','is_lease','is_active','added_by','rate_per_square','development_charges','utility_charges','distance','project_floors','project_start_date', 'is_featured','is_popular','position'
     ];
 
     protected static function boot()
@@ -27,7 +27,7 @@ class Project extends Model implements HasMedia
 	        $slug = Str::slug($project->project_title);
 
 	        // Check if slug already exists excluding the current project (if it's being updated)
-	        $query = Project::where('slug', "{$slug}");
+	        $query = Project::withTrashed()->where('slug', "{$slug}");
 
 	        // Exclude self on update
 	        if ($project->exists) {
@@ -92,4 +92,43 @@ class Project extends Model implements HasMedia
 	    $price_range = GeneralHelper::formatPriceRange($this->offers);
 	    return $price_range['min']['amount'] .' '. $price_range['min']['unit'] .' to '. $price_range['max']['amount'] .' '. $price_range['max']['unit'];
 	}
+
+
+	// Area relation (each project belongs to one area)
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
+
+    // SubArea relation (each project belongs to one sub area)
+    public function subArea()
+    {
+        return $this->belongsTo(SubArea::class);
+    }
+
+
+    public static function updatePosition($rows){        
+
+        try {
+
+            foreach($rows as $row){
+                foreach($row as $r){
+
+                    $id = $r['id'];
+                    $position = $r['position'];
+                    self::whereId($id)->update(['position' => $position]);
+                }
+            }
+
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+        
+    }
+
+
+    public static function getRecordsWihPosition(){
+        return self::orderBy('position','asc')->get();
+    }
 }

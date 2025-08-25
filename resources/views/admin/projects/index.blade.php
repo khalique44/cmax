@@ -24,9 +24,14 @@
                         <thead>
                         <tr>
                                                       
+                            <th>Position</th>                            
                             <th>Title</th>                            
                             <th>Progress</th>                             
                             <th>Added At</th>
+                            <th>Views</th>
+                            <th>Is Featured</th>
+                            <th>Is Popular</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -81,19 +86,53 @@ function renderActionColumn(id){
                 serverSide: true,
                 ajax: "{{ route('projects.data') }}",
                 pageLength: 10,
-                columns: [
-
-                     
+                rowReorder: true,
+                    
+                columns: [                     
                    
+                    { data: 'position', name: 'position' },                   
                     { data: 'project_title', name: 'project_title' },                   
                     { data: 'progress', name: 'progress' }, 
                     { data: 'created_at', name: 'created_at' },
+                    { data: 'views', name: 'views' },
+                    { data: 'is_featured', name: 'is_featured' },
+                    { data: 'is_popular', name: 'is_popular' },
+                    { data: 'is_active', name: 'is_active' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
+                createdRow: function(row, data, dataIndex) {
+                    // add a class
+                    //$(row).addClass('cursor-pointer sorting_1');
+
+                    // add data attributes from row data
+                    $(row).attr('data-entry-id', data.id);
+                    //$(row).attr('data-title', data.project_title);
+                },
                 paging: true, // Ensure pagination is enabled
                 searching: true, // Enable search
                 ordering: true, // Enable sorting
                 info: true // Show info text (e.g., "Showing 1 to 5 of 25 entries")
+            });
+
+            table.on('row-reorder', function (e, details) {
+                if(details.length) {
+                    let rows = [];
+                    details.forEach(element => {
+                        rows.push({
+                            id: $(element.node).data('entry-id'),
+                            position: element.newPosition
+                        });
+                        console.log(element)
+                    });
+
+                    $.ajax({
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        method: 'POST',
+                        url: "{{ url('admin/project/update-position') }}",
+                        data: { rows }
+                    }).done(function () { table.draw(); });
+                }
+
             });
 
             /*$('#projectsTable tbody').on('click', 'td.dt-control', function () {

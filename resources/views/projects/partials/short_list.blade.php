@@ -31,8 +31,9 @@
                       {{ $project->price_range['min']['amount'] .' '. $project->price_range['min']['unit'] }}
                        <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
                 </div>
+               
                 <div class="col-4 text-end">
-                   <span class="heart-btn"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                   <span class="heart-btn"><a href="javascript:;" class="add-to-compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}" title="Compare"><i class="fa fa-exchange"></i> </a></span>
                 </div>
              </div>
           </div>

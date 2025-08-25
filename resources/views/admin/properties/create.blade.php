@@ -387,12 +387,6 @@ $(document).on("change", "input#is_installment", function(){
 
 <script>
 
-    
-
-
-
-
-
 let map;
 let marker;
 let autocomplete;

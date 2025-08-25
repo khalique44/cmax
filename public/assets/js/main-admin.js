@@ -35,17 +35,19 @@ function displayMsg(msgArea, msg, msgType){
         msgArea.html('<div class="alert alert-'+msgType+'" role="alert">'+msg+'</div>').show();
         $('html, body').animate({ scrollTop: msgArea.offset().top}, 100);
 
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: msgIcon,
-            title: msg,
-            showConfirmButton: false,
-            timer: 5000,
-            timerProgressBar: true
-        });
+        
 
     }
+
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: msgIcon,
+        title: msg,
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
 
 }
 
@@ -346,7 +348,43 @@ function ajaxErrorCallback(response){
     }
 }
 
+$(document).on("change","select#area_id",function(e){
+    e.preventDefault();    
+    var area_id = $(this).val();
 
+    //var formData = new FormData(frm[0]); 
+    ajaxPostRequest("/get-sub-area/"+area_id,[],subAreaSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function subAreaSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        $('select#sub_area_id').empty();
+
+        // Add placeholder again if needed
+        $('select#sub_area_id').append('<option value=""></option>');
+        
+   
+        response.subAreas.forEach(function(item){
+           
+             $('select#sub_area_id').append(new Option(item.name, item.id, false, false));
+        });
+
+        $('select#sub_area_id').trigger('change');
+
+        //$('select#sub_area_id').html(options).show();
+
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
+    }
+}
 
 
 FilePond.registerPlugin(
@@ -556,3 +594,66 @@ function renderStatusBadge(is_active) {
         return '<span class="badge bg-danger">Inactive</span>';
     }
 }
+
+
+$(document).on("click",".updateStatus",function(e){
+    e.preventDefault();
+    var project_id = $(this).data("id");
+    var status = $(this).data("status");
+    var status_type = $(this).data("status-type");
+    var status_label = $(this).data("status-label");
+    
+    let $badge = $(this).children('.badge');
+    var msgArea = '';
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/project/update-status",
+        type: "GET",
+        data: {project_id:project_id,status:status,status_type:status_type},
+        success: function(response) {
+            //console.log(response.status);
+            if(response.status == 'success'){
+                console.log($(this).children('.badge'));
+                
+
+                if ($badge.hasClass('bg-danger')) {
+                    if(status_type == 'is_active' ){
+                        status_label = 'Active';
+                        
+                    }else{
+                        status_label = 'Yes';
+                        
+                    }
+                    status = 1;
+                    $badge.removeClass('bg-danger').addClass('bg-success').text(status_label);
+                   
+                } else {
+                    if(status_type == 'is_active' ){
+                        status_label = 'Deactive';
+                        
+                    }else{
+                        status_label = 'No';
+                       
+                    }
+                    status = 0;
+                    $badge.removeClass('bg-success').addClass('bg-danger').text(status_label);
+                }
+
+                $(this).attr("data-status",status);
+                $(this).attr("data-status-label",status_label);
+                $(this).attr("title","Click to"+status_label);
+                
+                displayMsg(msgArea,response.message,'success');
+                
+            }
+            hideAjaxLoader();
+            
+        },
+        error: function(){
+            displayMsg(msgArea,'Error occurred while updating status!','success');
+        },
+        always:function(){
+            hideAjaxLoader();
+        }
+    });
+});

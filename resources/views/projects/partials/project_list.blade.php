@@ -40,13 +40,18 @@
                         </ul>
                         <hr>
                         <div class="row mt-4 align-items-center">
-                            <div class="col-8">
+                            <div class="col-6">
                                 <h6 class="crore-h"><span style="font-size: 13px;">Starting Price</span><br>{{ $project->offers->min('price_from') }} {{ $project->offers->first()->price_from_in_format }}</h6>
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="col-3 text-end">
+                                
+                                <a href="javascript:;" class="detail-btn add-to-compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}">Compare</a>
+                            </div>
+                            <div class="col-3 text-end">
                                 <a href="{{ route('project.show', $project->slug) }}" class="detail-btn">More Details</a>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

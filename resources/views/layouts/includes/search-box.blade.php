@@ -29,7 +29,13 @@
                        <div class="row g-2">
                           <div class="col-md-11">
                              <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                   <label class="form-label">City</label>
+                                   <input type="text" class="form-control font-size-12"  id="city_id" name="city_id" placeholder="Search in City" value="Karachi" readonly="" disabled="">
+                                   
+
+                                </div>
+                                <div class="col-md-4">
                                    <label class="form-label">Area</label>
                                    <input type="text" class="form-control font-size-12" value="" id="search-area" name="search-area" placeholder="Search Area">
                                    <div id="suggestions" style="border:1px solid #ddd; display:none; position:absolute; background:#fff; z-index:999;"></div>
@@ -45,23 +51,33 @@
                                    </select>
                                 </div>
                                 <div class="col-md-3">
-                                   <label class="form-label">Monthly Instalment</label>
-                                   <select class="form-select select2" name="is_installment">
-                                      <option value="" selected>Select</option>
-                                      <option value="yes">Yes</option>
-                                      <option value="no">No</option>
-                                   </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label" name="progress">Progress</label>
-
-                                    <select class="form-select select2" name="progress">
-                                      <option value="" selected>Select</option>
-                                      @foreach($progress as $key => $prog)
-                                        <option value="{{ $key }}" >{{ ucfirst($prog) }}</option>
-                                      @endforeach
-                                    </select>
-                                </div>
+                                  <label class="form-label">Monthly Installment</label>
+                                  <select class="form-select select2" name="monthly_installment" id="monthly_installment">
+                                    <option value="">Select</option>
+                                    <option value="50000:100000" >50,000 ~ 100,000</option>
+                                    <option value="100000:150000" >100,000 ~ 150,000</option>
+                                    <option value="150000:200000" >150,000 ~ 200,000</option>
+                                    <option value="200000:250000" >200,000 ~ 250,000</option>
+                                    <option value="250000:300000" >250,000 ~ 300,000</option>
+                                    <option value="300000:350000" >300,000 ~ 350,000</option>
+                                    <option value="350000:400000" >350,000 ~ 400,000</option>
+                                    <option value="400000:450000" >400,000 ~ 450,000</option>
+                                    <option value="450000:500000" >450,000 ~ 500,000</option>
+                                    <option value="500000:550000" >500,000 ~ 550,000</option>
+                                    <option value="550000:600000" >550,000 ~ 600,000</option>
+                                    <option value="600000:650000" >600,000 ~ 650,000</option>
+                                    <option value="650000:700000" >650,000 ~ 700,000</option>
+                                    <option value="700000:750000" >700,000 ~ 750,000</option>
+                                    <option value="700000:750000" >750,000 ~ 800,000</option>
+                                    <option value="800000:850000" >800,000 ~ 850,000</option>
+                                    <option value="850000:900000" >850,000 ~ 900,000</option>
+                                    <option value="900000:950000" >900,000 ~ 950,000</option>
+                                    <option value="950000:1000000" >950,000 ~ 1,000,000</option>
+                            
+                                  </select>
+                                  
+                               </div>
+                                
                              </div>
                           </div>
                           <div class="col-md-1 text-end pt-2">
@@ -162,11 +178,15 @@
                                             </select>
                                          </div>
                                          <div class="col-md-3">
-                                            <label class="form-label">Project Completion</label>
-                                            <select class="form-select">
-                                               <option selected>Select</option>
+                                            <label class="form-label" >Progress</label>
+
+                                            <select class="form-select select2" name="progress" style="width: 100%;">
+                                              <option value="" selected>Select</option>
+                                              @foreach($progress as $key => $prog)
+                                                <option value="{{ $key }}" >{{ ucfirst($prog) }}</option>
+                                              @endforeach
                                             </select>
-                                         </div>
+                                        </div>
                                       </div>
                                    </div>
                                 </div>

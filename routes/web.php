@@ -171,8 +171,12 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::get('cms-pages/contact-us','CmsPage@contactUs')->name('cmspages.contactus');
         Route::post('cms-pages/save-about-us','CmsPage@saveAboutUs')->name('cmspages.save-aboutus');
         Route::post('cms-pages/save-career','CmsPage@saveCareer')->name('cmspages.save-career');
+        Route::post('get-sub-area/{id}','ProjectController@getSubAreas')->name('project.get-sub-area');
         Route::post('cms-pages/save-contact-us','CmsPage@saveContactUs')->name('cmspages.save-contactus');
         Route::resource('testimonials','TestimonialController');
+        Route::get('project/update-status','ProjectController@updateStatus')->name('project.update-status');
+        Route::post('project/update-position','ProjectController@updatePosition')->name('project.update-position');
+        
 
 
     });
@@ -184,13 +188,21 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/blog', 'BlogController@index')->name('blog.list');
 Route::get('/blog/{id}', 'BlogController@show')->name('show');
-Route::post('/search-area', 'HomeController@searchArea')->name('search-area');
+Route::get('/search-area', 'HomeController@searchArea')->name('search-area');
 Route::get('/projects', 'ProjectController@index')->name('allprojects');
 Route::get('/projects/search-results', 'ProjectController@searchResults')->name('search-results');
 Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
 Route::get('/about-us', 'CmsPage@showAboutUs')->name('aboutus.show');
 Route::get('/career', 'CmsPage@showCareer')->name('career.show');
 Route::get('/contact-us', 'CmsPage@showContactUs')->name('contactus.show');
+
+Route::post('/compare/add', 'ProjectCompareController@ajaxAdd')->name('projects.compare.ajaxAdd');
+Route::post('/compare/remove', 'ProjectCompareController@ajaxRemove')->name('projects.compare.ajaxRemove');
+Route::post('/compare/clear', 'ProjectCompareController@ajaxClear')->name('projects.compare.ajaxClear');
+
+Route::get('/compare', 'ProjectCompareController@index')->name('projects.compare');
+Route::get('/compare/add/{id}', [ProjectCompareController::class, 'add'])->name('projects.compare.add');
+Route::get('/compare/remove/{id}', [ProjectCompareController::class, 'remove'])->name('projects.compare.remove');
 
 
 

@@ -94,6 +94,9 @@
                                 </div>
                        
                             </div>
+
+                            
+
                             <div class="row">                                
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -105,19 +108,45 @@
                                 
                             </div>
                             <div class="row my-location-wrapper">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">City<span>*</span></label>
                                         <select name="city_id" id="city_id" class="form-control select2" >
-                                            <option value="">Select City</option>
+                                            
                                             @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ old('city_id', $project->city_id ?? '') === $city->id ? 'selected' : '' }}>{{ ucfirst($city->name)  }}</option>
+                                                @if($city->id == 31594)
+                                                    <option value="{{ $city->id }}" {{ old('city_id', $project->city_id ?? '') === $city->id ? 'selected' : '' }}>{{ ucfirst($city->name)  }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>                                    
 
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Area<span>*</span></label>
+                                        <select name="area_id" id="area_id" class="form-control select2" >
+                                            <option value="">Select Area</option>
+                                            @foreach($areas as $area)
+                                                <option value="{{ $area->id }}" {{ old('area_id', $project->area_id ?? '') === $area->id ? 'selected' : '' }}>{{ ucfirst($area->name)  }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>                                    
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Sub Area<span>*</span></label>
+                                        <select name="sub_area_id" id="sub_area_id" class="form-control select2" >
+                                            <option value="">Select Sub Area</option>
+                                            @foreach($sub_areas as $sub_area)
+                                                <option value="{{ $area->id }}" {{ old('sub_area_id', $project->sub_area_id ?? '') === $sub_area->id ? 'selected' : '' }}>{{ ucfirst($sub_area->name)  }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>                                    
+
+                                </div>
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="form-label">Location<span>*</span></label>
                                         <input  type="text" name="location" class="form-control" value="{{ old('location', $project->location ?? '') }}" id="gmap-location" required >
@@ -182,10 +211,13 @@
                                                 <div class="accordion-body">
                                                     <div class="repeatable-wrapper">
                                                         <div class="repeatable-fields">
+                                                            @php $offers = []; @endphp
                                                             @if(!empty($project->offers))
                                                                 @foreach($project->offers as $savedOffer)
                                                                     @if($savedOffer->offer == strtolower($offer))
-                                         
+                                                                        @php 
+                                                                            $offers[] =  $offer;
+                                                                        @endphp
                                                                         <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                             <div class="row">
                                                                                 <div class="col-md-4">
@@ -271,7 +303,41 @@
                                                                                         </select>
                                                                                     </div>
                                                                                 </div> 
-                                                                            </div>  
+                                                                            </div> 
+
+                            <div class="row installment-area">
+                                
+                                <div class="col-md-3  mt-5">
+                                    <div class="form-group">
+                                       
+                                        <div class="form-check">
+                                            <label >
+                                                <input class="form-check-input installment-checkbox" value="1" type="checkbox" name="{{$offer}}[is_installment][]" {{  $savedOffer->is_installment === 1 ? 'checked' : '' }}>
+                                                <strong>Is Installment</strong>
+                                            </label>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment {{ $savedOffer->is_installment ?? '' === 1 ? '' : 'display-none' }}">
+                                    <div class="form-group">
+                                        <label class="form-label">Advance Amount<span>*</span></label>
+                                        <input type="text" name="{{$offer}}[installment_advance_amount][]" class="form-control" value="{{ $savedOffer->installment_advance_amount ?? '' }}" >  
+                                    </div> 
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment {{ $savedOffer->is_installment ?? '' === 1 ? '' : 'display-none' }}">
+                                    <div class="form-group">
+                                        <label class="form-label">Number of Installments<span>*</span></label>
+                                        <input type="number" name="{{$offer}}[number_of_instalments][]" class="form-control" value="{{   $savedOffer->number_of_instalments ?? '' }}" >  
+                                    </div> 
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment {{ $savedOffer->is_installment ?? '' === 1 ? '' : 'display-none' }}">
+                                    <div class="form-group">
+                                        <label class="form-label">Monthly Installment<span>*</span></label>
+                                        <input type="text" name="{{$offer}}[monthly_installment][]" class="form-control" value="{{ $savedOffer->monthly_installment  ?? '' }}" >  
+                                    </div> 
+                                </div>
+                                    
+                            </div> 
                                                                             <div class="text-end mt-2">
                                                                                 <button type="button" class="btn btn-danger btn-sm remove-group" data-id="{{ $savedOffer->id }}">Remove</button>
                                                                                 <input type="hidden" name="{{$offer}}[offer_id][]" value="{{$savedOffer->id}}">
@@ -279,8 +345,8 @@
                                                                         </div>   
                                                                     @endif
                                                                 @endforeach         
-                                                            @else
-                                                           
+                                                            @endif
+                                                            @if(!in_array($offer,$offers))
                                                                 <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                     <div class="row">
                                                                         <div class="col-md-4">
@@ -407,7 +473,7 @@
                                     </div>
                                 </div>
                             </div>       
-                            <div class="row p-3">
+                            <div class="row">
                                 <div class="repeatable-wrapper" id="floorplans-wrapper">
                                     <label><strong>Floor Plans</strong></label>
                                   
@@ -662,15 +728,78 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-xs-12 mb-3 mt-3">
-                                <div class="form-group">
-                                   
-                                    <div class="form-check form-switch">
-                                      <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
-                                      <label class="form-check-label" for="is_active">Status</label>
-                                    </div>                                    
+                            <div class="row"> 
+                                <div class="col-md-3 mb-3 mt-3">
+                                    <div class="form-group">
+                                       
+                                        <div class="form-check form-switch">
+                                          <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {{ (isset($project) && $project->is_active == 0) ? '' : 'checked' }}>
+                                          <label class="form-check-label" for="is_active">Status</label>
+                                        </div>                                    
+                                    </div>
                                 </div>
+                                <div class="col-md-3 mb-3 mt-3">
+                                    <div class="form-group">
+                                       
+                                        <div class="form-check form-switch">
+                                          <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" {{ (isset($project) && $project->is_featured == 1) ? 'checked' : '' }}>
+                                          <label class="form-check-label" for="is_featured">Is Featured</label>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mt-3">
+                                    <div class="form-group">
+                                       
+                                        <div class="form-check form-switch">
+                                          <input class="form-check-input" type="checkbox" id="is_popular" name="is_popular" {{ (isset($project) && $project->is_popular == 1) ? 'checked' : '' }}>
+                                          <label class="form-check-label" for="is_popular">Is Popular</label>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="form-label"><strong><a href="javascript:;" class="toggle-survey-fields" >Survey Fields</a></strong></label>
+                                <div class="survey-fields row {!! !$is_show_survey_fields ? 'display-none' : '' !!} border p-3 m-2 rounded bg-light">
+                                     
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Rate Per Square</label>
+                                            <input type="text" name="rate_per_square" class="form-control" value="{{ old('rate_per_square', $project->rate_per_square ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Development Charges</label>
+                                            <input type="text" name="development_charges" class="form-control" value="{{ old('development_charges', $project->development_charges ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Utility Charges</label>
+                                            <input type="text" name="utility_charges" class="form-control" value="{{ old('utility_charges', $project->utility_charges ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Distance</label>
+                                            <input type="text" name="distance" class="form-control" value="{{ old('distance', $project->distance ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Project Floors</label>
+                                            <input type="text" name="project_floors" class="form-control" value="{{ old('project_floors', $project->project_floors ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Project Start Date</label>
+                                            <input type="date" name="project_start_date" class="form-control" value="{{ old('project_start_date', $project->project_start_date ?? '') }}" >  
+                                        </div> 
+                                    </div>
+                                </div>
+                                    
                             </div>
 
 
@@ -721,20 +850,37 @@ function initMap() {
         position: defaultLatLng
     });
 
+    const sw = new google.maps.LatLng(24.825, 67.000);  // Southwest corner
+    const ne = new google.maps.LatLng(24.950, 67.150);  // Northeast corner
+    const karachiBounds = new google.maps.LatLngBounds(sw, ne);
+
     const input = document.getElementById('gmap-location');
-    autocomplete = new google.maps.places.Autocomplete(input);
+    //autocomplete = new google.maps.places.Autocomplete(input);
+    // Approximate Karachi sub-area bounds (set to your target area)
+            
+
+    autocomplete = new google.maps.places.Autocomplete(input, {
+      bounds: karachiBounds,
+      componentRestrictions: { country: 'pk' }, // Pakistan only
+      strictBounds: true
+    });
 
     autocomplete.addListener('place_changed', onPlaceChanged);
 
     geocoder = new google.maps.Geocoder();
 
-    $(document).on('change','select#city_id ', function(){
-        console.log('city:',$(this).find('option:selected').text());
-        const city = $(this).find('option:selected').text();
-        if (city) {
-            onCityChange(city);
+    $(document).on('change','select#city_id, select#area_id, select#sub_area_id ', function(){
+        
+        const city = $('select#city_id').find('option:selected').text();
+        var area = $('select#area_id').find('option:selected').text();
+        var sub_area = $('select#sub_area_id').find('option:selected').text();
+        console.log('city:',city,'area:',area,'sub_area:',sub_area);
+        if (city || area || sub_area) {
+            area = (area) ? ','+area : '';
+            sub_area = (sub_area) ? ','+sub_area : '';
+            onCityChange(city, area, sub_area);
         }
-    })
+    });
 }
 
 function onPlaceChanged() {
@@ -749,9 +895,9 @@ function onPlaceChanged() {
 }
 
 // when city is selected from dropdown
-function onCityChange(cityName) {
+function onCityChange(cityName, area='', sub_area='') {
     $("#gmap-location").attr('placeholder','Enter a Location');
-    geocoder.geocode({ address: cityName }, function (results, status) {
+    geocoder.geocode({ address: cityName+area+sub_area }, function (results, status) {
         if (status === 'OK') {
             const location = results[0].geometry.location;
             map.setCenter(location);
@@ -763,8 +909,9 @@ function onCityChange(cityName) {
                 center: location,
                 radius: 30000 // ~30km
             });
+
             autocomplete.setBounds(circle.getBounds());
-            $("#gmap-location").attr('placeholder','Search from '+cityName);
+            $("#gmap-location").attr('placeholder','Search from '+cityName+' '+area+' '+sub_area);
         } else {
             console.error('City not found: ' + status);
         }
@@ -789,54 +936,57 @@ $(document).on("change", "input.offering", function(){
 
 
 $(document).ready(function () {
-  // Handle Add More for all groups
-  $('.repeatable-wrapper').on('click', '.add-more', function () {
-    let $wrapper = $(this).closest('.repeatable-wrapper');
-    let $group = $wrapper.find('.repeatable-group:first').clone();
+    // Handle Add More for all groups
+    $('.repeatable-wrapper').on('click', '.add-more', function () {
+        let $wrapper = $(this).closest('.repeatable-wrapper');
+        let $group = $wrapper.find('.repeatable-group:first').clone();
 
-    // Clear input/select values
-    $group.find('input, select').val('');
-    $group.find('button.remove-group').attr('data-id','');
-    $group.find('button.remove-group').attr('data-floorplan-id','');
-    $group.find('a.available-image-area').remove();
-    
-    $wrapper.find('.repeatable-fields').append($group);
-  });
+        // Clear input/select values
+        $group.find('input, select').val('');
+        $group.find('button.remove-group').attr('data-id','');
+        $group.find('button.remove-group').attr('data-floorplan-id','');
+        $group.find('a.available-image-area').remove();
 
-  // Handle Remove within groups
-  $(document).on('click', '.repeatable-wrapper .remove-group', function () {
-    let $fields = $(this).closest('.repeatable-fields');
-    if ($fields.find('.repeatable-group').length > 1) {
-        if($(this).data("id")  || $(this).data("floorplan-id")){
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "The record will be deleted after you save this form.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(this).closest('.repeatable-group').remove();
-                    var element_id = "deleted-offer";
-                    var record_id = $(this).data("id");
-                    if($(this).data("floorplan-id")){
-                        element_id = "deleted-floor-plan";
-                        record_id = $(this).data("floorplan-id");
+        $wrapper.find('.repeatable-fields').append($group);
+    });
+
+    // Handle Remove within groups
+    $(document).on('click', '.repeatable-wrapper .remove-group', function () {
+        let $fields = $(this).closest('.repeatable-fields');
+        if ($fields.find('.repeatable-group').length > 1) {
+            if($(this).data("id")  || $(this).data("floorplan-id")){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "The record will be deleted after you save this form.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).closest('.repeatable-group').remove();
+                        var element_id = "deleted-offer";
+                        var record_id = $(this).data("id");
+                        if($(this).data("floorplan-id")){
+                            element_id = "deleted-floor-plan";
+                            record_id = $(this).data("floorplan-id");
+                        }
+                        
+                        addDeletedRec(record_id,element_id);
                     }
-                    
-                    addDeletedRec(record_id,element_id);
-                }
-            });
-        }else{
+                });
+            }else{
 
-            $(this).closest('.repeatable-group').remove();
+                $(this).closest('.repeatable-group').remove();
+            }
+          
         }
-      
-    }
-  });
+    });
 
+    $(document).on("click",".toggle-survey-fields", function(){
+        $(".survey-fields").toggleClass("display-none");
+    });
     
 });
 
@@ -846,6 +996,20 @@ function addDeletedRec(record_id,element_id) {
     val.push(record_id);
     field.value = JSON.stringify(val);
 }
+
+$(document).on("change", "input.installment-checkbox", function(){
+
+    if($(this).is(":checked")){
+        $(this).parents(".installment-area").find(".is_installment").removeClass("display-none");
+    }else{
+        $(this).parents(".installment-area").find(".is_installment").addClass("display-none");
+    }
+
+});
+
+$(document).on("click",".toggle-survey-fields", function(){
+    $(".survey-fields").toggleClass("display-none");
+});
 
 </script>
 @if(!isset($project))
@@ -872,6 +1036,10 @@ function addDeletedRec(record_id,element_id) {
 
         $('select#city_id').on('change', function() {
             sessionStorage.setItem('city_id', $(this).val());
+        });
+
+        $(document).on("click",".toggle-survey-fields", function(){
+            $(".survey-fields").toggleClass("display-none");
         });
     });
     // Auto-fill form from sessionStorage

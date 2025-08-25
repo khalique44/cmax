@@ -156,14 +156,14 @@ class GeneralHelper
     
 
     public static function getStatusLabel($status = 1,$color = 'success'){
-
+        $label = $status;
         if(is_numeric($status)){
 
-            $status = $status == 1 ? 'Active' : 'Deactive';
+            $label = $status == 1 ? 'Active' : 'Deactive';
             $color = $status == 1 ? 'success' : 'danger';
         }
 
-        return '<span class="badge badge-'.$color.'">'.$status.'</span>';
+        return '<span class="badge bg-'.$color.'">'.$label.'</span>';
     }
 
 
@@ -250,6 +250,16 @@ class GeneralHelper
             'min' => GeneralHelper::detectNumberUnit($min),
             'max' => GeneralHelper::detectNumberUnit($max),
         ];
+    }
+
+    public static function showSurveyFileds($project){
+
+        if($project->rate_per_square || $project->development_charges || $project->utility_charges || $project->distance || $project->project_floors || $project->project_start_date ){
+            return true;
+        }
+
+        return false;
+
     }
 
     /*public static function timeTo24($time){

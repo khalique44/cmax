@@ -53,6 +53,12 @@ class ProjectController extends Controller
         $related_projects = Project::with('offers','floorPlan','builder')->where('builder_id',$project->builder_id)->take(3)->get();
         $progress = config('constants.progress');
 
+        $sessionKey = 'project_viewed_' . $project->id;
+        if (!session()->has($sessionKey)) {
+            $project->increment('views');
+            session()->put($sessionKey, true);
+        }
+
         return view('projects.details', compact('project','progress','related_projects'));
     }
 
@@ -80,11 +86,11 @@ class ProjectController extends Controller
         //
     }
 
-     public function searchResults(Request $request){
+    public function searchResults(Request $request){
 
         $searchArea      = $request->input('search-area');
         $builderId       = $request->input('builder_id');
-        $isInstallment   = $request->input('is_installment');
+        $monthly_installment   = $request->input('monthly_installment');
         $progress        = $request->input('progress');
         $propertyType    = $request->input('property_type');
         $priceFrom       = $request->input('price_from');
@@ -92,27 +98,50 @@ class ProjectController extends Controller
         $bedrooms        = $request->input('bedrooms');
         $priceFrom       = GeneralHelper::detectNumberUnit($priceFrom);
         $priceTo         = GeneralHelper::detectNumberUnit($priceTo);
-        $searchedData    = $request->all();
+        $searchedData    = $request->all();    
+        $installment = $monthly_installment ? explode(':', $monthly_installment) : [];        
+        
+
         
         \DB::enableQueryLog();
 
+        $searchArea = explode(' - ', $searchArea);
+        $area = $searchArea[0] ?? '';
+        $subArea = $searchArea[1] ?? '';
 
         $projects = Project::query()
 
         // Search area (assuming 'location' field)
-        ->when($searchArea, function ($query, $searchArea) {
+        /*->when($searchArea, function ($query, $searchArea) {
             $query->where('location', 'like', "%$searchArea%");
+        })*/
+
+
+
+        ->when($area, function ($query, $searchArea) {
+            $query->whereHas('area', function ($q) use ($searchArea) {
+                $q->where('name', 'like', '%' . $searchArea . '%');
+            });
+            
         })
+
+        ->when($subArea, function ($query, $searchArea) {
+            $query->orWhereHas('subArea', function ($q) use ($searchArea) {
+                $q->where('name', 'like', '%' . $searchArea . '%');
+            });
+            
+        })
+        
 
         // Builder ID
         ->when($builderId && $builderId != 'Select', function ($query) use ($builderId) {
             $query->where('builder_id', $builderId);
         })
 
-        // Is Installment (assuming 'is_installment' field)
-        ->when($isInstallment && $isInstallment != 'Select', function ($query) use ($isInstallment) {
+        /*// Is Installment (assuming 'is_installment' field)
+        ->when($monthly_installment && $monthly_installment != 'Select', function ($query) use ($isInstallment) {
             $query->where('is_installment', $isInstallment);
-        })
+        })*/
 
         // Progress (e.g., under-construction, completed)
         ->when($progress && $progress != 'Select', function ($query) use ($progress) {
@@ -123,6 +152,15 @@ class ProjectController extends Controller
         /*->when($propertyType, function ($query, $propertyType) {
             $query->whereIn('offering', explode(",",$propertyType));
         })*/
+
+        ->when($installment, function ($query, $installment) {
+            $query->whereHas('offers', function ($q) use ($installment) {
+                $installment_from = $installment[0] ?? '';
+                $installment_to = $installment[1] ?? '';
+                $q->whereBetween('monthly_installment', [$installment_from, $installment_to]);
+                $q->where('is_installment', 1);
+            });
+        })
 
         // Bedrooms (assuming 'bedrooms' field in project_offers table)
         ->when($bedrooms, function ($query, $bedrooms) {
@@ -145,7 +183,7 @@ class ProjectController extends Controller
 
        
 
-        $projects = $projects->paginate(3);
+        $projects = $projects->orderBy('position', 'asc')->paginate(10);
         //dd(\DB::getQueryLog());
         $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');

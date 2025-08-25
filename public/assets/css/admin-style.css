@@ -2540,7 +2540,7 @@ form .form-label span {
 }
 
 
-.cursor-pointer.sorting_1{
+tbody td.sorting_1{
     cursor: move ;
 }
 

@@ -10,6 +10,8 @@ use App\Category;
 use App\Builder;
 use App\User;
 use App\Feature;
+use App\Area;
+use App\SubArea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
@@ -48,7 +50,29 @@ class ProjectController extends Controller
                     $progress = config('constants.progress');
                     return  $progress[$project->progress];
                 })
-                ->rawColumns(['action'])
+                ->editColumn('is_active', function($project) {
+                    $status = GeneralHelper::getStatusLabel($project->is_active);
+                    $label = $project->is_active == 1 ? 'Deactive' : 'Active';
+                    $newStatus = $project->is_active == 1 ? 0 : 1;
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_active" data-status-label="'.$label.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$label.'" >'.$status.'</a>';                    
+                })
+                ->editColumn('is_featured', function($project) {
+                    $label = $project->is_featured == 1 ? 'Yes' : 'No';
+                    $color = $project->is_featured == 1 ? 'success' : 'danger';
+                    $statusHtml = GeneralHelper::getStatusLabel($label,$color);
+                    $newLabel = $project->is_featured == 1 ? 'No' : 'Yes';
+                    $newStatus = $project->is_featured == 1 ? 0 : 1;
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_featured" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                })
+                ->editColumn('is_popular', function($project) {
+                    $label = $project->is_popular == 1 ? 'Yes' : 'No';
+                    $color = $project->is_popular == 1 ? 'success' : 'danger';
+                    $statusHtml = GeneralHelper::getStatusLabel($label,$color);
+                    $newLabel = $project->is_popular == 1 ? 'No' : 'Yes';
+                    $newStatus = $project->is_popular == 1 ? 0 : 1;
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_popular" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                })
+                ->rawColumns(['action','is_active','is_featured','is_popular'])
                 ->toJson();
         }
     }
@@ -71,10 +95,13 @@ class ProjectController extends Controller
         $cities = GeneralHelper::getCitiesByCountry(166);
         $price_types = config('constants.price_types');
         $offering = config('constants.offering');    
+        $areas = Area::orderBy('name' , 'asc')->get();
+        $sub_areas = SubArea::orderBy('name' , 'asc')->get();
         $features = Feature::where('is_active',1)->orderBy('name' , 'asc')->get();
+        $is_show_survey_fields = false;
         
         
-        return view('admin.projects.create', compact('users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features'));
+        return view('admin.projects.create', compact('users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features','areas','sub_areas','is_show_survey_fields'));
     }
 
     /**
@@ -94,6 +121,9 @@ class ProjectController extends Controller
             'location' => 'required',            
             'images.*' => 'image|max:10240',
             'offering' => 'required|array|min:1|in:'.implode(",",$offering),
+            'area_id' => 'required',
+            'sub_area_id' => 'required',
+
 
             ],
             [                
@@ -126,6 +156,12 @@ class ProjectController extends Controller
                         $rules["{$offer}.bedrooms.$i"] = 'required|integer|min:0';
                         $rules["{$offer}.bathrooms.$i"] = 'required|integer|min:0';
                     }
+
+                    if($request->filled('{$offer}.is_installment.$i')){
+                        $rules["{$offer}.installment_advance_amount.$i"] = 'required';
+                        $rules["{$offer}.number_of_instalments.$i"] = 'required';
+                        $rules["{$offer}.monthly_installment.$i"] = 'required';
+                    }
                 }
             }
         }
@@ -145,7 +181,9 @@ class ProjectController extends Controller
         // Using bootstrap switcher which return on/off text
         $request->merge([
             'offering' => $request->has('offering') ? implode(',', $request->offering) : '',            
-            'is_active' => $request->has('is_active') ? 1 : 0,            
+            'is_active' => $request->has('is_active') ? 1 : 0,    
+            'is_featured' => $request->has('is_featured') ? 1 : 0,        
+            'is_popular' => $request->has('is_popular') ? 1 : 0,        
             'added_by' => auth('admin')->user()->id,
         ]);
 
@@ -184,6 +222,10 @@ class ProjectController extends Controller
                         'price_to' => $request->$offer['price_to'][$i],
                         'price_from_in_format' => $request->$offer['price_type_from'][$i],
                         'price_to_in_format' => $request->$offer['price_type_to'][$i],
+                        'is_installment' => $request->has("{$offer}.is_installment.{$i}") ? 1 : 0,
+                        'installment_advance_amount' => $request->$offer['installment_advance_amount'][$i],
+                        'number_of_instalments' => $request->$offer['number_of_instalments'][$i],
+                        'monthly_installment' => $request->$offer['monthly_installment'][$i],
        
                     ]);
                    
@@ -306,10 +348,13 @@ class ProjectController extends Controller
         $cities = GeneralHelper::getCitiesByCountry(166);
         $price_types = config('constants.price_types');
         $offering = config('constants.offering');       
-        $features = Feature::where('is_active',1)->orderBy('name' , 'asc')->get();      
+        $features = Feature::where('is_active',1)->orderBy('name' , 'asc')->get();   
+        $areas = Area::orderBy('name' , 'asc')->get();
+        $sub_areas = SubArea::orderBy('name' , 'asc')->get();   
+        $is_show_survey_fields = GeneralHelper::showSurveyFileds($project);
         
         
-        return view('admin.projects.create', compact('project','users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features'));
+        return view('admin.projects.create', compact('project','users','builders','progress','offering','area_types','bedrooms','bathrooms','cities','price_types','features','areas','sub_areas','is_show_survey_fields'));
     }
 
     /**
@@ -329,6 +374,8 @@ class ProjectController extends Controller
             'location' => 'required',            
             'images.*' => 'image|max:2048',
             'offering' => 'required|array|min:1|in:'.implode(",",$offering),
+            'area_id' => 'required',
+            'sub_area_id' => 'required',
 
             ],
             [                
@@ -369,6 +416,12 @@ class ProjectController extends Controller
                         $rules["{$offer}.bedrooms.$i"] = 'required|integer|min:0';
                         $rules["{$offer}.bathrooms.$i"] = 'required|integer|min:0';
                     }
+
+                    if($request->filled('{$offer}.is_installment.$i')){
+                        $rules["{$offer}.installment_advance_amount.$i"] = 'required';
+                        $rules["{$offer}.number_of_instalments.$i"] = 'required';
+                        $rules["{$offer}.monthly_installment.$i"] = 'required';
+                    }
                 }
             }
         }
@@ -395,6 +448,8 @@ class ProjectController extends Controller
         $request->merge([
             'offering' => $request->has('offering') ? implode(',', $request->offering) : '',            
             'is_active' => $request->has('is_active') ? 1 : 0,            
+            'is_featured' => $request->has('is_featured') ? 1 : 0,            
+            'is_popular' => $request->has('is_popular') ? 1 : 0,            
             'added_by' => auth('admin')->user()->id,
         ]);
 
@@ -424,6 +479,7 @@ class ProjectController extends Controller
                 $count = count($request->$offer['title'] ?? []);
                 for ($i = 0; $i < $count; $i++) {
                     $offerId = $request->$offer['offer_id'][$i] ?? null;
+
                     $project->offers()->updateOrCreate(
                         ['id' => $offerId],
                         [
@@ -438,6 +494,10 @@ class ProjectController extends Controller
                         'price_to' => $request->$offer['price_to'][$i],
                         'price_from_in_format' => $request->$offer['price_type_from'][$i],
                         'price_to_in_format' => $request->$offer['price_type_to'][$i],
+                        'is_installment' => $request->has("{$offer}.is_installment.{$i}") ? 1 : 0,
+                        'installment_advance_amount' => $request->$offer['installment_advance_amount'][$i],
+                        'number_of_instalments' => $request->$offer['number_of_instalments'][$i],
+                        'monthly_installment' => $request->$offer['monthly_installment'][$i],
        
                     ]);
                    
@@ -591,5 +651,48 @@ class ProjectController extends Controller
 
         return view('admin.projects.add-property', compact('project','property','users','builders','amenities','categories','area_types','property_types','bedrooms','bathrooms','purposes','cities'));
         
+    }
+
+    public function getSubAreas($area_id){
+
+        $subAreas = SubArea::where('area_id',$area_id)->orderBy('name','asc')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sub areas found',
+            'subAreas' => $subAreas
+        ]);
+    }
+
+
+    public function updateStatus(Request $request){
+       
+        $project = Project::findOrFail($request->project_id);   
+
+        $project->update([$request->status_type => $request->status]);
+        
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Record updated successfully!'
+        ]);
+    }
+
+    public function updatePosition(Request $request)
+    { 
+        
+        $rows = ($request->all());        
+        Project::updatePosition($rows);
+        $response = array( 'status' => 'success', 'message' => __('Position Updated Successfully!') );
+            
+        return response()->json($response);
+    }
+
+    public function reGeneratePositions(){
+        $records = Project::getRecordsWihPosition();
+        foreach ($records as $key => $record) {
+            $record->position = $key + 1;
+            $record->save();
+        }
     }
 }

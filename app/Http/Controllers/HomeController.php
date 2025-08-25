@@ -9,6 +9,8 @@ use App\TeamMember;
 use App\Project;
 use App\Builder;
 use App\Post;
+use App\Area;
+use App\SubArea;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -39,7 +41,7 @@ class HomeController extends Controller
         $property_types = config('constants.property_types');
         $bedrooms = config('constants.bedrooms');
         $offering = config('constants.offering');
-        $popular_projects = Project::with('offers','floorPlan','builder')->where('is_popular',true)->take(3)->get();
+        $popular_projects = Project::with('offers','floorPlan','builder')->where('is_popular',true)->take(3)->orderBy('position', 'asc')->get();
         $latestPosts = Post::where('status', 'yes')
         ->latest()  // created_at DESC
         ->take(3)
@@ -56,7 +58,7 @@ class HomeController extends Controller
         //return '<H2>Coming Soon</H2';
     }
 
-    public function searchArea(Request $request){
+    /*public function searchArea(Request $request){
 
         $query = $request->get('query');
 
@@ -66,7 +68,29 @@ class HomeController extends Controller
                 ->take(50);         // Limit results (optional)
         $results = collect($results)->values(); // resets keys        
         return response()->json($results);
+    }*/
+
+
+    public function searchArea(Request $request){
+      $query = $request->get('query');
+
+      $results = Area::with('subAreas')
+          ->where('name', 'like', '%' . $query . '%')
+          ->orderBy('name', 'asc') // Order areas alphabetically
+          ->get()
+          ->flatMap(function ($area) {
+              $list = collect([$area->name]); // Add area name first
+              foreach ($area->subAreas->sortBy('name') as $subArea) { // Order sub-areas alphabetically
+                  $list->push($area->name . ' - ' . $subArea->name);
+              }
+              return $list;
+          })
+          ->take(50)
+          ->values();
+
+      return response()->json($results);
     }
+
 
    
 }

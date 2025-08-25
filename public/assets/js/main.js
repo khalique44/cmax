@@ -172,7 +172,7 @@ $('#search-area').on('keyup', function(e){
     //showAjaxLoader();
     $.ajax({
         url: "/search-area",
-        type: "POST",
+        type: "GET",
         data: formData,
         dataType: "json",
         //contentType: false,
@@ -382,6 +382,17 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('change','#minInstallment, #maxInstallment', function() {
+        var min = parseInt($('#minInstallment').val()) || 0;
+        var max = parseInt($('#maxInstallment').val()) || 0;
+
+        if (min > max) {
+            $('#installmentError').text('Max installment must be greater than Min installment!');
+        } else {
+            $('#installmentError').text('');
+        }
+    });
+
     $('.toggle-description').on('click', function () {
         var container = $(this).closest('.description-container');
         var shortDesc = container.find('.short-description');
@@ -453,5 +464,82 @@ $(document).on('click', '.page-item  a.page-link', function(e) {
 });
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    const compareBox = document.getElementById("compare-box");
+    const compareItems = document.getElementById("compare-items");
+
+    // Add project to compare
+    document.querySelectorAll(".add-to-compare").forEach(btn => {
+        btn.addEventListener("click", function () {
+            let id = this.dataset.id;
+            let title = this.dataset.title;
+            let formData = new FormData();
+            formData.append("id", id);
+
+            fetch("/compare/add", {
+                method: "POST",
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                body: formData,
+                //data: {id:id}
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    renderCompareItems(data.projects);
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    });
+
+    // Remove project
+    function removeCompare(id) {
+        fetch("/compare/remove", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            },
+            body: JSON.stringify({id})
+        })
+        .then(res => res.json())
+        .then(data => renderCompareItems(data.projects));
+    }
+
+    // Clear all
+    document.getElementById("clear-compare").addEventListener("click", function () {
+        fetch("/compare/clear", {
+            method: "POST",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+        })
+        .then(res => res.json())
+        .then(data => renderCompareItems(data.projects));
+    });
+
+    // Render projects inside box
+    function renderCompareItems(projects) {
+        compareItems.innerHTML = "";
+        if (projects.length === 0) {
+            compareBox.classList.add("hidden");
+            return;
+        }
+
+        projects.forEach(p => {
+            let item = document.createElement("div");
+            item.className = "flex justify-between items-center border p-2 rounded";
+            item.innerHTML = `
+                <span>${p.title}</span>
+                <button class="text-red-500 text-sm" onclick="removeCompare(${p.id})">&times;</button>
+            `;
+            compareItems.appendChild(item);
+        });
+
+        compareBox.classList.remove("hidden");
+    }
+
+    // Expose removeCompare globally
+    window.removeCompare = removeCompare;
+});
 
 

@@ -86,6 +86,24 @@ p.loc-txt {
   background-color: #1049AB;
   color: #fff;
 }
+
+@media (max-width: 768px) {
+  #compare-box {
+    left: 0;
+    right: 0;
+    border-radius: 1rem 1rem 0 0;
+  }
+  #compare-items {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+  }
+  #compare-items div {
+    min-width: 120px;
+    white-space: nowrap;
+  }
+}
+
 /* ------ End code by KHL ------ */
 
 

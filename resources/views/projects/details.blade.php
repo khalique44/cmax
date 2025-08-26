@@ -29,6 +29,11 @@
                     {{ $project->price_range['min']['amount'] ?? '' .' '. $project->price_range['min']['unit'] ?? '' }} 
                 </h2>
                 <div class="d-flex justify-content-end ">
+                    <div class="mb-2 me-2">
+                        <a class="btn-red addToCompare" data-title="{{ $project->project_title
+                         }}" data-id="{{ $project->id
+                         }}" href="javascript:;">Compare</a>
+                     </div>
                     <div class="call-btn mb-2">
                         <a href="tel:{{ $project->builder->mobile_number ?? '#' }}">
                             <img src="{{ asset('public/assets/img/phone-icon.svg') }}" alt="">

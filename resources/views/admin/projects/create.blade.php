@@ -198,7 +198,7 @@
                                 <div class="accordion" id="project-offers">
 
                                     @foreach($offering as $key => $offer)
-                                        <div class="accordion-item offer-item-{{$offer}}  {{ isset($project) &&  in_array($offer,$offers) ? '' : 'display-none' }} ">
+                                        <div class="accordion-item offer-item-{{$offer}}  {{ isset($project) &&  in_array($offer,$offers) ? '' : 'display-none' }} " {{ $offer .' '. json_encode($offers) }}>
                                             
                                             <h2 class="accordion-header" id="offer-heading-{{$key}}">
                                               <button class="accordion-button offer-item-btn-{{$offer}}" type="button" data-bs-toggle="collapse" data-bs-target="#offer-{{$key}}"
@@ -211,12 +211,12 @@
                                                 <div class="accordion-body">
                                                     <div class="repeatable-wrapper">
                                                         <div class="repeatable-fields">
-                                                            @php $offers = []; @endphp
+                                                            @php $savedOffers = []; @endphp
                                                             @if(!empty($project->offers))
                                                                 @foreach($project->offers as $savedOffer)
                                                                     @if($savedOffer->offer == strtolower($offer))
                                                                         @php 
-                                                                            $offers[] =  $offer;
+                                                                            $savedOffers[] =  $offer;
                                                                         @endphp
                                                                         <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                             <div class="row">
@@ -346,7 +346,7 @@
                                                                     @endif
                                                                 @endforeach         
                                                             @endif
-                                                            @if(!in_array($offer,$offers))
+                                                            @if(!in_array($offer,$savedOffers))
                                                                 <div class="repeatable-group border p-3 mb-3 rounded bg-light">
                                                                     <div class="row">
                                                                         <div class="col-md-4">
@@ -432,7 +432,41 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div> 
-                                                                    </div>  
+                                                                    </div> 
+
+                            <div class="row installment-area">
+                                
+                                <div class="col-md-3  mt-5">
+                                    <div class="form-group">
+                                       
+                                        <div class="form-check">
+                                            <label >
+                                                <input class="form-check-input installment-checkbox" value="1" type="checkbox" name="{{$offer}}[is_installment][]" >
+                                                <strong>Is Installment</strong>
+                                            </label>
+                                        </div>                                    
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment display-none">
+                                    <div class="form-group">
+                                        <label class="form-label">Advance Amount<span>*</span></label>
+                                        <input type="text" name="{{$offer}}[installment_advance_amount][]" class="form-control" value="" >  
+                                    </div> 
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment display-none">
+                                    <div class="form-group">
+                                        <label class="form-label">Number of Installments<span>*</span></label>
+                                        <input type="number" name="{{$offer}}[number_of_instalments][]" class="form-control" value="" >  
+                                    </div> 
+                                </div>
+                                <div class="col-md-3 mt-3 is_installment display-none">
+                                    <div class="form-group">
+                                        <label class="form-label">Monthly Installment<span>*</span></label>
+                                        <input type="text" name="{{$offer}}[monthly_installment][]" class="form-control" value="" >  
+                                    </div> 
+                                </div>
+                                    
+                            </div> 
                                                                     <div class="text-end mt-2">
                                                                         <button type="button" class="btn btn-danger btn-sm remove-group" data-id="">Remove</button>
                                                                     </div>

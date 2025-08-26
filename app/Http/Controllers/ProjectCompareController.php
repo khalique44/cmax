@@ -34,8 +34,8 @@ class ProjectCompareController extends Controller
     public function index()
     {
         $compare = session()->get('compare', []);
-        dd($compare);
-        $projects = Project::whereIn('id', $compare)->get();
+
+        $projects = Project::with('offers','floorPlan','builder')->whereIn('id', $compare)->get();
 
         return view('projects.compare', compact('projects'));
     }
@@ -52,7 +52,7 @@ class ProjectCompareController extends Controller
 	        }
 	        $compare[] = $id;
 	        session()->put('compare', $compare);
-	        dd($compare);
+	 
 	    }
 
 	    $projects = Project::whereIn('id', $compare)->get(['id', 'project_title']);

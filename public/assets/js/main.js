@@ -469,8 +469,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const compareItems = document.getElementById("compare-items");
 
     // Add project to compare
-    document.querySelectorAll(".add-to-compare").forEach(btn => {
+    document.querySelectorAll(".addToCompare").forEach(btn => {
         btn.addEventListener("click", function () {
+            showAjaxLoader();
             let id = this.dataset.id;
             let title = this.dataset.title;
             let formData = new FormData();
@@ -484,11 +485,16 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(res => res.json())
             .then(data => {
+                console.log(data.status);
                 if (data.status === "success") {
-                    renderCompareItems(data.projects);
+                    //renderCompareItems(data.projects);
+
+                    document.location = "/compare";
+
                 } else {
                     alert(data.message);
                 }
+                hideAjaxLoader();
             });
         });
     });

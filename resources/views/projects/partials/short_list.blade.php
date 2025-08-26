@@ -32,8 +32,8 @@
                        <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
                 </div>
                
-                <div class="col-4 text-end">
-                   <span class="heart-btn"><a href="javascript:;" class="add-to-compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}" title="Compare"><i class="fa fa-exchange"></i> </a></span>
+                <div class="col-4 text-end">                   
+                   <button class="heart-btn addToCompare" title="Compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}"><i class="fa fa-exchange" aria-hidden="true"></i></button>
                 </div>
              </div>
           </div>

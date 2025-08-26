@@ -1,53 +1,163 @@
 @extends('layouts.app')
 
+  
 @section('content')
-<div class="container">
-    <h2>Compare Projects</h2>
 
-    @if($projects->count())
-    <div class="table-responsive">
-        <table class="table table-bordered text-center">
-            <thead>
-                <tr>
-                    <th>Attribute</th>
-                    @foreach($projects as $project)
-                        <th>{{ $project->title }}
-                            <a href="{{ route('projects.compare.remove', $project->id) }}" class="text-danger">&times;</a>
-                        </th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Location</td>
-                    @foreach($projects as $project)
-                        <td>{{ $project->location }}</td>
-                    @endforeach
-                </tr>
-                <tr>
-                    <td>Price</td>
-                    @foreach($projects as $project)
-                        <td>{{ number_format($project->price) }}</td>
-                    @endforeach
-                </tr>
-                <tr>
-                    <td>Type</td>
-                    @foreach($projects as $project)
-                        <td>{{ $project->type }}</td>
-                    @endforeach
-                </tr>
-                <tr>
-                    <td>Amenities</td>
-                    @foreach($projects as $project)
-                        <td>{{ implode(', ', $project->amenities ?? []) }}</td>
-                    @endforeach
-                </tr>
-                {{-- Add more rows as needed --}}
-            </tbody>
-        </table>
+
+@include('layouts.includes.nav')
+
+
+
+
+<section class="py-5">
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-grid">
+
+                <div class="filter-group">
+                    <select class="filter-select">
+                        <option>Select Project</option>
+                        <option>Chapal Courtyard 1</option>
+                        <option>Chapal Grande Vista</option>
+                        <option>Other Projects</option>
+                    </select>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+
+
+
+
+            </div>
+            <div class="text-center"><button class="add-to-compare">Add to Compare</button></div>
+        </div>
+
+        <!-- Comparison Container -->
+        <div class="comparison-container cols-{{ count($projects) }}">
+            <div class="property-headers">
+                <div class="empty-header"></div>
+
+                {{-- Loop over each project --}}
+                @foreach($projects as $project)
+                    <div class="property-header">
+                        <h2 class="property-title">
+                            {{ strtoupper($project->name) }}
+                        </h2>
+                        <img src="{{ $project->image_url ?? asset('assets/img/default.jpg') }}"
+                             alt="{{ $project->name }}"
+                             class="property-image">
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Location Row -->
+            <div class="comparison-row">
+                <div class="row-label">Location</div>
+                @foreach($projects as $project)
+                    <div class="row-value">
+                        <span class="location-icon">📍</span>
+                        {{ $project->location }}
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Builder Row -->
+            <div class="comparison-row">
+                <div class="row-label">Builder</div>
+                @foreach($projects as $project)
+                    <div class="row-value">{{ $project->builder->name ?? ''}}</div>
+                @endforeach
+            </div>
+
+            <!-- Status Row -->
+            <div class="comparison-row">
+                <div class="row-label">Progress</div>
+                @foreach($projects as $project)
+                    <div class="row-value {{ $project->progress == 'ready' ? 'status-ready' : 'status-construction' }}">
+                        {{ config('constants.progress.'.$project->progress) }}
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Project Unit Row -->
+            <div class="comparison-row">
+                <div class="row-label">Unit Type</div>
+                @foreach($projects as $project)
+                    <div class="row-value">
+                        <span class="unit-type">
+                            {{ $project->offering }} {{ $project->unit_size }}
+                            <span class="dropdown-small">▼</span>
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Unit Type Row -->
+            <div class="comparison-row">
+                <div class="row-label">Unit Type</div>
+                @foreach($projects as $project)
+                    <div class="row-value">{{ $project->unit_type }}</div>
+                @endforeach
+            </div>
+
+            <!-- Installment Plan -->
+            <div class="comparison-row">
+                <div class="row-label">Installment Plan</div>
+                @foreach($projects as $project)
+                    <div class="row-value text-center">
+                        @if($project->installment_plan)
+                            <a href="{{ $project->installment_plan }}" class="btn btn-red">Download</a>
+                        @else
+                            <span class="text-muted">N/A</span>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Bed Dimensions -->
+            <div class="comparison-row">
+                <div class="row-label">
+                    <span class="bed-icon"><i class="fa fa-bed"></i></span>
+                    Bed
+                </div>
+                @foreach($projects as $project)
+                    <div class="row-value">
+                        <table class="dimensions-table">
+                            <thead class="dimensions-header">
+                                <tr>
+                                    <th>S. No</th>
+                                    <th>Dimensions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($project->bed_dimensions as $index => $dim)
+                                    <tr class="dimensions-row">
+                                        <td>{{ $index+1 }}</td>
+                                        <td>{{ $dim }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Amenities -->
+            <div class="comparison-row">
+                <div class="row-label">Amenities</div>
+                @foreach($projects as $project)
+                    <div class="row-value">
+                        @foreach($project->amenities as $amenity)
+                            <span class="badge bg-dark">{{ $amenity }}</span>
+                        @endforeach
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
     </div>
-    @else
-        <p>No projects selected for comparison.</p>
-    @endif
-</div>
+</section>
+
+  @include('layouts.includes.footer')     
+       
 @endsection

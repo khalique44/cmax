@@ -26,7 +26,11 @@
             </div>
             <div class="col-md-5 text-end">
                 <h2 class="Starting-price mb-4"><span>Starting From</span>
-                    {{ $project->price_range['min']['amount'] ?? '' .' '. $project->price_range['min']['unit'] ?? '' }} 
+
+                    {{ $project->price_range['min']['amount'] ?? ''}}
+                     
+                    {{ $project->price_range['min']['unit'] ?? '' }} 
+                    
                 </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="mb-2 me-2">

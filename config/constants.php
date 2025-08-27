@@ -63,4 +63,5 @@ return [
                             'Hospital',                            
                             'Educational Area',                            
                         ],
+    'compare_project_limit' => 4,
 ];

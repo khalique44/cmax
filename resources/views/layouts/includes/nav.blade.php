@@ -46,7 +46,7 @@
                <a class="nav-link" href="{{ route('blog.list'); }}">Blogs</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Compare</a>
+               <a class="nav-link" href="{{ route('projects.compare'); }}">Compare</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="#">Properties for Sale</a>

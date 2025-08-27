@@ -26,14 +26,20 @@
              </p>
              <hr>
              <div class="row mt-4 align-items-center">
-                <div class="col-8">
+                <div class="col-4">
                    <h6 class="crore-h">
                       {{ $project->price_range['min']['amount'] .' '. $project->price_range['min']['unit'] }}
                        <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
                 </div>
                
-                <div class="col-4 text-end">                   
-                   <button class="heart-btn addToCompare" title="Compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}"><i class="fa fa-exchange" aria-hidden="true"></i></button>
+                <div class="col-8 text-end">   
+                  @if(in_array($project->id, $compare))
+                    <button class="heart-btn text-danger" title="Remove from Compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}" onclick="removeCompare('{{ $project->id }}')"><i class="fa fa-remove" aria-hidden="true"></i></button>
+                  @else
+                    <button class="heart-btn addToCompare" title="Compare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}"><i class="fa fa-exchange" aria-hidden="true"></i></button>
+                    
+                  @endif                
+                   
                 </div>
              </div>
           </div>

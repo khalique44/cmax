@@ -197,6 +197,7 @@ Route::get('/career', 'CmsPage@showCareer')->name('career.show');
 Route::get('/contact-us', 'CmsPage@showContactUs')->name('contactus.show');
 
 Route::post('/compare/add', 'ProjectCompareController@ajaxAdd')->name('projects.compare.ajaxAdd');
+Route::post('/compare/add-multiple', 'ProjectCompareController@ajaxAddMultiple')->name('projects.compare.ajaxAddMultiple');
 Route::post('/compare/remove', 'ProjectCompareController@ajaxRemove')->name('projects.compare.ajaxRemove');
 Route::post('/compare/clear', 'ProjectCompareController@ajaxClear')->name('projects.compare.ajaxClear');
 

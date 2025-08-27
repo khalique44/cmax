@@ -9,7 +9,7 @@
   <section class="gallery-area pt-5 pb-5">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <div class="breadcrumbs">
                     <ol class="breadcrumbs">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
@@ -21,10 +21,11 @@
                     <a href="#" class="launch-btn position-static">{{ $project->offering ?? '' }}</a>
                </div>
                <h1 class="mt-2 mainhead-inner">{{ $project->project_title }}</h1>
-               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location ?? '' }} <a href="#location">See on the Map</a></p>
+               <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location ?? '' }} <a href="#location" title="See on the Map"><i class="fa fa-eye"></i></a></p>
+
 
             </div>
-            <div class="col-md-5 text-end">
+            <div class="col-md-6 text-end">
                 <h2 class="Starting-price mb-4"><span>Starting From</span>
 
                     {{ $project->price_range['min']['amount'] ?? ''}}
@@ -34,9 +35,12 @@
                 </h2>
                 <div class="d-flex justify-content-end ">
                     <div class="mb-2 me-2">
-                        <a class="btn-red addToCompare" data-title="{{ $project->project_title
-                         }}" data-id="{{ $project->id
-                         }}" href="javascript:;">Compare</a>
+
+                        @if(in_array($project->id, $compare))
+                        <a href="javascript:;" class="detail-btn btn-grey"  onclick="removeCompare('{{ $project->id }}')">Remove Compare</a>
+                        @else
+                        <a href="javascript:;" class="btn-red addToCompare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}">Compare</a>
+                        @endif
                      </div>
                     <div class="call-btn mb-2">
                         <a href="tel:{{ $project->builder->mobile_number ?? '#' }}">

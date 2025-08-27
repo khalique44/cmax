@@ -24,17 +24,21 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{!! url('public/assets/css/sweetalert2.min.css') !!}"> 
     <!-- jQuery (Required for Slick Slider) -->
     <script src="{!! url('public/assets/js/jquery-3.6.0.min.js') !!}"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
     <!-- Slick Slider JS -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="{!! url('public/assets/js/sweetalert2@11.js') !!}"></script>
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="{!! url('public/select2/select2.min.css')!!}" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
    <script src="{!! url('public/select2/select2.js')!!}"></script>
+
 </head>
 
 <body>

@@ -45,7 +45,11 @@
                             </div>
                             
                             <div class="col-8 text-end">
+                                @if(in_array($project->id, $compare))
+                                <a href="javascript:;" class="detail-btn btn-grey"  onclick="removeCompare('{{ $project->id }}')">Remove from Compare</a>
+                                @else
                                 <a href="javascript:;" class="detail-btn btn-red addToCompare" data-id="{{ $project->id }}" data-title="{{ $project->project_title }}">Compare</a>
+                                @endif
                                 
                                 <a href="{{ route('project.show', $project->slug) }}" class="detail-btn">More Details</a>
                             </div>

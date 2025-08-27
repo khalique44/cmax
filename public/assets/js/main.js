@@ -144,6 +144,7 @@ function displayMsg(msgArea, msg, msgType){
     }
 
     msgType = (msgType == 'error') ? 'danger' : msgType;
+    var msgIcon = (msgType == 'error' || msgType == 'danger') ? 'error' : 'success';
 
     if(jQuery('.custom-msg-area').length > 0){
 
@@ -156,7 +157,19 @@ function displayMsg(msgArea, msg, msgType){
         msgArea.html('<div class="alert alert-'+msgType+'" role="alert">'+msg+'</div>').show();
         $('html, body').animate({ scrollTop: msgArea.offset().top}, 100);
 
+        
+
     }
+
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: msgIcon,
+        title: msg,
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
 
 }
 
@@ -203,7 +216,7 @@ function searchAreaCallback(response){
              displayMsg(msgArea,o,msgType);
         });
     }else{
-        displayMsg(msgArea,response.msg,msgType);
+        //displayMsg(msgArea,response.msg,msgType);
     }
 }
 
@@ -410,6 +423,12 @@ $(document).ready(function() {
         }
     });
 
+    // handle compare select box
+
+    $('.compare-select-box').select2({
+        maximumSelectionLength: 4
+      });
+
 });
 
 
@@ -499,19 +518,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Remove project
-    function removeCompare(id) {
-        fetch("/compare/remove", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-            },
-            body: JSON.stringify({id})
-        })
-        .then(res => res.json())
-        .then(data => renderCompareItems(data.projects));
-    }
+
 
     // Clear all
     document.getElementById("clear-compare").addEventListener("click", function () {
@@ -547,5 +554,57 @@ document.addEventListener("DOMContentLoaded", function () {
     // Expose removeCompare globally
     window.removeCompare = removeCompare;
 });
+
+// Remove project
+function removeCompare(id) {
+
+    showAjaxLoader();    
+
+    $.ajax({
+        url: "/compare/remove",
+        type: "POST",
+        data: {id:id},
+        dataType: "json",
+        //contentType: false,
+        //processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            location.reload();
+            hideAjaxLoader();
+        }
+    });
+}
+
+function addCompareMultiple() {
+
+    showAjaxLoader();   
+    var ids = $("select.compare-select-box").val();
+
+    $.ajax({
+        url: "/compare/add-multiple",
+        type: "POST",
+        data: {ids:ids},
+        dataType: "json",
+        //contentType: false,
+        //processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            if(data.status == 'success'){
+                displayMsg('','Project added to compare.','success')
+                location.reload();
+            }else{
+                displayMsg('',data.message,'error')
+            }        
+            
+            
+        },
+        error: function(){
+            displayMsg('','Server Error! Please reload and try again.','error')
+        },
+        always: function(){
+            hideAjaxLoader();
+        }
+    });
+}
 
 

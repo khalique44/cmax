@@ -52,6 +52,7 @@ class ProjectController extends Controller
         $project = Project::with('offers','floorPlan','builder')->where('slug',$slug)->firstOrFail();
         $related_projects = Project::with('offers','floorPlan','builder')->where('builder_id',$project->builder_id)->take(3)->get();
         $progress = config('constants.progress');
+        $compare        = session()->get('compare', []);
 
         $sessionKey = 'project_viewed_' . $project->id;
         if (!session()->has($sessionKey)) {
@@ -59,7 +60,7 @@ class ProjectController extends Controller
             session()->put($sessionKey, true);
         }
 
-        return view('projects.details', compact('project','progress','related_projects'));
+        return view('projects.details', compact('project','progress','related_projects','compare'));
     }
 
     /**
@@ -99,9 +100,8 @@ class ProjectController extends Controller
         $priceFrom       = GeneralHelper::detectNumberUnit($priceFrom);
         $priceTo         = GeneralHelper::detectNumberUnit($priceTo);
         $searchedData    = $request->all();    
-        $installment = $monthly_installment ? explode(':', $monthly_installment) : [];        
-        
-
+        $installment    = $monthly_installment ? explode(':', $monthly_installment) : [];      
+        $compare        = session()->get('compare', []);  
         
         \DB::enableQueryLog();
 
@@ -183,7 +183,7 @@ class ProjectController extends Controller
 
        
 
-        $projects = $projects->orderBy('position', 'asc')->paginate(10);
+        $projects = $projects->where('is_active', true)->orderBy('position', 'asc')->paginate(10);
         //dd(\DB::getQueryLog());
         $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');
@@ -192,13 +192,13 @@ class ProjectController extends Controller
         $offering = config('constants.offering');
 
         if ($request->ajax()) {
-            return view('projects.partials.project_list', compact('builders','progress','property_types','bedrooms','projects','offering','searchedData'))->render();
+            return view('projects.partials.project_list', compact('builders','progress','property_types','bedrooms','projects','offering','searchedData','compare'))->render();
         }
 
         
 
         
-        return view('project-search-results',compact('builders','progress','property_types','bedrooms','projects','offering','searchedData'));
+        return view('project-search-results',compact('builders','progress','property_types','bedrooms','projects','offering','searchedData','compare'));
 
     }
 }

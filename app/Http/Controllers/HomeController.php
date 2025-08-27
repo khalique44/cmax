@@ -46,6 +46,7 @@ class HomeController extends Controller
         ->latest()  // created_at DESC
         ->take(3)
         ->get();
+        $compare        = session()->get('compare', []);
 
         if(!empty($data->header_image)){
             
@@ -53,7 +54,7 @@ class HomeController extends Controller
             $header_image = url('public') .'/'.$data->header_image;
           } 
         }
-        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects','latestPosts'));
+        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects','latestPosts','compare'));
         
         //return '<H2>Coming Soon</H2';
     }

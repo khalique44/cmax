@@ -28,7 +28,8 @@
              <div class="row mt-4 align-items-center">
                 <div class="col-4">
                    <h6 class="crore-h">
-                      {{ $project->price_range['min']['amount'] .' '. $project->price_range['min']['unit'] }}
+                      {{ $project->price_range['min']['amount'] ?? '' }}  
+                      {{ $project->price_range['min']['unit'] ?? '' }}
                        <span style="font-weight: 400; font-size: 13px;">Starting Price</span></h6>
                 </div>
                

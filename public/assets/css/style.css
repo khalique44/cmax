@@ -159,6 +159,10 @@ p.loc-txt {
     border: 1px solid #aaa;
     padding: 5px 5px 1px 5px;
 }
+
+.page-navigation ul li {
+  margin-right : 5px;
+}
 /* ------ End code by KHL ------ */
 
 

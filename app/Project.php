@@ -90,7 +90,12 @@ class Project extends Model implements HasMedia
 	public function getMinMaxAttribute()
 	{
 	    $price_range = GeneralHelper::formatPriceRange($this->offers);
-	    return $price_range['min']['amount'] .' '. $price_range['min']['unit'] .' to '. $price_range['max']['amount'] .' '. $price_range['max']['unit'];
+	    $min_amount = $price_range['min']['amount'] ?? 'N/A';
+	    $max_amount = $price_range['max']['amount'] ?? 'N/A';
+	    $min_unit = $price_range['min']['unit'] ?? '';
+	    $max_unit = $price_range['max']['unit'] ?? '';
+	    
+	    return $min_amount .' '. $min_unit .' to '. $max_amount .' '. $max_unit;
 	}
 
 

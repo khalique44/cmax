@@ -184,7 +184,7 @@
                         @foreach($offering as $offer)
                             <h3 class="mb-3">{{ $offer }} <span class="offer-price">
 
-                                {{ $project->min_max }}
+                                {{ $project->min_max ?? '' }}
                                 </span></h3>
                             <!-- <div class="sqrft">
                                 <span>Type A - 541 Sq ft</span>

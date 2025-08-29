@@ -79,6 +79,11 @@ p.loc-txt {
     
     width: 100%;
 }
+
+.project-div p.loc-txt {
+    
+    width: 95%;
+}
 .font-size-12{
   font-size: 12px;
 }

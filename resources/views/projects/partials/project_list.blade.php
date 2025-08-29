@@ -35,13 +35,13 @@
                         <p class="mb-3">{!! \Illuminate\Support\Str::limit(strip_tags($project->description), 100) !!}...</p>
                         <ul class="amenities">
                             <li><i class="fa fa-user"></i> {{ $project->builder->builder_name ?? 'N/A' }}</li>
-                            <li><i class="fa fa-building"></i> {{ $project->offering }}</li>
-                            <li><i class="fa fa-arrows"></i> {{ $project->offers->min('area') }} - {{ $project->offers->max('area') }} {{ $project->offers->first()->area_type }}</li>
+                            <li><i class="fa fa-building"></i> {{ $project->offering ?? '' }}</li>
+                            <li><i class="fa fa-arrows"></i> {{ $project->offers->min('area') ?? '' }} - {{ $project->offers->max('area') ?? '' }} {{ $project->offers->first()->area_type ?? '' }}</li>
                         </ul>
                         <hr>
                         <div class="row mt-4 align-items-center">
                             <div class="col-4">
-                                <h6 class="crore-h"><span style="font-size: 13px;">Starting Price</span><br>{{ $project->offers->min('price_from') }} {{ $project->offers->first()->price_from_in_format }}</h6>
+                                <h6 class="crore-h"><span style="font-size: 13px;">Starting Price</span><br>{{ $project->offers->min('price_from') ?? '' }} {{ $project->offers->first()->price_from_in_format ?? '' }}</h6>
                             </div>
                             
                             <div class="col-8 text-end">

@@ -163,6 +163,17 @@ p.loc-txt {
 .page-navigation ul li {
   margin-right : 5px;
 }
+div#suggestions {
+    height: 244px;
+    overflow: auto;
+   width: 230px;
+}
+div#suggestions .suggestion-item {
+    font-size: 14px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+}
+
 /* ------ End code by KHL ------ */
 
 

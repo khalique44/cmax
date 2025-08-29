@@ -1018,9 +1018,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on("click",".toggle-survey-fields", function(){
-        $(".survey-fields").toggleClass("display-none");
-    });
+    
     
 });
 
@@ -1072,9 +1070,7 @@ $(document).on("click",".toggle-survey-fields", function(){
             sessionStorage.setItem('city_id', $(this).val());
         });
 
-        $(document).on("click",".toggle-survey-fields", function(){
-            $(".survey-fields").toggleClass("display-none");
-        });
+        
     });
     // Auto-fill form from sessionStorage
     window.addEventListener('DOMContentLoaded', () => {

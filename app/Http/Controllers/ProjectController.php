@@ -50,7 +50,7 @@ class ProjectController extends Controller
     public function show(string $slug)
     {
         $project = Project::with('offers','floorPlan','builder')->where('slug',$slug)->firstOrFail();
-        $related_projects = Project::with('offers','floorPlan','builder')->where('builder_id',$project->builder_id)->take(3)->get();
+        $related_projects = Project::with('offers','floorPlan','builder')->where('builder_id',$project->builder_id)->where('id','<>',$project->id)->take(3)->get();
         $progress = config('constants.progress');
         $compare        = session()->get('compare', []);
 

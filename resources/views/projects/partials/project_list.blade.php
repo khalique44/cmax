@@ -31,7 +31,7 @@
                             @endif
 
                         </div>
-                        <p class="loc-txt"><i class="fa fa-map-marker"></i> {{ $project->location }}</p>
+                        <p class="loc-txt"><i class="fa fa-map-marker"></i> {{ $project->alt_location ?? '' }}</p>
                         <p class="mb-3">{!! \Illuminate\Support\Str::limit(strip_tags($project->description), 100) !!}...</p>
                         <ul class="amenities">
                             <li><i class="fa fa-user"></i> {{ $project->builder->builder_name ?? 'N/A' }}</li>

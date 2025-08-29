@@ -20,9 +20,9 @@
              <a href="{{ route('project.show', $project->slug) }}">
              <h6>{{ $project->project_title }}</h6>
              </a>
-             <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->location }}</p>
+             <p class="loc-txt"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ $project->alt_location ?? '' }}</p>
              <p class="mb-4">
-                {{ $project->offers->min('area') }} - {{ $project->offers->max('area') }} {{ $project->offers->first()->area_type ?? '' }} | {{ $project->offering }}
+                {{ $project->offers->min('area') ?? '' }} - {{ $project->offers->max('area') ?? '' }} {{ $project->offers->first()->area_type ?? '' }} | {{ $project->offering ?? '' }}
              </p>
              <hr>
              <div class="row mt-4 align-items-center">

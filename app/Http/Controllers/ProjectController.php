@@ -183,7 +183,7 @@ class ProjectController extends Controller
 
        
 
-        $projects = $projects->where('is_active', true)->orderBy('position', 'asc')->paginate(10);
+        $projects = $projects->with(['Area', 'subArea'])->where('is_active', true)->orderBy('position', 'asc')->paginate(10);
         //dd(\DB::getQueryLog());
         $builders = Builder::where('is_active',1)->orderBy('builder_name','asc')->get();
         $progress = config('constants.progress');

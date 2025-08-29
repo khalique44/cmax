@@ -94,13 +94,13 @@ class Project extends Model implements HasMedia
 	    $max_amount = $price_range['max']['amount'] ?? 'N/A';
 	    $min_unit = $price_range['min']['unit'] ?? '';
 	    $max_unit = $price_range['max']['unit'] ?? '';
-	    
+
 	    return $min_amount .' '. $min_unit .' to '. $max_amount .' '. $max_unit;
 	}
 
 
 	// Area relation (each project belongs to one area)
-    public function area()
+    public function Area()
     {
         return $this->belongsTo(Area::class);
     }
@@ -135,5 +135,19 @@ class Project extends Model implements HasMedia
 
     public static function getRecordsWihPosition(){
         return self::orderBy('position','asc')->get();
+    }
+
+    public function getAltLocationAttribute(){
+
+    	$areaName =  $this->Area->name ??  ''; 
+    	$subAreaName =  $this->subArea->name ??  ''; 
+    	$subAreaName = $subAreaName ? ', '.$subAreaName : '';
+    	$location =  $this->location ??  ''; 
+
+    	if(empty($areaName) && empty($subAreaName)){
+    		 return $location;
+    	}else{
+    		 return $areaName.$subAreaName;
+    	}
     }
 }

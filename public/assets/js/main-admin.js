@@ -330,6 +330,7 @@ function projectSuccessCallback(response){
 
 function ajaxErrorCallback(response){
 
+    hideAjaxLoader();
     var  msgArea = $('.ajax-msg');
     var msgType = 'error';
 
@@ -348,10 +349,32 @@ function ajaxErrorCallback(response){
     }
 }
 
+function ajaxErrorSweetAlert(response){
+
+    hideAjaxLoader();
+   
+    var msgType = 'error';
+
+    if (response.responseJSON && response.responseJSON.errors){
+        let errors = response.responseJSON.errors;       
+        let html = '<ul >';
+        $.each(errors, function (key, value) {
+            html += `<li>${value[0]}</li>`;
+        });
+        html += '</ul>';
+        displayMsg('',html,msgType);         
+        
+    }else{
+
+        displayMsg('','Server Error!',msgType);
+    }
+}
+
 $(document).on("change","select#area_id",function(e){
     e.preventDefault();    
     var area_id = $(this).val();
-
+     $("#main_area_id").val(area_id);
+     $(".area-title").val($("select#area_id option:selected").text());
     //var formData = new FormData(frm[0]); 
     ajaxPostRequest("/get-sub-area/"+area_id,[],subAreaSuccessCallback,ajaxErrorCallback,true);    
 
@@ -406,7 +429,7 @@ FilePond.setOptions({
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
                 onload: function (res) { 
-                    console.log(res)
+                    //console.log(res)
                     const data = JSON.parse(res);
                     var preview_id = 'uploaded-preview';
                     if(data.mediaKey == 'project_gallery'){
@@ -613,7 +636,7 @@ $(document).on("click",".updateStatus",function(e){
         success: function(response) {
             //console.log(response.status);
             if(response.status == 'success'){
-                console.log($(this).children('.badge'));
+                //console.log($(this).children('.badge'));
                 
 
                 if ($badge.hasClass('bg-danger')) {
@@ -657,3 +680,114 @@ $(document).on("click",".updateStatus",function(e){
         }
     });
 });
+
+
+$(document).on("submit","form#areaForm",function(e){
+    e.preventDefault();    
+
+    var msgArea = $(".ajax-msg-area");
+    var frm = $('form#areaForm');
+    var formData = new FormData(frm[0]);
+
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/areas",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        contentType: false,
+        processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            mainAreaSuccessCallback(data)
+            hideAjaxLoader();
+        },
+        error: ajaxErrorSweetAlert,
+        always: function(){
+            hideAjaxLoader();
+        }
+    });    
+
+});
+
+
+function mainAreaSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg-area');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        let newOption = new Option(response.area.name, response.area.id, true, true);
+        setTimeout(function(){
+            console.log(newOption);
+            $('#area_id').append(newOption).trigger('change'); // Add and select
+            $(".area-title").val($("select#area_id option:selected").text());
+        },3000);
+        $('#areaModal').modal('hide'); // Close modal
+        $('#areaForm')[0].reset(); // Reset form
+        
+
+    }else{
+        
+         displayMsg(msgArea,response.message,msgType);
+    }
+
+    hideAjaxLoader();
+}
+
+
+
+$(document).on("submit","form#subAreaForm",function(e){
+    e.preventDefault();    
+
+    var msgArea = $(".ajax-msg-area");
+    var frm = $('form#subAreaForm');
+    var formData = new FormData(frm[0]);
+
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/sub-areas",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        contentType: false,
+        processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            subAreaSuccessRecord(data)
+            hideAjaxLoader();
+        },
+        error: ajaxErrorSweetAlert,
+        always: function(){
+            hideAjaxLoader();
+        }
+    });    
+
+});
+
+
+function subAreaSuccessRecord(response){
+
+    var  msgArea = $('.ajax-msg-sub-area');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        let newOption = new Option(response.subarea.name, response.subarea.id, true, true);
+        $('select#sub_area_id').append(newOption).trigger('change'); // Add and select
+        //$("#main_area_id").append(newOption).trigger('change');
+
+        $('#subAreaModal').modal('hide'); // Close modal
+        $('#sub-area-name').val(''); // Reset form
+        
+        displayMsg('','Sub Area Added Successfully!',msgType);
+    }else{
+        
+         displayMsg(msgArea,response.message,msgType);
+    }
+
+    hideAjaxLoader();
+}

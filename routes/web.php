@@ -176,6 +176,9 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::resource('testimonials','TestimonialController');
         Route::get('project/update-status','ProjectController@updateStatus')->name('project.update-status');
         Route::post('project/update-position','ProjectController@updatePosition')->name('project.update-position');
+        Route::post('/areas', 'MainAreaController@store')->name('areas.store');
+        Route::post('/sub-areas', 'SubAreaController@store')->name('subareas.store');
+
         
 
 

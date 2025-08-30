@@ -2392,7 +2392,7 @@ form .form-label span {
         color: #fff;
     }
 }
-.modal-footer .btn {
+/*.modal-footer .btn {
     background: #DC1C2E none repeat scroll 0 0;
     border-radius: 0;
     color: #fff;
@@ -2401,8 +2401,8 @@ form .form-label span {
     padding: 10px 20px;
     text-decoration: none;
     text-transform: uppercase;
-    /* border: none !important; */
-}
+    
+}*/
 #main_header .logo a {
     display: inline-flex;
     flex-wrap: wrap;

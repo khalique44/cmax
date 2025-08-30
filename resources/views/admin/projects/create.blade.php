@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label class="form-label">Area<span>*</span></label>
+                                        <label class="form-label">Area<span>*</span> <span class="text-success text-right"><a href="javascript:;" class="add-main-area" data-bs-toggle="modal" data-bs-target="#areaModal"><i class="fa fa-plus-circle "></i></a></span></label>
                                         <select name="area_id" id="area_id" class="form-control select2" >
                                             <option value="">Select Area</option>
                                             @foreach($areas as $area)
@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label class="form-label">Sub Area<span>*</span></label>
+                                        <label class="form-label">Sub Area<span>*</span> <span class="text-success text-right"><a href="javascript:;" class="add-sub-area" data-bs-toggle="modal" data-bs-target="#subAreaModal"><i class="fa fa-plus-circle "></i></a></span></label>
                                         <select name="sub_area_id" id="sub_area_id" class="form-control select2" >
                                             <option value="">Select Sub Area</option>
                                             @foreach($sub_areas as $sub_area)
@@ -853,11 +853,73 @@
             </div>
         </div>
     </div>
-<script>
 
 
 
-</script>
+    <!-- Modal -->
+    <div class="modal fade" id="areaModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="areaForm" method="POST">
+          @csrf
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h5 class="modal-title">Add Area</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="ajax-msg-area"></div>
+              <div class="form-group">
+                <label for="area-name">Area Name</label>
+                <input type="text" class="form-control" name="name" id="area-name" >
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Save</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal fade" id="subAreaModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="subAreaForm" method="POST">
+          @csrf
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h5 class="modal-title">Add Sub Area</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="ajax-msg-sub-area"></div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="main_area_id">Area</label>
+                    <input type="text" class="form-control area-title" name="" id="" disabled="" >
+                    <input type="hidden" name="area_id" id="main_area_id" >
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="sub-area-name">Sub Area Name</label>
+                    <input type="text" class="form-control" name="name" id="sub-area-name" >
+                  </div>
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Save</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
 
 
 <script>

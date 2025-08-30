@@ -720,11 +720,11 @@ function mainAreaSuccessCallback(response){
         msgType = 'success'; 
 
         let newOption = new Option(response.area.name, response.area.id, true, true);
-        setTimeout(function(){
-            console.log(newOption);
+        //setTimeout(function(){
+            //console.log(newOption);
             $('#area_id').append(newOption).trigger('change'); // Add and select
             $(".area-title").val($("select#area_id option:selected").text());
-        },3000);
+        //},3000);
         $('#areaModal').modal('hide'); // Close modal
         $('#areaForm')[0].reset(); // Reset form
         

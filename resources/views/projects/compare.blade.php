@@ -48,7 +48,11 @@
                                 {{ strtoupper($project->project_title) }}
                             </h2>
                             @if(!empty($firstImage))
-                                <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) ?? asset('assets/img/default.jpg') }}"
+                                <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl())  }}"
+                                 alt="{{ $project->project_title }}"
+                                 class="property-image">
+                            @else
+                                <img src="{{ asset('public/assets/img/no-image-1080x1080.png') }}"
                                  alt="{{ $project->project_title }}"
                                  class="property-image">
                             @endif
@@ -91,71 +95,72 @@
                     @foreach($projects as $project)
                         <div class="row-value">
                             <span class="unit-type">
-                                {{ $project->offering }} 
-                                <span class="dropdown-small">▼</span>
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Unit Type Row -->
-                <div class="comparison-row">
-                    <div class="row-label">Unit Type</div>
-                    @foreach($projects as $project)
-                        <div class="row-value"></div>
-                    @endforeach
-                </div>
-
-                <!-- Installment Plan -->
-                <div class="comparison-row">
-                    <div class="row-label">Installment Plan</div>
-                    @foreach($projects as $project)
-                        <div class="row-value text-center">
-                            @if($project->installment_plan)
-                                <a href="{{ $project->installment_plan }}" class="btn btn-red">Download</a>
-                            @else
-                                <span class="text-muted">N/A</span>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Bed Dimensions -->
-                <div class="comparison-row">
-                    <div class="row-label">
-                        <span class="bed-icon"><i class="fa fa-bed"></i></span>
-                        Bed
-                    </div>
-                    @foreach($projects as $project)
-                        <div class="row-value">
-                            <table class="dimensions-table">
+                                 <table class="dimensions-table">
                                 <thead class="dimensions-header">
                                     <tr>
-                                        <th>No of Rooms</th>
-                                        <th>Dimensions</th>
+                                        <th></th>
+                                        @if(!empty($project->offers))
+                                            @foreach($project->offers as $key => $savedOffer)
+                                                
+                                                <th>{{ucwords(rtrim($savedOffer->offer,'s')) ?? ''}}</th>
+                                            
+                                            @endforeach
+                                        @endif
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($project->offers as $index => $savedOffer)
-                                        <tr class="dimensions-row">
-                                            <td>{{ $savedOffer->bedrooms }}</td>
-                                            <td></td>
-                                        </tr>
-                                    @endforeach
+                                    <tr class="dimensions-row">
+                                        <td></td>
+                                        @foreach($project->offers as $index => $savedOffer)
+                                                
+                                                <td>{{ $savedOffer->title ?? '' }}</td>
+                                                
+                                            
+                                        @endforeach
+                                    </tr>
+                                    <tr class="dimensions-row">
+                                        <td><i class="fa fa-bed" title="Number of Bedrooms"></i></td>
+                                        @foreach($project->offers as $index => $savedOffer)
+                                                
+                                                
+                                                <td>{!! $savedOffer->bedrooms > 0 ? $savedOffer->bedrooms : 'N/A' !!}</td>
+                                                
+                                            
+                                        @endforeach
+                                    </tr>
+
+                                    <tr class="dimensions-row">
+                                        <td><i class="fa fa-calendar" title="Installment"></i></td>
+                                        @foreach($project->offers as $index => $savedOffer)
+                                                
+
+                                                <td> {!! $savedOffer->is_installment > 0 ? '<span class="badge bg-success">Yes</span> ' : '<span class="badge bg-danger">No</span>' !!}</td>
+                                                
+                                            
+                                        @endforeach
+                                    </tr>
                                 </tbody>
                             </table>
+                                
+                            </span>
                         </div>
                     @endforeach
-                </div>
+                </div>               
+
 
                 <!-- Amenities -->
                 <div class="comparison-row">
                     <div class="row-label">Features</div>
                     @foreach($projects as $project)
                         <div class="row-value">
-                            @foreach($project->features as $feature)
-                                <span class="badge bg-dark">{{ $feature->name }}</span>
-                            @endforeach
+                            @if(!$project->features->isEmpty())
+                                @foreach($project->features as $feature)
+                                    <span class="badge bg-dark">{{ $feature->name }}</span>
+                                @endforeach
+                            @else
+                                <span>N/A</span>
+                            @endif
                         </div>
                     @endforeach
                 </div>

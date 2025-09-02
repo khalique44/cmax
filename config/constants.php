@@ -4,10 +4,11 @@ return [
    
     'area_types' => [
 
-					'Marla',
+					
                     'Sq. Ft.',
                     'Sq. M.',
                     'Sq. Yd.',
+                    'Marla',
                     'Kanal'                        					
 						
 					],

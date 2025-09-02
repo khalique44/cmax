@@ -12,6 +12,8 @@ use App\User;
 use App\Feature;
 use App\Area;
 use App\SubArea;
+use App\ProjectOffer;
+use App\ProjectFloorPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
@@ -392,9 +394,11 @@ class ProjectController extends Controller
         $features = $request->has('features') ? $request->features : [];
         
 
+
         foreach ($offering as $offer) {
             if ($request->has($offer)) {
                 $count = count($request->$offer['title'] ?? []);
+
                 for ($i = 0; $i < $count; $i++) {
 
                     $offer_id = $request->$offer['offer_id'][$i] ?? null;
@@ -477,6 +481,7 @@ class ProjectController extends Controller
         foreach ($offering as $offer) {
             if ($request->has($offer)) {
                 $count = count($request->$offer['title'] ?? []);
+
                 for ($i = 0; $i < $count; $i++) {
                     $offerId = $request->$offer['offer_id'][$i] ?? null;
 
@@ -581,12 +586,36 @@ class ProjectController extends Controller
 
         // Remove deleted images
         $deletedFiles = $request->input('deleted_files', []);
+        $deletedOffers = $request->input('deleted-offer', []);
+        $deletedFloorPlans = $request->input('deleted-floor-plan', []);
 
        if (!empty($deletedFiles)) {            
             foreach ($deletedFiles as $id) {
                 if($id){
                     $id = (json_decode($id));
                     Media::whereIn('id', $id)->delete();
+                }
+                
+            }
+        }
+
+        if (!empty($deletedOffers)) {            
+            foreach ($deletedOffers as $id) {
+                if($id){
+                    $id = (json_decode($id));
+
+                    $isDeleted = ProjectOffer::whereIn('id', $id)->delete();
+
+                }
+                
+            }
+        }
+
+         if (!empty($deletedFloorPlans)) {            
+            foreach ($deletedFloorPlans as $id) {
+                if($id){
+                    $id = (json_decode($id));
+                    ProjectFloorPlan::whereIn('id', $id)->delete();
                 }
                 
             }

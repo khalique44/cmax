@@ -103,7 +103,7 @@
                         </a>
                     </h4>
                 </div>
-                <div id="collapse6" class="panel-collapse collapse {!! str_contains($url,'/admin/cms-pages') ? 'show' : '' !!}">
+                <div id="collapse6" class="panel-collapse collapse {!! str_contains($url,'/admin/cms-pages') || str_contains($url,'/home-page/project-types') ? 'show' : '' !!}">
                     <div class="panel-body">
                         <div class="accordions-content-link">
                             <ul>

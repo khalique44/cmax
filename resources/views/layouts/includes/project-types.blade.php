@@ -22,33 +22,33 @@
       </div>
       <div class="row">
          <div data-aos="fade-up" class="col-6 col-md-6 col-lg-3 mb-3 mb-md-0">
-            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ $first_box_offer ?? 'Apartment'}}&price_from=&price_to=&bedrooms=&progress=">
+            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ !empty($first_box_offer) ? $first_box_offer : 'Apartment'}}&price_from=&price_to=&bedrooms=&progress=">
             <div class="property-div text-center" style="{{  $first_box_offer_image  }}">
-               <p class="pt-4 mb-0 ap-h">{{ $first_box_offer ?? 'Apartment'}}</p>
+               <p class="pt-4 mb-0 ap-h">{{ !empty($first_box_offer) ? $first_box_offer : 'Apartment'}}</p>
                <p class="mb-0 ap-p">{{ $first_box_offer_count ?? '0'}} Properties</p>
             </div>
             </a>
          </div>
          <div data-aos="fade-up" class="col-6 col-md-6 col-lg-3 mb-3 mb-md-0">
-            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ $second_box_offer ?? 'Villas'}}&price_from=&price_to=&bedrooms=&progress=">
+            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ !empty($second_box_offer) ? $second_box_offer : 'Villas'}}&price_from=&price_to=&bedrooms=&progress=">
             <div class="property-div text-center villas-div" style="{{  $second_box_offer_image  }}">
-               <p class="pt-4 mb-0 ap-h">{{ $second_box_offer ?? 'Villas'}}</p>
+               <p class="pt-4 mb-0 ap-h">{{ !empty($second_box_offer) ? $second_box_offer : 'Villas'}}</p>
                <p class="mb-0 ap-p">{{ $second_box_offer_count ?? '0'}} Properties</p>
             </div>
          </a>
          </div>
          <div data-aos="fade-up" class="col-6 col-md-6 col-lg-3 mb-3 mb-md-0 mt-md-4 mt-lg-0">
-            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ $third_box_offer ?? 'Offices'}}&price_from=&price_to=&bedrooms=&progress=">
+            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ !empty($third_box_offer) ? $third_box_offer : 'Offices'}}&price_from=&price_to=&bedrooms=&progress=">
             <div class="property-div text-center offices-div" style="{{  $third_box_offer_image  }}">
-               <p class="pt-4 mb-0 ap-h"> {{ $third_box_offer ?? 'Offices'}}</p>
+               <p class="pt-4 mb-0 ap-h">{{ !empty($third_box_offer) ? $third_box_offer : 'Offices'}}</p>
                <p class="mb-0 ap-p">{{ $third_box_offer_count ?? '0'}} Properties</p>
             </div>
          </a>
          </div>
          <div data-aos="fade-up" class="col-6 col-md-6 col-lg-3 mt-md-4 mt-lg-0">
-            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ $fourth_box_offer ?? 'Shops'}}&price_from=&price_to=&bedrooms=&progress=">
+            <a href="{{route('search-results')}}?search-area=&builder_id=&monthly_installment=&property_type={{ !empty($fourth_box_offer) ? $fourth_box_offer : 'Shops'}}&price_from=&price_to=&bedrooms=&progress=">
             <div class="property-div text-center shops-div" style="{{  $fourth_box_offer_image  }}">
-               <p class="pt-4 mb-0 ap-h">{{ $fourth_box_offer ?? 'Shops'}}</p>
+               <p class="pt-4 mb-0 ap-h">{{ !empty($fourth_box_offer) ? $fourth_box_offer : 'Shops'}}</p>
                <p class="mb-0 ap-p">{{ $fourth_box_offer_count ?? '0'}} Properties</p>
             </div>
          </a>

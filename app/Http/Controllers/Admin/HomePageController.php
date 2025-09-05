@@ -15,21 +15,7 @@ class HomePageController extends Controller
      */
     public function index()
     {
-        $offering = config('constants.offering');
-        $home_section_project_type = GeneralHelper::getOption('home_section_project_type');
-        $first_box_offer = GeneralHelper::getOption('first_box_offer');
-        $first_box_offer_image = GeneralHelper::getOption('first_box_offer_image');
-
-        $second_box_offer = GeneralHelper::getOption('second_box_offer');
-        $second_box_offer_image = GeneralHelper::getOption('second_box_offer_image');
-
-        $third_box_offer = GeneralHelper::getOption('third_box_offer');
-        $third_box_offer_image = GeneralHelper::getOption('third_box_offer_image');
-
-        $fourth_box_offer = GeneralHelper::getOption('fourth_box_offer');
-        $fourth_box_offer_image = GeneralHelper::getOption('fourth_box_offer_image');
-
-        return view('admin.home_page.home_page_sections.edit',compact('offering','home_section_project_type','first_box_offer','first_box_offer_image','second_box_offer','second_box_offer_image','third_box_offer','third_box_offer_image','fourth_box_offer','fourth_box_offer_image'));
+        
     }
 
     /**
@@ -84,7 +70,7 @@ class HomePageController extends Controller
      */
     public function update(Request $request, $id)
     {
-         $request->validate([
+        $request->validate([
             'home_section_project_type' => 'required|max:255',
             'first_box_offer' => 'required|max:255',
             'second_box_offer' => 'required|max:255',
@@ -148,7 +134,7 @@ class HomePageController extends Controller
 
         
 
-        return redirect('/admin/home-page')->with('success', 'Data saved successfully!');
+        return redirect('/admin/home-page/project-types')->with('success', 'Data saved successfully!');
     }
 
     /**
@@ -160,5 +146,26 @@ class HomePageController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function sectionProjectTypes(){
+
+
+        $offering = config('constants.offering');
+        $home_section_project_type = GeneralHelper::getOption('home_section_project_type');
+        $first_box_offer = GeneralHelper::getOption('first_box_offer');
+        $first_box_offer_image = GeneralHelper::getOption('first_box_offer_image');
+
+        $second_box_offer = GeneralHelper::getOption('second_box_offer');
+        $second_box_offer_image = GeneralHelper::getOption('second_box_offer_image');
+
+        $third_box_offer = GeneralHelper::getOption('third_box_offer');
+        $third_box_offer_image = GeneralHelper::getOption('third_box_offer_image');
+
+        $fourth_box_offer = GeneralHelper::getOption('fourth_box_offer');
+        $fourth_box_offer_image = GeneralHelper::getOption('fourth_box_offer_image');
+
+        return view('admin.home_page.home_page_sections.edit',compact('offering','home_section_project_type','first_box_offer','first_box_offer_image','second_box_offer','second_box_offer_image','third_box_offer','third_box_offer_image','fourth_box_offer','fourth_box_offer_image'));
     }
 }

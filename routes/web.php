@@ -178,7 +178,10 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::post('project/update-position','ProjectController@updatePosition')->name('project.update-position');
         Route::post('/areas', 'MainAreaController@store')->name('areas.store');
         Route::post('/sub-areas', 'SubAreaController@store')->name('subareas.store');
+        
+        Route::get('home-page/project-types','HomePageController@sectionProjectTypes')->name('home-section.project-types');
         Route::resource('home-page','HomePageController');
+        
         
 
 

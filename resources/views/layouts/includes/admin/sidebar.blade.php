@@ -107,9 +107,11 @@
                     <div class="panel-body">
                         <div class="accordions-content-link">
                             <ul>
+                                <li><a href="{{url('admin/home-page/project-types/')}}">Home Section Project Type</a></li>
                                 <li><a href="{{url('admin/cms-pages/about-us/')}}">About Us</a></li>
                                 <li><a href="{{url('admin/cms-pages/contact-us/')}}">Contact Us</a></li>
                                 <li><a href="{{url('admin/cms-pages/career/')}}">Career</a></li>
+                                
                                 
                             </ul>
                         </div>

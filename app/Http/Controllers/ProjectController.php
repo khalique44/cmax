@@ -97,6 +97,7 @@ class ProjectController extends Controller
         $priceFrom       = $request->input('price_from');
         $priceTo         = $request->input('price_to');
         $bedrooms        = $request->input('bedrooms');
+        $offer           = $request->input('offer');
         $priceFrom       = GeneralHelper::detectNumberUnit($priceFrom);
         $priceTo         = GeneralHelper::detectNumberUnit($priceTo);
         $searchedData    = $request->all();    
@@ -152,6 +153,7 @@ class ProjectController extends Controller
         /*->when($propertyType, function ($query, $propertyType) {
             $query->whereIn('offering', explode(",",$propertyType));
         })*/
+        
 
         ->when($installment, function ($query, $installment) {
             $query->whereHas('offers', function ($q) use ($installment) {
@@ -172,10 +174,18 @@ class ProjectController extends Controller
         // Price Range (in related project_offers table)
         ->when(($priceFrom && $priceTo && $propertyType), function ($query) use ($priceFrom, $priceTo, $propertyType) {
             $query->whereHas('offers', function ($q) use ($priceFrom, $priceTo, $propertyType) {
-                $q->whereBetween('price_from', [$priceFrom['amount'], $priceTo['amount']]);
-                $q->where('price_from_in_format', [$priceFrom['unit']]);
-                $q->orWhere('price_to_in_format', [$priceTo['unit']]);
+                if(!empty($priceFrom['amount']) && !empty($priceTo['amount'])){
+                    $q->whereBetween('price_from', [$priceFrom['amount'], $priceTo['amount']]);
+                    $q->where('price_from_in_format', [$priceFrom['unit']]);
+                    $q->orWhere('price_to_in_format', [$priceTo['unit']]);
+                }
                 $q->where('offer', [$propertyType]);
+            });
+        })
+
+        ->when($offer, function ($query, $offer) {
+            $query->whereHas('offers', function ($q) use ($offer) {
+                $q->where('offer', $offer);
             });
         });
 

@@ -11,7 +11,10 @@ use App\Builder;
 use App\Post;
 use App\Area;
 use App\SubArea;
+use App\ProjectOffer;
 use Illuminate\Http\Request;
+use App\Http\Helpers\GeneralHelper;
+
 
 class HomeController extends Controller
 {
@@ -47,6 +50,15 @@ class HomeController extends Controller
         ->take(3)
         ->get();
         $compare        = session()->get('compare', []);
+        $first_box_offer = GeneralHelper::getOption('first_box_offer');
+        $second_box_offer = GeneralHelper::getOption('second_box_offer');
+        $third_box_offer = GeneralHelper::getOption('third_box_offer');
+        $fourth_box_offer = GeneralHelper::getOption('fourth_box_offer');
+
+        $first_box_offer_count = ProjectOffer::where('offer', strtolower($first_box_offer))->count();
+        $second_box_offer_count = ProjectOffer::where('offer', strtolower($second_box_offer))->count();
+        $third_box_offer_count = ProjectOffer::where('offer', strtolower($third_box_offer))->count();
+        $fourth_box_offer_count = ProjectOffer::where('offer', strtolower($fourth_box_offer))->count();
 
         if(!empty($data->header_image)){
             
@@ -54,7 +66,7 @@ class HomeController extends Controller
             $header_image = url('public') .'/'.$data->header_image;
           } 
         }
-        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects','latestPosts','compare'));
+        return view('home',compact('data','header_image','testimonials','builders','progress','property_types','bedrooms','offering','popular_projects','latestPosts','compare','first_box_offer_count','second_box_offer_count','third_box_offer_count','fourth_box_offer_count'));
         
         //return '<H2>Coming Soon</H2';
     }

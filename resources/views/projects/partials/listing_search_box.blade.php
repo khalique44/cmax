@@ -13,7 +13,7 @@
                       </div>
                        <div class="col-md-4">
                           <label class="form-label">Area</label>
-                          <input type="text" class="form-control" id="search-area" name="search-area" placeholder="Search Area" value="{{ $searchedData && $searchedData['search-area'] ? $searchedData['search-area'] : '' }}" >
+                          <input type="text" class="form-control" id="search-area" name="search-area" placeholder="Search Area" value="{{ $searchedData && isset($searchedData['search-area']) ? $searchedData['search-area'] : '' }}" >
                           <div id="suggestions" style="border:1px solid #ddd; display:none; position:absolute; background:#fff; z-index:999;"></div>
                        </div>
                        <div class="col-md-3">
@@ -22,7 +22,7 @@
                           <select class="form-select select2" name="builder_id">1
                             <option value="" selected >Select</option>
                             <@foreach($builders as $builder)
-                              <option value="{{ $builder->id }}" {{ $searchedData && $searchedData['builder_id'] ==  $builder->id ? 'selected' : '' }}>{{ ucfirst($builder->builder_name) }}</option>
+                              <option value="{{ $builder->id }}" {{ $searchedData && isset($searchedData['builder_id']) ==  $builder->id ? 'selected' : '' }}>{{ ucfirst($builder->builder_name) }}</option>
                             @endforeach
                            </select>
                        </div>

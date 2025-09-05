@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth']], function() {
 
 Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
 
-    Route::get('/','AdminController@welcome')->name('admin.welcome');
+    //Route::get('/','AdminController@welcome')->name('admin.welcome');
 
     Route::get('login','Auth\LoginController@showLoginForm')->name('admin.login');
     Route::post('login','Auth\LoginController@login');
@@ -178,17 +178,23 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::post('project/update-position','ProjectController@updatePosition')->name('project.update-position');
         Route::post('/areas', 'MainAreaController@store')->name('areas.store');
         Route::post('/sub-areas', 'SubAreaController@store')->name('subareas.store');
-
+        Route::resource('home-page','HomePageController');
         
 
 
     });
 });
 
-Auth::routes();
+//Auth::routes();
+Route::get('/home', function () {
+    return redirect('/admin/dashboard');
+});
+Route::get('/admin', function () {
+    return redirect('/admin/login');
+});
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/blog', 'BlogController@index')->name('blog.list');
 Route::get('/blog/{id}', 'BlogController@show')->name('show');
 Route::get('/search-area', 'HomeController@searchArea')->name('search-area');

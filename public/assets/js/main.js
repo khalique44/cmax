@@ -255,6 +255,37 @@ $(document).ready(function(){
             $('#suggestions').hide();
         }
     });
+
+
+    $('#subscriptionForm').on('submit', function(e){
+        e.preventDefault();
+        showAjaxLoader();
+        $.ajax({
+            url: "/subscribe",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response){
+                if(response.success){
+                    displayMsg($('#subscribe-message'),response.message,'success');
+                   
+                    $('#subscriptionForm')[0].reset();
+                }
+                hideAjaxLoader();
+            },
+            error: function(xhr){
+                let errors = xhr.responseJSON.errors;
+                if(errors && errors.email){
+                    displayMsg($('#subscribe-message'),errors.email[0],'danger');
+                   
+                }
+                hideAjaxLoader();
+            },
+            always:function(){
+                hideAjaxLoader();
+            }
+        });
+    });
+
 });
 
 
@@ -606,5 +637,3 @@ function addCompareMultiple() {
         }
     });
 }
-
-

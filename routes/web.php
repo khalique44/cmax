@@ -216,6 +216,9 @@ Route::post('/compare/clear', 'ProjectCompareController@ajaxClear')->name('proje
 Route::get('/compare', 'ProjectCompareController@index')->name('projects.compare');
 Route::get('/compare/add/{id}', [ProjectCompareController::class, 'add'])->name('projects.compare.add');
 Route::get('/compare/remove/{id}', [ProjectCompareController::class, 'remove'])->name('projects.compare.remove');
+Route::post('/subscribe', 'SubscriptionController@store')->name('subscribe');
+Route::get('/survey', 'SurveyController@index')->name('survey');
+
 
 
 

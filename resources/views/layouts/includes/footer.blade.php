@@ -17,7 +17,6 @@
               <ul class="footer-list">
                  <li class="mb-2"><a href="#">Our Agents</a></li>
                  <li class="mb-2"><a href="#">FAQS</a></li>
-                 <li class="mb-2"><a href="#">Testimonials</a></li>
                  <li class="mb-2"><a href="{{route('aboutus.show')}}">About Us</a></li>
                  <li class="mb-2"><a href="{{route('contactus.show')}}">Contact Us</a></li>
               </ul>
@@ -32,10 +31,14 @@
            </div>
            <div class="col-md-3">
               <h4 class="footer-h">Get The Latest Information</h4>
-              <form class="sub-form">
-                 <input type="email" id="email" name="email" placeholder="Email Address" required>
-                 <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+              <form class="sub-form" id="subscriptionForm">
+                  @csrf
+                  <input type="email" id="email" name="email" placeholder="Email Address" required>
+                  <button type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
               </form>
+
+              <div id="subscribe-message" style="margin-top:10px;"></div>
+
            </div>
         </div>
     </div>

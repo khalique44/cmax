@@ -34,7 +34,7 @@
                <a class="nav-link" aria-current="page" href="{{ route('search-results'); }}">Projects</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Survey</a>
+               <a class="nav-link" href="{{ route('survey'); }}">Survey</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="{{ route('aboutus.show'); }}">About Us</a>

@@ -124,7 +124,7 @@ class ProjectController extends Controller
             'images.*' => 'image|max:10240',
             'offering' => 'required|array|min:1|in:'.implode(",",$offering),
             'area_id' => 'required',
-            'sub_area_id' => 'required',
+            'sub_area' => 'required',
 
 
             ],
@@ -189,6 +189,20 @@ class ProjectController extends Controller
             'added_by' => auth('admin')->user()->id,
         ]);
 
+        $sub_area_id = 0;
+
+        if(!empty($request->sub_area)){
+
+            $subArea = SubArea::firstOrCreate(
+                [
+                    'name' => $request->sub_area,
+                    'area_id' => $request->area_id,
+                ]
+            );
+
+            $sub_area_id = $subArea->id ?? 0;
+        }
+
         $logo_url = "";
 
         if(!empty($request->project_logo)){
@@ -202,9 +216,10 @@ class ProjectController extends Controller
 
         $request->merge([
             'logo_url' => $logo_url,
+            'sub_area_id' => $sub_area_id
         ]);
 
-        $project = Project::create($request->except('project_logo','project_gallery','payment_plan','_token'));
+        $project = Project::create($request->except('project_logo','sub_area','project_gallery','payment_plan','_token'));
         $project->features()->sync($request->input('features', []));
 
         foreach ($offering as $offer) {
@@ -457,7 +472,24 @@ class ProjectController extends Controller
             'added_by' => auth('admin')->user()->id,
         ]);
 
-        
+        $sub_area_id = 0;
+
+        if(!empty($request->sub_area)){
+
+            $subArea = SubArea::firstOrCreate(
+                [
+                    'name' => $request->sub_area,
+                    'area_id' => $request->area_id,
+                ]
+            );
+
+            $sub_area_id = $subArea->id ?? 0;
+
+            $request->merge([
+                
+                'sub_area_id' => $sub_area_id
+            ]);
+        }
 
         if(!empty($request->project_logo)){
             $folderName = 'project_logos';

@@ -115,7 +115,7 @@
                                             
                                             @foreach($cities as $city)
                                                 @if($city->id == 31594)
-                                                    <option value="{{ $city->id }}" {{ old('city_id', $project->city_id ?? '') === $city->id ? 'selected' : '' }}>{{ ucfirst($city->name)  }}</option>
+                                                    <option value="{{ $city->id }}" {{ old('city_id', $project->city_id ?? '') === $city->id ? 'selected' : '' }} >{{ ucfirst($city->name)  }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -134,22 +134,19 @@
                                     </div>                                    
 
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Sub Area<span>*</span> <span class="text-success text-right"><a href="javascript:;" class="add-sub-area" data-bs-toggle="modal" data-bs-target="#subAreaModal"><i class="fa fa-plus-circle "></i></a></span></label>
-                                        <select name="sub_area_id" id="sub_area_id" class="form-control select2" >
-                                            <option value="">Select Sub Area</option>
-                                            @foreach($sub_areas as $sub_area)
-                                                <option value="{{ $area->id }}" {{ old('sub_area_id', $project->sub_area_id ?? '') === $sub_area->id ? 'selected' : '' }}>{{ ucfirst($sub_area->name)  }}</option>
-                                            @endforeach
-                                        </select>
+                                        <label class="form-label">Sub Area<span>*</span> <!-- <span class="text-success text-right"><a href="javascript:;" class="add-sub-area" data-bs-toggle="modal" data-bs-target="#subAreaModal"><i class="fa fa-plus-circle "></i></a></span> --></label>
+                                        <input  type="text" name="sub_area"   value="{{ old('sub_area', $project->subArea->name ?? '') }}" id="gmap-location" required class="form-control">
+                                        <input  type="hidden" name="sub_area_id"   value="{{ old('sub_area_id', $project->sub_area_id ?? '') }}" >
+                                        
                                     </div>                                    
 
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="form-label">Location<span>*</span></label>
-                                        <input  type="text" name="location" class="form-control" value="{{ old('location', $project->location ?? '') }}" id="gmap-location" required >
+                                        <label class="form-label">Formatted Address</label>
+                                        <input  type="text" name="location" class="form-control" id="location" value="{{ old('location', $project->location ?? '') }}"  >
 
                                         <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $project->latitude ?? '') }}">
                                         <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $project->longitude ?? '') }}">
@@ -497,7 +494,7 @@
 
                                                 <li class="feature-{{ $feature->id }} list-inline-item">
                                                 <input type="checkbox" class="btn-check" name="features[]" id="feature-{{ $feature->id }}" autocomplete="off" value="{{ $feature->id }}" {{ isset($project) && $project->features->contains($feature->id) ? 'checked' : '' }} >
-                                                    <label class="btn btn-light" for="feature-{{$feature->id}}">{{$feature->name}}</label>
+                                                    <label class="btn btn-light" for="feature-{{$feature->id}}"><i class="fa {{$feature->icon ?? ''}}"></i> {{$feature->name}}</label>
                                                     
                                                 </li>
                                                 
@@ -958,7 +955,8 @@ function initMap() {
     autocomplete = new google.maps.places.Autocomplete(input, {
       bounds: karachiBounds,
       componentRestrictions: { country: 'pk' }, // Pakistan only
-      strictBounds: true
+      strictBounds: true,
+      types: ["(regions)"]
     });
 
     autocomplete.addListener('place_changed', onPlaceChanged);
@@ -985,15 +983,38 @@ function onPlaceChanged() {
         map.setCenter(place.geometry.location);
         marker.setPosition(place.geometry.location);
 
+        let subArea = "";
+
+        // Loop through address components
+        if (place.address_components) {
+            for (const comp of place.address_components) {
+                if (
+                    comp.types.includes("sublocality_level_1") ||
+                    comp.types.includes("sublocality_level_2")
+                ) {
+                    console.log('comp:',comp)
+                    subArea = comp.long_name;
+                    break;
+              }
+            }
+        }
+        
+        // Fallback: if no neighborhood found, just take place name
+        if (!subArea) {
+        subArea = place.name;
+        }
+
         document.getElementById('latitude').value = place.geometry.location.lat();
         document.getElementById('longitude').value = place.geometry.location.lng();
+        document.getElementById("location").value = place.formatted_address;
+        document.getElementById("gmap-location").value = subArea;
     }
 }
 
 // when city is selected from dropdown
 function onCityChange(cityName, area='', sub_area='') {
     $("#gmap-location").attr('placeholder','Enter a Location');
-    geocoder.geocode({ address: cityName+area+sub_area }, function (results, status) {
+    geocoder.geocode({ address: area + cityName }, function (results, status) {
         if (status === 'OK') {
             const location = results[0].geometry.location;
             map.setCenter(location);
@@ -1003,7 +1024,7 @@ function onCityChange(cityName, area='', sub_area='') {
             // Set bounds for autocomplete
             const circle = new google.maps.Circle({
                 center: location,
-                radius: 30000 // ~30km
+                radius: 1000 // ~30km
             });
 
             autocomplete.setBounds(circle.getBounds());

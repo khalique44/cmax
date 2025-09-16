@@ -238,14 +238,24 @@ function demoFromHTML() {
 /* Common alert box for confirm to delete in modules*/
 
 $(document).ready(function() {
-    ClassicEditor
-    .create(document.querySelector('#txtEditor'))
-    .then(editor => {
-        editor.ui.view.editable.element.style.minHeight = '300px';
-    })
-    .catch(error => {
-        console.error(error);
-    });
+    if($("textarea#txtEditor").length > 0){
+        ClassicEditor
+        .create(document.querySelector('#txtEditor'))
+        .then(editor => {
+            editor.ui.view.editable.element.style.minHeight = '300px';
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+    /*document.querySelectorAll('.editor').forEach(el => {
+        ClassicEditor.create(el)
+            .then(editor => {
+                editor.ui.view.editable.element.style.minHeight = '300px';
+            })
+            .catch(error => console.error(error));
+    });*/
     /*if($("textarea#txtEditor").length > 0){
         CKEDITOR.replace( 'txtEditor' );
 

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helpers\GeneralHelper;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactFormMail;
+use App\Mail\PropertyInquiryMail;
+
 
 class CmsPage extends Controller
 {
@@ -164,5 +168,39 @@ class CmsPage extends Controller
         
 
             ));
+    }
+
+    public function submitContactUs(Request $request)
+    {
+        $data = $request->validate([
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email',
+            'phone'   => 'nullable|string|max:20',
+            'message' => 'required|string',
+        ]);
+
+        // Send email
+        Mail::to(config('constants.admin_email'))->send(new ContactFormMail($data));
+
+        return response()->json(['message' => 'Thank you! Your message has been sent.']);
+
+    }
+
+
+    public function submitInquiryForm(Request $request)
+    {
+        $data = $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email',
+            'phone'         => 'required|string|max:20',
+            'property_type' => 'required|string',
+            'budget'        => 'nullable|string|max:255',
+            'location'      => 'nullable|string|max:255',
+            'message'       => 'nullable|string',
+        ]);
+
+        Mail::to(config('constants.admin_email'))->send(new PropertyInquiryMail($data));
+
+        return response()->json(['message' => 'Your inquiry has been sent successfully!']);
     }
 }

@@ -2710,3 +2710,6 @@ display: none;
 .accordion-button.collapsed {
   background-color: #ddd; /* When closed */
 }
+.district-back-del-btn-area{
+    float: right;
+}

@@ -5,34 +5,46 @@
 		<div data-aos="fade-up" class="row mt-4">
 			<div class="col-md-2"></div>
 			<div class="col-md-8">
-				<form action="#" method="POST" class="cta-form">
-					<div class="row g-3">
-						<div class="col-md-6">
-							<input type="text" name="name" class="form-control" placeholder="Name" required>
-						</div>
-						<div class="col-md-6">
-							<input type="email" name="email" class="form-control" placeholder="Email" required>
-						</div>
-						<div class="col-md-6">
-							<input type="tel" name="phone" class="form-control" placeholder="+92 -" required>
-						</div>
-						<div class="col-md-6">
-							<input type="text" name="property" class="form-control" placeholder="Property Type">
-						</div>
-						<div class="col-md-6">
-							<input type="text" name="budget" class="form-control" placeholder="Budget Range">
-						</div>
-						<div class="col-md-6">
-							<input type="text" name="location" class="form-control" placeholder="Location Preferences">
-						</div>
-						<div class="col-12">
-							<textarea name="message" class="form-control" rows="4" placeholder="Message"></textarea>
-						</div>
-						<div class="col-12 text-center">
-							<button type="submit" class="btn btn-custom px-4 py-2">SUBMIT NOW</button>
-						</div>
-					</div>
+				<form id="propertyForm" method="POST" class="cta-form">
+				    @csrf
+				    <div class="row g-3">
+				        <div class="col-md-6">
+				            <input type="text" title="Full Name" name="name" class="form-control" placeholder="Name" required>
+				        </div>
+				        <div class="col-md-6">
+				            <input type="email" title="Email" name="email" class="form-control" placeholder="Email" required>
+				        </div>
+				        <div class="col-md-6">
+				            <input type="tel" title="Phone" name="phone" class="form-control" placeholder="+92 -" required>
+				        </div>
+				        <div class="col-md-6">
+				            @php
+				                $offering = config('constants.offering');
+				            @endphp
+				            <select title="Property Type" class="form-select form-control" name="property_type" required>
+				                <option value="">Select Property Type</option>
+				                @foreach($offering as $type)
+				                    <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+				                @endforeach
+				            </select>
+				        </div>
+				        <div class="col-md-6">
+				            <input type="text" title="Budget" name="budget" class="form-control" placeholder="Budget Range">
+				        </div>
+				        <div class="col-md-6">
+				            <input type="text" title="Location" name="location" class="form-control" placeholder="Location Preferences">
+				        </div>
+				        <div class="col-12">
+				            <textarea name="message" title="Message" class="form-control" rows="4" placeholder="Message"></textarea>
+				        </div>
+				        <div class="col-12 text-center">
+				            <button type="submit" class="btn btn-custom px-4 py-2">SUBMIT NOW</button>
+				            <div class="property-ajax-message mt-3"></div>
+				        </div>
+
+				    </div>
 				</form>
+
 			</div>
 			<div class="col-md-2"></div>
 		</div>

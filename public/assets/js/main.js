@@ -87,7 +87,7 @@ function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     }else{
 
-        console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
+        //console.log('isJson:',isJson,'contentType:',contentType,'processData:',processData);
         var ajaxParams = {
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             method: 'POST',
@@ -154,7 +154,9 @@ function displayMsg(msgArea, msg, msgType){
 
     if(msgArea.length > 0){
 
-        msgArea.html('<div class="alert alert-'+msgType+'" role="alert">'+msg+'</div>').show();
+
+
+        msgArea.html('<div class="alert alert-'+msgType+' alert-dismissible fade show" role="alert">'+msg+'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').show();
         $('html, body').animate({ scrollTop: msgArea.offset().top}, 100);
 
         
@@ -285,6 +287,60 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('#contactForm').on('submit', function (e) {
+        e.preventDefault();
+        showAjaxLoader();
+
+        $.ajax({
+            url: $('meta[name="home_url"]').attr('content')+"/contact-submit", // your route
+            method: "POST",
+            data: $(this).serialize(),
+            success: function (response) {
+                
+                displayMsg($('.contact-ajax-message'),response.message,'success');
+                $('#contactForm')[0].reset();
+                hideAjaxLoader();
+            },
+            error: function (xhr) {
+               
+                    displayMsg($('.contact-ajax-message'),'Something went wrong!','danger');                  
+                
+                    hideAjaxLoader();
+            },
+            always:function(){
+                hideAjaxLoader();
+            }
+        });
+    });
+
+
+
+    $('#propertyForm').on('submit', function (e) {
+        e.preventDefault();
+        showAjaxLoader();
+        $.ajax({
+            url: $('meta[name="home_url"]').attr('content')+"/property-submit",
+            method: "POST",
+            data: $(this).serialize(),
+            success: function (response) {
+                displayMsg($('.property-ajax-message'),response.message,'success');
+                $('#propertyForm')[0].reset();
+                hideAjaxLoader();
+                
+            },
+            error: function () {
+                displayMsg($('.property-ajax-message'),'Something went wrong!','danger');     
+                
+                hideAjaxLoader();
+            },
+            always:function(){
+                hideAjaxLoader();
+            }
+        });
+    });
+
+
 
 });
 
@@ -468,7 +524,7 @@ function fetchProjects(page = 1) {
     var formData = $('#filter-form').serialize() + '&page=' + page;
     showAjaxLoader();
     $.ajax({
-        url: "/projects/search-results",
+        url: $('meta[name="home_url"]').attr('content')+"/projects/search-results",
         type: "GET",
         data: formData,
         success: function(data) {
@@ -486,7 +542,7 @@ function fetchPosts(page = 1) {
     var formData = 'page=' + page;
     showAjaxLoader();
     $.ajax({
-        url: "/blog",
+        url: $('meta[name="home_url"]').attr('content')+"/blog",
         type: "GET",
         data: formData,
         success: function(data) {
@@ -592,7 +648,7 @@ function removeCompare(id) {
     showAjaxLoader();    
 
     $.ajax({
-        url: "/compare/remove",
+        url: $('meta[name="home_url"]').attr('content')+"/compare/remove",
         type: "POST",
         data: {id:id},
         dataType: "json",
@@ -612,7 +668,7 @@ function addCompareMultiple() {
     var ids = $("select.compare-select-box").val();
 
     $.ajax({
-        url: "/compare/add-multiple",
+        url: $('meta[name="home_url"]').attr('content')+"/compare/add-multiple",
         type: "POST",
         data: {ids:ids},
         dataType: "json",
@@ -637,3 +693,5 @@ function addCompareMultiple() {
         }
     });
 }
+
+

@@ -186,7 +186,7 @@
 
 
 <script src="{!! url('public/assets/js/bootstrap-colorpicker.js') !!}"></script>
-<script src="{!! url('public/assets/js/ckeditor/ckeditor.js') !!}"></script>
+<script src="{!! url('public/assets/js/ckeditor.js') !!}"></script>
 <script src="{!! url('public/assets/js/jquery.timepicker.min.js') !!}"></script>
 
 <!-- FilePond Scripts -->
@@ -238,7 +238,15 @@ function demoFromHTML() {
 /* Common alert box for confirm to delete in modules*/
 
 $(document).ready(function() {
-    if($("textarea#txtEditor").length > 0){
+    ClassicEditor
+    .create(document.querySelector('#txtEditor'))
+    .then(editor => {
+        editor.ui.view.editable.element.style.minHeight = '300px';
+    })
+    .catch(error => {
+        console.error(error);
+    });
+    /*if($("textarea#txtEditor").length > 0){
         CKEDITOR.replace( 'txtEditor' );
 
         // Wait for CKEditor to be ready
@@ -254,7 +262,7 @@ $(document).ready(function() {
                 sessionStorage.setItem('description', data);
             });
         });
-    }
+    }*/
 
      $('.colors').colorpicker({
         popover: false,

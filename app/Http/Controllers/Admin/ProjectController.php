@@ -115,7 +115,10 @@ class ProjectController extends Controller
 
         $validated = $request->validate([
 
-            'project_title' => 'required',                 
+            'project_title' => [
+                'required',
+                Rule::unique('projects', 'project_title'),
+            ],                 
             'progress' => 'required',            
             'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'builder_id' => 'required',
@@ -149,9 +152,9 @@ class ProjectController extends Controller
                     $rules["{$offer}.area.$i"] = 'required|string|min:0';
                     $rules["{$offer}.area_type.$i"] = 'required';
                     $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
-                    $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
+                    //$rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
                     $rules["{$offer}.price_type_from.$i"] = 'required';
-                    $rules["{$offer}.price_type_to.$i"] = 'required';
+                    //$rules["{$offer}.price_type_to.$i"] = 'required';
                     
                     // Flats might have bedrooms/bathrooms, plots might not
                     if (in_array($offer, ['flats', 'offices'])) {
@@ -236,9 +239,9 @@ class ProjectController extends Controller
                         'bedrooms' => ($request->has("{$offer}.bedrooms.{$i}")) ? $request->$offer['bedrooms'][$i] : 0,
                         'bathrooms' => ($request->has("{$offer}.bathrooms.{$i}")) ? $request->$offer['bathrooms'][$i] : 0,
                         'price_from' => $request->$offer['price_from'][$i],
-                        'price_to' => $request->$offer['price_to'][$i],
+                        'price_to' => $request->$offer['price_from'][$i],
                         'price_from_in_format' => $request->$offer['price_type_from'][$i],
-                        'price_to_in_format' => $request->$offer['price_type_to'][$i],
+                        'price_to_in_format' => $request->$offer['price_type_from'][$i],
                         'is_installment' => $request->has("{$offer}.is_installment.{$i}") ? 1 : 0,
                         'installment_advance_amount' => $request->$offer['installment_advance_amount'][$i],
                         'number_of_instalments' => $request->$offer['number_of_instalments'][$i],
@@ -383,7 +386,10 @@ class ProjectController extends Controller
 
         $validated = $request->validate([
 
-            'project_title' => 'required',                 
+            'project_title' => [
+                'required',
+                Rule::unique('projects', 'project_title')->ignore($project->id ?? null),
+            ],               
             'progress' => 'required',            
             'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'builder_id' => 'required',
@@ -426,9 +432,9 @@ class ProjectController extends Controller
                     $rules["{$offer}.area.$i"] = 'required|string|min:0';
                     $rules["{$offer}.area_type.$i"] = 'required';
                     $rules["{$offer}.price_from.$i"] = 'required|numeric|min:0';
-                    $rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
+                    //$rules["{$offer}.price_to.$i"] = 'required|numeric|min:0';
                     $rules["{$offer}.price_type_from.$i"] = 'required';
-                    $rules["{$offer}.price_type_to.$i"] = 'required';
+                    //$rules["{$offer}.price_type_to.$i"] = 'required';
                     
                     // Flats might have bedrooms/bathrooms, plots might not
                     if (in_array($offer, ['flats', 'offices'])) {
@@ -441,6 +447,10 @@ class ProjectController extends Controller
                         $rules["{$offer}.number_of_instalments.$i"] = 'required';
                         $rules["{$offer}.monthly_installment.$i"] = 'required';
                     }
+
+                    $messages["{$offer}.price_from.$i.required"] = "Price field at row {$i} in {$offer} is required.";
+                    $messages["{$offer}.price_from.$i.numeric"]  = "Price field at row {$i} in {$offer} must be a number.";
+                    $messages["{$offer}.price_from.$i.min"]      = "Price field at row {$i} in {$offer} must be at least 0.";
                 }
             }
         }
@@ -528,9 +538,9 @@ class ProjectController extends Controller
                         'bedrooms' => ($request->has("{$offer}.bedrooms.{$i}")) ? $request->$offer['bedrooms'][$i] : 0,
                         'bathrooms' => ($request->has("{$offer}.bathrooms.{$i}")) ? $request->$offer['bathrooms'][$i] : 0,
                         'price_from' => $request->$offer['price_from'][$i],
-                        'price_to' => $request->$offer['price_to'][$i],
+                        'price_to' => $request->$offer['price_from'][$i],
                         'price_from_in_format' => $request->$offer['price_type_from'][$i],
-                        'price_to_in_format' => $request->$offer['price_type_to'][$i],
+                        'price_to_in_format' => $request->$offer['price_type_from'][$i],
                         'is_installment' => $request->has("{$offer}.is_installment.{$i}") ? 1 : 0,
                         'installment_advance_amount' => $request->$offer['installment_advance_amount'][$i],
                         'number_of_instalments' => $request->$offer['number_of_instalments'][$i],

@@ -11,8 +11,14 @@
                 <div class="district-back-del-btn-area">
                     <div class="distrcit-back-btn">
                         <div class="district-back-del-btn-area">
-                            <a href="{{url('admin/projects')}}" data-toggle="" data-target="#search-db-model"  class="btn">Back</a>
+                            <a href="{{url('admin/projects')}}" data-toggle="" data-target="#search-db-model"  class="btn btn-sm btn-warning">Back</a>
+                            @if(isset($project))
+                                <a class="btn btn-sm btn-success pull-right" target="_blank" href="{{ url("/project/$project->slug/") }}" >
+                                                View
+                                            </a>
+                            @endif
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -243,7 +249,7 @@
 
                                                                             <div class="row mt-2">
                                                                                 @if($offer != 'Plots' && $offer != 'Offices' && $offer != 'Shops')
-                                                                                    <div class="col-md-2">
+                                                                                    <div class="col-md-3">
                                                                                         <div class="form-group">
                                                                                             <label class="form-label">Bedrooms</label>
                                                                                             <select name="{{$offer}}[bedrooms][]" class="form-control">
@@ -254,7 +260,7 @@
                                                                                           </select>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-md-2">
+                                                                                    <div class="col-md-3">
                                                                                         <div class="form-group">
                                                                                             <label class="form-label">Bathrooms</label>
                                                                                             <select name="{{$offer}}[bathrooms][]" class="form-control">
@@ -266,13 +272,13 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 @endif
-                                                                                <div class="col-md-2">
+                                                                                <div class="col-md-3">
                                                                                     <div class="form-group">
-                                                                                        <label class="form-label">Price From <span>*</span></label>
+                                                                                        <label class="form-label">Price <span>*</span></label>
                                                                                         <input type="number" name="{{$offer}}[price_from][]" class="form-control" min="0" step="any" inputmode="decimal" value="{{ $savedOffer->price_from }}">
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-md-2">
+                                                                                <div class="col-md-3">
                                                                                     <div class="form-group">
                                                                                         <label class="form-label">Amount in</label>
                                                                                         <select name="{{$offer}}[price_type_from][]" id="price_type_from_{{$offer}}" class="form-control" >
@@ -283,23 +289,8 @@
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-md-2">
-                                                                                    <div class="form-group">
-                                                                                        <label class="form-label">Price To <span>*</span></label>
-                                                                                        <input type="number" name="{{$offer}}[price_to][]" class="form-control" min="0" step="any" inputmode="decimal" value="{{ $savedOffer->price_to  }}">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    <div class="form-group">
-                                                                                        <label class="form-label">Amount in</label>
-                                                                                        <select name="{{$offer}}[price_type_to][]" id="price_type_to_{{$offer}}" class="form-control" >
-                                                                                        
-                                                                                            @foreach($price_types as $key => $price_type)
-                                                                                                <option value="{{ $price_type }}" {{ old('price_type_to', $savedOffer->price_to_in_format ?? '') === $price_type ? 'selected' : '' }}>{{ ucfirst($price_type) }}</option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div> 
+                                                                                
+                                                                                
                                                                             </div> 
 
                             <div class="row installment-area">
@@ -372,7 +363,7 @@
 
                                                                     <div class="row mt-2">
                                                                         @if($offer != 'Plots' && $offer != 'Offices' && $offer != 'Shops')
-                                                                            <div class="col-md-2">
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group">
                                                                                     <label class="form-label">Bedrooms</label>
                                                                                     <select name="{{$offer}}[bedrooms][]" class="form-control">
@@ -383,7 +374,7 @@
                                                                                   </select>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-2">
+                                                                            <div class="col-md-3">
                                                                                 <div class="form-group">
                                                                                     <label class="form-label">Bathrooms</label>
                                                                                     <select name="{{$offer}}[bathroom][]" class="form-control">
@@ -395,13 +386,13 @@
                                                                                 </div>
                                                                             </div>
                                                                         @endif
-                                                                        <div class="col-md-2">
+                                                                        <div class="col-md-3">
                                                                             <div class="form-group">
-                                                                                <label class="form-label">Price From <span>*</span></label>
+                                                                                <label class="form-label">Price <span>*</span></label>
                                                                                 <input type="number" name="{{$offer}}[price_from][]" class="form-control" min="0" step="any" inputmode="decimal">
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-2">
+                                                                        <div class="col-md-3">
                                                                             <div class="form-group">
                                                                                 <label class="form-label">Amount in</label>
                                                                                 <select name="{{$offer}}[price_type_from][]" id="price_type_from_{{$offer}}" class="form-control" >
@@ -412,23 +403,8 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="form-group">
-                                                                                <label class="form-label">Price To <span>*</span></label>
-                                                                                <input type="number" name="{{$offer}}[price_to][]" class="form-control" min="0" step="any" inputmode="decimal">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="form-group">
-                                                                                <label class="form-label">Amount in</label>
-                                                                                <select name="{{$offer}}[price_type_to][]" id="price_type_to_{{$offer}}" class="form-control" >
-                                                                                
-                                                                                    @foreach($price_types as $key => $price_type)
-                                                                                        <option value="{{ $price_type }}" {{ old('price_type_to', $project->price_type_to ?? '') === $price_type ? 'selected' : '' }}>{{ ucfirst($price_type) }}</option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                            </div>
-                                                                        </div> 
+                                                                        
+                                                                        
                                                                     </div> 
 
                             <div class="row installment-area">
@@ -834,15 +810,17 @@
                             </div>
 
 
-                            <div class="row">
+                            <div class="row mb-5">
 
-                                <div class="col-md-12">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <input type="hidden" name="deleted-offer[]" id="deleted-offer">
                                         <input type="hidden" name="deleted-floor-plan[]" id="deleted-floor-plan">
                                         <button type="submit" class="btn btn-success mt-3">{{ isset($project) ? 'Update' : 'Save' }}</button>
+                                        <button type="submit" class="btn btn-warning mt-3">Back</button>
                                     </div>
                                 </div>
+                                
                             </div>
                         </form>
                     </div>

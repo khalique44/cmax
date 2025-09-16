@@ -35,25 +35,28 @@
 					<div class="row">
 						<div class="col-md-8">
 							<h4 class="sub-h4 mb-4">Message Us</h4>
-							<form class="contact-form">
-								<div class="form-group mb-3">
-									<input type="text" class="form-control" placeholder="Name">
-								</div>
-								<div class="form-group mb-3">
-									<input type="text" class="form-control" placeholder="Email">
-								</div>
-								<div class="form-group mb-3">
-									<input type="text" class="form-control" placeholder="Phone">
-								</div>
-								<div class="form-group mb-3">
-									<textarea type="text" class="form-control" placeholder="Message" rows="5"></textarea>
-								</div>
 
-								<button type="submit" class="btn btn-red">
-									submit
-								</button>
+							<form class="contact-form" id="contactForm">
+							    @csrf
+							    <div class="form-group mb-3">
+							        <input type="text" title="Full Name" name="name" class="form-control" placeholder="Full Name" required>
+							    </div>
+							    <div class="form-group mb-3">
+							        <input type="email" title="Email" name="email" class="form-control" placeholder="Email" required>
+							    </div>
+							    <div class="form-group mb-3">
+							        <input type="text" title="Phone" name="phone" class="form-control" placeholder="Phone">
+							    </div>
+							    <div class="form-group mb-3">
+							        <textarea name="message" title="Message" class="form-control" placeholder="Message" rows="5" required></textarea>
+							    </div>
 
+							    <button type="submit" class="btn btn-red">
+							        Submit
+							    </button>
+							    <div class="contact-ajax-message mt-3"></div>
 							</form>
+
 						</div>
 						<div class="col-md-4">
 							<div class="contact-details">

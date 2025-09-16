@@ -65,4 +65,5 @@ return [
                             'Educational Area',                            
                         ],
     'compare_project_limit' => 4,
+    'admin_email' => env('ADMIN_EMAIL', 'khalique.ahmed3@gmail.com'),
 ];

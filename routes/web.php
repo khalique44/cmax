@@ -207,6 +207,10 @@ Route::get('/project/{slug}', 'ProjectController@show')->name('project.show');
 Route::get('/about-us', 'CmsPage@showAboutUs')->name('aboutus.show');
 Route::get('/career', 'CmsPage@showCareer')->name('career.show');
 Route::get('/contact-us', 'CmsPage@showContactUs')->name('contactus.show');
+Route::post('/contact-submit', 'CmsPage@submitContactUs')->name('contact.submit');
+Route::post('/property-submit', 'CmsPage@submitInquiryForm')->name('property.submit');
+
+
 
 Route::post('/compare/add', 'ProjectCompareController@ajaxAdd')->name('projects.compare.ajaxAdd');
 Route::post('/compare/add-multiple', 'ProjectCompareController@ajaxAddMultiple')->name('projects.compare.ajaxAddMultiple');

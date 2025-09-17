@@ -592,8 +592,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then(data => {
                 console.log(data.status);
-                if (data.status === "success") {
-                    //renderCompareItems(data.projects);
+                if (data.status === "success") {                    
 
                     document.location = "/compare";
 
@@ -607,39 +606,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // Clear all
-    document.getElementById("clear-compare").addEventListener("click", function () {
-        fetch("/compare/clear", {
-            method: "POST",
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
-        })
-        .then(res => res.json())
-        .then(data => renderCompareItems(data.projects));
-    });
 
-    // Render projects inside box
-    function renderCompareItems(projects) {
-        compareItems.innerHTML = "";
-        if (projects.length === 0) {
-            compareBox.classList.add("hidden");
-            return;
-        }
-
-        projects.forEach(p => {
-            let item = document.createElement("div");
-            item.className = "flex justify-between items-center border p-2 rounded";
-            item.innerHTML = `
-                <span>${p.title}</span>
-                <button class="text-red-500 text-sm" onclick="removeCompare(${p.id})">&times;</button>
-            `;
-            compareItems.appendChild(item);
-        });
-
-        compareBox.classList.remove("hidden");
-    }
 
     // Expose removeCompare globally
-    window.removeCompare = removeCompare;
+    //window.removeCompare = removeCompare;
 });
 
 // Remove project

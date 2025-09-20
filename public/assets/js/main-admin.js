@@ -621,7 +621,8 @@ function renderStatusBadge(is_active) {
 
 $(document).on("click",".updateStatus",function(e){
     e.preventDefault();
-    var project_id = $(this).data("id");
+    var model_id = $(this).data("id");
+    var model_name = $(this).data("model-name");
     var status = $(this).data("status");
     var status_type = $(this).data("status-type");
     var status_label = $(this).data("status-label");
@@ -630,9 +631,9 @@ $(document).on("click",".updateStatus",function(e){
     var msgArea = '';
     showAjaxLoader();
     $.ajax({
-        url: "/admin/project/update-status",
+        url: "/admin/"+model_name+"/update-status",
         type: "GET",
-        data: {project_id:project_id,status:status,status_type:status_type},
+        data: {model_id:model_id,status:status,status_type:status_type},
         success: function(response) {
             //console.log(response.status);
             if(response.status == 'success'){

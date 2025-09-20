@@ -48,15 +48,14 @@ class ProjectController extends Controller
                                             Delete
                                         </a>';
                 })
-                ->editColumn('progress', function($project) {
-                    $progress = config('constants.progress');
-                    return  $progress[$project->progress];
-                })
+                
+                
+
                 ->editColumn('is_active', function($project) {
                     $status = GeneralHelper::getStatusLabel($project->is_active);
                     $label = $project->is_active == 1 ? 'Deactive' : 'Active';
                     $newStatus = $project->is_active == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_active" data-status-label="'.$label.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$label.'" >'.$status.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_active" data-status-label="'.$label.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$label.'" >'.$status.'</a>';                    
                 })
                 ->editColumn('is_featured', function($project) {
                     $label = $project->is_featured == 1 ? 'Yes' : 'No';
@@ -64,7 +63,7 @@ class ProjectController extends Controller
                     $statusHtml = GeneralHelper::getStatusLabel($label,$color);
                     $newLabel = $project->is_featured == 1 ? 'No' : 'Yes';
                     $newStatus = $project->is_featured == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_featured" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_featured" data-status-label="'.$newLabel.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
                 })
                 ->editColumn('is_popular', function($project) {
                     $label = $project->is_popular == 1 ? 'Yes' : 'No';
@@ -72,7 +71,7 @@ class ProjectController extends Controller
                     $statusHtml = GeneralHelper::getStatusLabel($label,$color);
                     $newLabel = $project->is_popular == 1 ? 'No' : 'Yes';
                     $newStatus = $project->is_popular == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_popular" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_popular" data-status-label="'.$newLabel.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
                 })
                 ->rawColumns(['action','is_active','is_featured','is_popular'])
                 ->toJson();
@@ -738,7 +737,7 @@ class ProjectController extends Controller
 
     public function updateStatus(Request $request){
        
-        $project = Project::findOrFail($request->project_id);   
+        $project = Project::findOrFail($request->model_id);   
 
         $project->update([$request->status_type => $request->status]);
         

@@ -181,6 +181,9 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         
         Route::get('home-page/project-types','HomePageController@sectionProjectTypes')->name('home-section.project-types');
         Route::resource('home-page','HomePageController');
+        Route::resource('features','FeatureController');
+        Route::get('/feature-data', 'FeatureController@getFeatures')->name('features.data');
+        Route::get('feature/update-status','FeatureController@updateStatus')->name('feature.update-status');
         
         
 

@@ -178,7 +178,15 @@ div#suggestions .suggestion-item {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
 }
-
+p.listing-short-desc {
+  font-size: 14px;
+}
+.width-100-pc{
+  width: 100% !important;
+}
+.width-23-pc{
+  width: 23% !important;
+}
 /* ------ End code by KHL ------ */
 
 

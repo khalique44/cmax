@@ -192,12 +192,13 @@ class FeatureController extends Controller
     public function destroy($id)
     {
         $record = Feature::find($id);
+        
         if(!$record){
             return abort(404);
         }
         Feature::Where('id',$id)->delete();
-    
-        return redirect('/admin/features');
+        
+        return response()->json(['success' => 'Record deleted successfully.']);
     }
 
     public function updateStatus(Request $request){

@@ -470,7 +470,7 @@
 
                                                 <li class="feature-{{ $feature->id }} list-inline-item">
                                                 <input type="checkbox" class="btn-check" name="features[]" id="feature-{{ $feature->id }}" autocomplete="off" value="{{ $feature->id }}" {{ isset($project) && $project->features->contains($feature->id) ? 'checked' : '' }} >
-                                                    <label class="btn btn-light" for="feature-{{$feature->id}}"><i class="fa {{$feature->icon ?? ''}}"></i> {{$feature->name}}</label>
+                                                    <label class="btn btn-light" for="feature-{{$feature->id}}">{!! $feature->icon_image !!} {{$feature->name}}</label>
                                                     
                                                 </li>
                                                 

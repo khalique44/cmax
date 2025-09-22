@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Traits\OptimizesMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ use App\Http\Helpers\GeneralHelper;
 
 class Project extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory, InteractsWithMedia, SoftDeletes, OptimizesMedia;
 
     protected $fillable = [        
     	'builder_id','city_id','area_id','sub_area_id','project_title','description','progress','area','location','latitude','longitude','logo_url','offering','is_lease','is_active','added_by','rate_per_square','development_charges','utility_charges','distance','project_floors','project_start_date', 'is_featured','is_popular','position'
@@ -77,9 +78,17 @@ class Project extends Model implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
 	{
-	    $this->addMediaConversion('thumb')
-	        ->width(200)	        
-	        ->sharpen(10);
+	    $this
+            ->addMediaConversion('thumb')
+            ->width(200)
+            //->height(300)
+            ->sharpen(10)
+            ->optimize();
+
+        $this
+            ->addMediaConversion('webp')
+            ->format('webp')
+            ->optimize();
 	}
 
 	public function getPriceRangeAttribute()

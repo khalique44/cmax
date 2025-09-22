@@ -32,7 +32,18 @@
 
                         </div>
                         <p class="loc-txt"><i class="fa fa-map-marker"></i> {{ $project->alt_location ?? '' }}</p>
-                        <p class="mb-3">{!! \Illuminate\Support\Str::limit(strip_tags($project->description), 100) !!}...</p>
+                        <p class="mb-3 listing-short-desc">
+                            @php
+
+                                $limit = config('constants.project_text_limit'); // Limit characters
+                                $description = $project->description;
+                            @endphp    
+                            {!! \Illuminate\Support\Str::limit(strip_tags($description), $limit) !!}
+                            {!! \Illuminate\Support\Str::limit(strip_tags($project->description), 100) !!}...
+                            @if(strlen($description) > $limit)
+                                <a href="{{ route('project.show', $project->slug) }}" class="">Show more</a>
+                            @endif
+                        </p>
                         <ul class="amenities">
                             <li><i class="fa fa-user"></i> {{ $project->builder->builder_name ?? 'N/A' }}</li>
                             <li><i class="fa fa-building"></i> {{ $project->offering ?? '' }}</li>

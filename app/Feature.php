@@ -23,4 +23,11 @@ class Feature extends Model
 	{
 	   return $this->belongsToMany(Project::class, 'project_features', 'feature_id', 'project_id');
 	}
+
+    public function getIconImageAttribute()
+	{
+        $fileUrl = url('public') ."/". $this->file_url;
+        return (!empty($this->file_url)) ? '<img src="'.$fileUrl .'" class="feature-image-icon" width="30">' : '<i class="fa '.$this->icon .'"></i>';
+	    
+	}
 }

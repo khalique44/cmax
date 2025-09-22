@@ -6,6 +6,7 @@ use App\Property;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\Controller;
 use App\TemporaryUpload;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class MediaController extends Controller
 {
@@ -30,6 +31,8 @@ class MediaController extends Controller
         $media = $tempModel
             ->addMediaFromRequest($mediaKey)
             ->toMediaCollection('temp'); // Use a temp collection
+        $optimizer = OptimizerChainFactory::create();
+        $optimizer->optimize($media->getPath());
 
         return response()->json([
             'id' => $media->id,

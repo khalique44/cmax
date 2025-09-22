@@ -110,8 +110,9 @@ function renderActionColumn(id){
                 },
                 paging: true, // Ensure pagination is enabled
                 searching: true, // Enable search
-                ordering: true, // Enable sorting
-                info: true // Show info text (e.g., "Showing 1 to 5 of 25 entries")
+                ordering: false, // Enable sorting
+                info: true, // Show info text (e.g., "Showing 1 to 5 of 25 entries")
+                //order: [[0, "desc"]]
             });
 
             table.on('row-reorder', function (e, details) {

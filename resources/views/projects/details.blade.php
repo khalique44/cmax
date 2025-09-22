@@ -61,15 +61,16 @@
           @php
             $paymentPlans = $project->getMedia('payment_plan');                        
             $projectProgress = $project->getMedia('project_progress');                        
-            $gallery = $project->getMedia('project_gallery');
+            $gallery = $project->getMedia('project_gallery'
+            );
             $firstImage = $gallery->first();  // Get the first media
             $remainingImages = $gallery->slice(1);  // Skip the first media
           @endphp
 
             <div class="col-md-6">
                 @if(!empty($firstImage))
-                    <a href="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" data-lightbox="gallery-group">
-                        <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="" class="w-100">
+                    <a href="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl('webp')) }}" data-lightbox="gallery-group">
+                        <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl('webp')) }}" alt="" class="w-100">
                     </a>
                 @endif
             </div>
@@ -79,7 +80,7 @@
                       @foreach($remainingImages as $key => $media)
                         <div class="col-md-6" {!! ($key > 4) ? "style='display:none;'" : "" !!}>
                           <div class="galleria-inside">
-                              <a href="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" data-lightbox="gallery-group"><img src="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl()) }}" alt="" class="w-100"></a>
+                              <a href="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl('webp')) }}" data-lightbox="gallery-group"><img src="{{   GeneralHelper::getMediaWithPublicDir($media->getUrl('webp')) }}" alt="" class="w-100"></a>
                               @if($key == 4)
                                 <a href="#" class="btn-showgal"><img src="{{ asset('public/assets/img/gallery-iconwhite.png') }}" alt=""> Show all photos</a>
                               @endif
@@ -241,6 +242,7 @@
                                                             </strong>
 
                                                         </li>
+                                                        <li class="width-100-pc"><span class="width-23-pc">Location</span> {{ $project->alt_location ?? '' }} <a href="#location" title="See on the Map"><i class="fa fa-eye"></i></a></li>
                                                         
                                                     </ul>
                                                 </div>
@@ -261,7 +263,7 @@
                             <ul class="checked_list">
                                 @foreach($project->features as $key => $feature)
                                     <li>
-                                        <i class="fa {{ !empty($feature->icon) ? $feature->icon : 'fa-check-circle'}}"></i>
+                                        {!! $feature->icon_image ?? '' !!}
                                         {{ $feature->name ?? ''}}
                                     </li>
                                 @endforeach
@@ -342,10 +344,10 @@
                                         
                                         <li class="show active" id="home-paymentplan-tab-{{ $paymentPlan->id }}" role="" >
                                            
-                                            @if($paymentPlan->getUrl())
-                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl()) }}" data-lightbox="gallery-group2" class="card-img">
+                                            @if($paymentPlan->getUrl('webp'))
+                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl('webp')) }}" data-lightbox="gallery-group2" class="card-img">
                                                     
-                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl()) }}" alt="" >
+                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($paymentPlan->getUrl('webp')) }}" alt="" >
                                                     
                                                     
                                                 </a>
@@ -369,10 +371,10 @@
                                         
                                         <li class="show active" id="home-paymentplan-tab-{{ $progress->id }}" role="" >
                                            
-                                            @if($progress->getUrl())
-                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl()) }}" data-lightbox="gallery-group2" class="card-img">
+                                            @if($progress->getUrl('webp'))
+                                                <a href="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl('webp')) }}" data-lightbox="gallery-group2" class="card-img">
                                                     
-                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl()) }}" alt="" >
+                                                        <img src="{{  GeneralHelper::getMediaWithPublicDir($progress->getUrl('webp')) }}" alt="" >
                                                     
                                                     
                                                 </a>
@@ -399,7 +401,7 @@
 
                                         @endphp
                                         <div class="display-builder-logo">
-                                            <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl()) }}" alt="Builder Image" class="img-fluid mx-auto d-block" 
+                                            <img src="{{  GeneralHelper::getMediaWithPublicDir($firstImage->getUrl('webp')) }}" alt="Builder Image" class="img-fluid mx-auto d-block" 
     style="max-width: 180px;">  
                                         </div>             
                                        

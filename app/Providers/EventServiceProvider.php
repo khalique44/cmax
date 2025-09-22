@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
+        \Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAdded::class => [
+        \App\Listeners\OptimizeMedia::class,
+        ],
     ];
 
     /**

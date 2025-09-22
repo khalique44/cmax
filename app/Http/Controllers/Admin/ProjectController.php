@@ -19,7 +19,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
+use Spatie\Image\Image;
+use Spatie\Image\Enums\ImageDriver;
+
+
 
 class ProjectController extends Controller
 {
@@ -48,15 +54,14 @@ class ProjectController extends Controller
                                             Delete
                                         </a>';
                 })
-                ->editColumn('progress', function($project) {
-                    $progress = config('constants.progress');
-                    return  $progress[$project->progress];
-                })
+                
+                
+
                 ->editColumn('is_active', function($project) {
                     $status = GeneralHelper::getStatusLabel($project->is_active);
                     $label = $project->is_active == 1 ? 'Deactive' : 'Active';
                     $newStatus = $project->is_active == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_active" data-status-label="'.$label.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$label.'" >'.$status.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_active" data-status-label="'.$label.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$label.'" >'.$status.'</a>';                    
                 })
                 ->editColumn('is_featured', function($project) {
                     $label = $project->is_featured == 1 ? 'Yes' : 'No';
@@ -64,7 +69,7 @@ class ProjectController extends Controller
                     $statusHtml = GeneralHelper::getStatusLabel($label,$color);
                     $newLabel = $project->is_featured == 1 ? 'No' : 'Yes';
                     $newStatus = $project->is_featured == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_featured" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_featured" data-status-label="'.$newLabel.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
                 })
                 ->editColumn('is_popular', function($project) {
                     $label = $project->is_popular == 1 ? 'Yes' : 'No';
@@ -72,7 +77,7 @@ class ProjectController extends Controller
                     $statusHtml = GeneralHelper::getStatusLabel($label,$color);
                     $newLabel = $project->is_popular == 1 ? 'No' : 'Yes';
                     $newStatus = $project->is_popular == 1 ? 0 : 1;
-                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_popular" data-status-label="'.$newLabel.'" class="updateStatus" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
+                    return '<a href="#" data-status="'.$newStatus.'" data-status-type="is_popular" data-status-label="'.$newLabel.'" class="updateStatus" data-model-name="project" data-id="'.$project->id.'" title="Click to '.$newLabel.'" >'.$statusHtml.'</a>';                    
                 })
                 ->rawColumns(['action','is_active','is_featured','is_popular'])
                 ->toJson();
@@ -120,7 +125,7 @@ class ProjectController extends Controller
                 Rule::unique('projects', 'project_title'),
             ],                 
             'progress' => 'required',            
-            'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
             'builder_id' => 'required',
             'city_id' => 'required',
             'location' => 'required',            
@@ -208,13 +213,32 @@ class ProjectController extends Controller
 
         $logo_url = "";
 
-        if(!empty($request->project_logo)){
+
+        if (!empty($request->project_logo)) {
             $folderName = 'project_logos';
             $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
-            $fullFileName = $fileName."-".time().'.'.$request->project_logo->getClientOriginalExtension();
-            $fullFileName = str_replace(" ","_",$fullFileName);
-            $request->project_logo->move(public_path('uploads/'.$folderName), $fullFileName);
-            $logo_url = 'uploads/'.$folderName.'/'.$fullFileName;
+            $fullFileName = $fileName . "-" . time() . '.' . $request->project_logo->getClientOriginalExtension();
+            $fullFileName = str_replace(" ", "_", $fullFileName);
+
+            $destinationPath = public_path('uploads/' . $folderName);
+            $request->project_logo->move($destinationPath, $fullFileName);
+
+            $filePath = $destinationPath . '/' . $fullFileName;
+
+            // 🔹 Optimize the uploaded file
+            $optimizer = OptimizerChainFactory::create();
+            $optimizer->optimize($filePath);
+
+            $logo_url = 'uploads/' . $folderName . '/' . $fullFileName;
+
+            $webpPath = $destinationPath . '/' . $fileName . "-" . time() . '.webp';
+
+            Image::useImageDriver(ImageDriver::Gd);
+
+            Image::load($filePath)
+                ->format('webp')
+                ->save($webpPath);            
+           
         }
 
         $request->merge([
@@ -388,10 +412,10 @@ class ProjectController extends Controller
 
             'project_title' => [
                 'required',
-                Rule::unique('projects', 'project_title')->ignore($project->id ?? null),
+                Rule::unique('projects', 'project_title')->ignore($project->id)->whereNull('deleted_at'),
             ],               
             'progress' => 'required',            
-            'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+            'project_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
             'builder_id' => 'required',
             'city_id' => 'required',
             'location' => 'required',            
@@ -501,17 +525,35 @@ class ProjectController extends Controller
             ]);
         }
 
-        if(!empty($request->project_logo)){
+        if (!empty($request->project_logo)) {
             $folderName = 'project_logos';
             $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
-            $fullFileName = $fileName."-".time().'.'.$request->project_logo->getClientOriginalExtension();
-            $fullFileName = str_replace(" ","_",$fullFileName);
-            $request->project_logo->move(public_path('uploads/'.$folderName), $fullFileName);
-            $logo_url = 'uploads/'.$folderName.'/'.$fullFileName;
+            $fullFileName = $fileName . "-" . time() . '.' . $request->project_logo->getClientOriginalExtension();
+            $fullFileName = str_replace(" ", "_", $fullFileName);
 
+            $destinationPath = public_path('uploads/' . $folderName);
+            $request->project_logo->move($destinationPath, $fullFileName);
+
+            $filePath = $destinationPath . '/' . $fullFileName;
+
+            // 🔹 Optimize the uploaded file
+            $optimizer = OptimizerChainFactory::create();
+            $optimizer->optimize($filePath);
+
+            $logo_url = 'uploads/' . $folderName . '/' . $fullFileName;
+
+            $webpPath = $destinationPath . '/' . $fileName . "-" . time() . '.webp';
+
+            Image::useImageDriver(ImageDriver::Gd);
+
+            Image::load($filePath)
+                 ->format('webp')
+                 ->save($webpPath);
+            
             $request->merge([
                 'logo_url' => $logo_url,
             ]);
+           
         }        
 
         $project->update($request->except('project_logo','project_gallery','payment_plan'));
@@ -738,7 +780,7 @@ class ProjectController extends Controller
 
     public function updateStatus(Request $request){
        
-        $project = Project::findOrFail($request->project_id);   
+        $project = Project::findOrFail($request->model_id);   
 
         $project->update([$request->status_type => $request->status]);
         

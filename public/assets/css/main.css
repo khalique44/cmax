@@ -545,6 +545,7 @@ span.number {
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 1px;
+    margin-top: 9px;
 }
 .inner-banner .banner-form input, .inner-banner .banner-form select{
     background-color: #fff;
@@ -573,8 +574,9 @@ span.number {
 }
 .property-listing .card-img img{
     border-radius: 20px 0 0px 20px;
-    height: 100%;
+    height: 290px;
     width: 100%;
+    object-fit: fill;
 }
 .property-listing .launch-btn{left: 1.5%;}
 .property-listing .detail-btn{
@@ -659,6 +661,11 @@ span.number {
     /* background-size: 13px; */
     border-radius: 40px;
 }
+.form-control:disabled{
+    background: transparent;
+    opacity: 1;
+    font-weight: 700;
+}
 .calculator_budget .form-textarea{
     background-color: #ffffffbd;
     border: 1px solid #fff;
@@ -668,6 +675,25 @@ span.number {
     border-radius: 14px;
     padding-left: 10px;
     padding-top: 8px;
+}
+.inner-banner .dropdown-price-range-toggle{
+    padding-left: 9px;
+}
+.inner-banner .select2-container--default .select2-selection--single,
+.inner-banner .dropdown-price-range-toggle{
+    border: none;
+    border-radius: 40px;
+    height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+    align-content: center;
+}
+#home .banner-form .select2-container--default .select2-selection--single{
+    background-color: transparent;
+    border: none !important;
+}
+#home .banner-form  .select2-container .select2-selection--single .select2-selection__rendered{
+    padding-left: 0;
 }
 .btn-red{
     background-color: #CD2227;
@@ -703,6 +729,12 @@ span.number {
     font-weight: 500;
     display: block;
     width: 100%;
+}
+#home-floorplan-tab-1 .card-img img,
+#home-paymentplan-tab-16 .card-img img,
+#home-paymentplan-tab-17 .card-img img{
+    max-height: 200px;
+    width: auto;
 }
 .galleria-inside{
     height: 204px;

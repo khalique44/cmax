@@ -544,11 +544,11 @@ class ProjectController extends Controller
 
             $webpPath = $destinationPath . '/' . $fileName . "-" . time() . '.webp';
 
-            // Image::useImageDriver(ImageDriver::Gd);
+            Image::useImageDriver(ImageDriver::Gd);
 
-            // Image::load($filePath)
-            //     ->format('webp')
-            //     ->save($webpPath);
+            Image::load($filePath)
+                 ->format('webp')
+                 ->save($webpPath);
             
             $request->merge([
                 'logo_url' => $logo_url,

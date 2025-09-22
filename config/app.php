@@ -213,6 +213,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'LogActivity' => App\Http\Helpers\LogActivity::class,
+        'GeneralHelper' => App\Facades\GeneralHelper::class,
 
     ],
 

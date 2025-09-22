@@ -50,7 +50,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('users.data') }}",
-                 pageLength: 5,
+                 pageLength: 10,
                 columns: [
                    
                     { data: 'first_name', name: 'first_name' },

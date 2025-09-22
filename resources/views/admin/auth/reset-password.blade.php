@@ -31,8 +31,8 @@
                             <input type="password" class="backend-field form-control" placeholder="Confirm Password" name="password_confirmation" required>
                         </div>
                         <div class="submit-request-btn pull-right">
-                            <a href="{!! route('admin.dashboard') !!}" class="btn-sm btn-danger" style="line-height: 0.9;">{{__('BACK')}}</a>
-                            <button type="submit" class="btn-sm btn-success">{{__('CHANGE PASSWORD')}}</button>
+                            <a href="{!! route('admin.dashboard') !!}" class="btn btn-sm btn-danger" >{{__('BACK')}}</a>
+                            <button type="submit" class="btn btn-sm btn-success">{{__('CHANGE PASSWORD')}}</button>
                         </div>
                     </form>
                 </div>

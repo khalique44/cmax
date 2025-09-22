@@ -19,6 +19,12 @@ class Post extends Model
     ];
 
 
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->created_at->format('l d, Y');
+    }
+
+
     public static function updatePosition($rows){        
 
         try {
@@ -42,5 +48,10 @@ class Post extends Model
 
     public static function getRecordsWihPosition(){
         return self::orderBy('position','asc')->get();
+    }
+
+    public static function getAllPosts(){
+
+        return Post::latest()->get();
     }
 }

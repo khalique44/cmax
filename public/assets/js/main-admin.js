@@ -22,6 +22,7 @@ function displayMsg(msgArea, msg, msgType){
     }
 
     msgType = (msgType == 'error') ? 'danger' : msgType;
+    var msgIcon = (msgType == 'error' || msgType == 'danger') ? 'error' : 'success';
 
     if(jQuery('.custom-msg-area').length > 0){
 
@@ -34,11 +35,23 @@ function displayMsg(msgArea, msg, msgType){
         msgArea.html('<div class="alert alert-'+msgType+'" role="alert">'+msg+'</div>').show();
         $('html, body').animate({ scrollTop: msgArea.offset().top}, 100);
 
+        
+
     }
+
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: msgIcon,
+        title: msg,
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true
+    });
 
 }
 
-function ajaxPostRequest(url,data,successCallback,isJson){
+function ajaxPostRequest(url,data,successCallback,ajaxErrorCallback,isJson){
 
     isJson = typeof isJson !== 'undefined' ? isJson : false;
 
@@ -47,6 +60,55 @@ function ajaxPostRequest(url,data,successCallback,isJson){
         method: 'POST',
         url: $('meta[name="admin_url"]').attr('content')+url,
         data: data,
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        success: successCallback,
+        error: ajaxErrorCallback,
+        
+        beforeSend: function() {
+            showAjaxLoader();
+        }
+    }
+    var extraParams  = {
+           datatype: "json"
+
+        }
+
+    /*if(!isJson){
+     
+     var extraParams  = {
+            contentType: false,
+            cache: false,
+            processData: false,
+        } 
+    }
+
+    ajaxParams = Object.assign(extraParams,ajaxParams);
+
+    var moreParams = {
+                        success: successCallback,
+                        error: ajaxErrorCallback
+                    }
+    ajaxParams = Object.assign(moreParams,ajaxParams);*/
+    $.ajax(ajaxParams)
+    .always(function(){     
+        hideAjaxLoader();
+    });
+}
+
+function ajaxPostRequest2(url,data,successCallback,ajaxErrorCallback,isJson){
+
+    isJson = typeof isJson !== 'undefined' ? isJson : false;
+
+    var ajaxParams = {
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        method: 'POST',
+        url: $('meta[name="admin_url"]').attr('content')+url,
+        data: data,    
+        
+        success: successCallback,
+        error: ajaxErrorCallback,
         
         beforeSend: function() {
             showAjaxLoader();
@@ -63,32 +125,24 @@ function ajaxPostRequest(url,data,successCallback,isJson){
             contentType: false,
             cache: false,
             processData: false,
-        }
-
-    
-
+        } 
     }
 
     ajaxParams = Object.assign(extraParams,ajaxParams);
 
+    var moreParams = {
+                        success: successCallback,
+                        error: ajaxErrorCallback
+                    }
+    ajaxParams = Object.assign(moreParams,ajaxParams);
     $.ajax(ajaxParams)
-    .done(successCallback)
-    .fail( function( reason ) {
-          // Handles errors only
-    })
-    .always(function(){
-     
-      hideAjaxLoader();
+    .always(function(){     
+        hideAjaxLoader();
     });
 }
 
 
-$(document).on("change","select.time-slot-month",function(){
-    var month = $(this).val();
-    var data = {month:month};
-    var url = "/available_time_slots/get-days";
-    ajaxPostRequest(url,data,successCallback,true);
-});
+
 
 function successCallback(response){
     if(response.success){
@@ -107,135 +161,633 @@ function successCallback(response){
     }
 }
 
-function loadLaundryBookingChart(dataCount,xValuesRDGR){ 
+
+
+
+
+
+/*-----CMAX----*/
+
+$(document).on("submit","form#builder-form",function(e){
+    e.preventDefault();    
+    var frm = $('form#builder-form');
+    var formData = new FormData(frm[0]);
+    ajaxPostRequest("/builders",formData,builderSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+$(document).on("submit","form#builder-form-update",function(e){
+    e.preventDefault();    
+    var builder_id = $('input[name="builder_id"]').val();
+    //var formData = $(this).serializeArray();
+    var frm = $('form#builder-form-update');
+    var formData = new FormData(frm[0]);
+    ajaxPostRequest("/builders/"+builder_id,formData,builderSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function builderSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
         
-    new Chart("myChart", {
-      type: "bar",
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#builder-form")[0].reset();
+            FilePond.find(document.querySelector('#filepond')).removeFiles();
+            $("#uploaded-preview").html('');
 
-      data: {
-        labels: xValuesRDGR,
-        datasets: [
-            {
-            label: 'Number of Bookings',  
-            data: dataCount,
-            borderColor: "blue",
-            backgroundColor: "blue",
-            fill: false
-            }
-        ]
-      },
-      options: {
-        legend: {
-                position:'bottom',
-                align:'end',
-                
-            },
-            scales: {
-		      y: {
-		        beginAtZero: true
-		      }
-		    }
-      }
-    });
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
+    }
+    
 }
 
 
-function loadReportedIssues(dataCount,labels,type,colorCodes){
+$(document).on("submit","form#cmspages",function(e){
+    e.preventDefault();   
+    var pg_name = $(".pg_name").val();
+    var frm = $('form#cmspages');
+    var formData = new FormData(frm[0]);
+    ajaxPostRequest("/cms-pages/"+pg_name,formData,cmsSuccessCallback,ajaxErrorCallback,true);    
 
-    var chart_type = (typeof type !== 'undefined') ? type : 'pie';	
-    var label = 'Number of Issues';
-    var id = "reportedIssues";
+});
 
-    if(chart_type !== 'pie'){
-        label = 'Total Expense Amount';
-        id = 'reportedIssuesExp';
+function cmsSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){     
+
+            displayMsg(msgArea,response.message,msgType);           
+
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
     }
-console.log(chart_type,label,id);
-	new Chart(id, {
-      type: chart_type,
-      data: {
-        labels: labels,
-        datasets: [
-            {
-            label:  label,  
-            data: dataCount,
-            backgroundColor: 		      
-            colorCodes
-		   
-            }
-        ]
-      },
-      options: {
-        legend: {
-                position:'bottom',
-                align:'end',
-                
-            },
-            scales: {
-		      y: {
-		        beginAtZero: true
-		      }
-		    }
-      }
-    });
-
-
+    
 }
 
-$(document).on("change","select#laundry_number",function(){
-    var laundry_number = $(this).val();
-    if(laundry_number !== ''){
-       document.location = $('meta[name="admin_url"]').attr('content')+"/available_time_slots/?laundry_number="+laundry_number;
+$(document).on("submit","form#property-form",function(e){
+    e.preventDefault();    
+   
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/properties",formData,propertySuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+$(document).on("submit","form#property-form-update",function(e){
+    e.preventDefault();    
+    var id = $('input[name="property_id"]').val();
+    var formData = $(this).serializeArray();
+    ajaxPostRequest("/properties/"+id,formData,propertySuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function propertySuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#property-form")[0].reset();
+            FilePond.find(document.querySelector('#filepond')).removeFiles();
+            $("#uploaded-preview").html('');
+
+            if(response.project_id){
+                location.reload();
+            }
+
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
     }
+    
+}
+
+
+
+
+$(document).on("submit","form#project-form",function(e){
+    e.preventDefault(); 
+
+    var frm = $('form#project-form');
+    var formData = new FormData(frm[0]);   
+
+    ajaxPostRequest("/projects",formData,projectSuccessCallback,ajaxErrorCallback,true);    
+
 });
 
-$(document).on("change","select#laundry_number_create, select#laundry_number_edit",function(){
-    var laundry_number = $(this).val();
-    if(laundry_number !== ''){
-       $("#datepicker td.active.day").trigger("click");
+$(document).on("submit","form#project-form-update",function(e){
+    e.preventDefault();    
+    var id = $('input[name="project_id"]').val();
+    var frm = $('form#project-form-update');
+    var formData = new FormData(frm[0]); 
+    ajaxPostRequest("/projects/"+id,formData,projectSuccessCallback,ajaxErrorCallback,true);    
+
+});
+
+function projectSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+        
+        setTimeout(function(){            
+            displayMsg(msgArea,response.message,msgType);
+            $("form#project-form")[0].reset();
+            FilePond.find(document.querySelector('.filepond')).removeFiles();
+            $(".uploaded-images").html('');
+            if(response.project.id){
+                document.location=window.cmax.adminUrl+"/projects/"+response.project.id+"/edit";
+            }
+
+        },1000);
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
     }
-});
-
-var counter = 0;
-$(document).on("click",".add-more-slots",function(e){
-    e.preventDefault();
-    counter++;
-    var addMoreHtml = $(".selected-slots:eq(0)").html();
-    $(".more-slots-area").append('<div class="remove_me_'+counter+'"><div class="">'+addMoreHtml+'<div class="col-xs-2"><button type="button" class="btn-sm btn-danger mt-30 remove-slots" data-id='+counter+' style="margin-top:30px; ">- Remove</button></div></div></div>');
-    setTimeout(function(){ loadTimePicker() },100)
-});
+    
+}
 
 
-jQuery(document).on("click",".remove-slots",function(e){
-    e.preventDefault();
-    var removeDivId = jQuery(this).data("id");
-    if(confirm("Are you sure want to remove this record?")){
-      jQuery('.remove_me_'+removeDivId).remove();
+function ajaxErrorCallback(response){
+
+    hideAjaxLoader();
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if (response.responseJSON && response.responseJSON.errors){
+        let errors = response.responseJSON.errors;       
+        let html = '<ul >';
+        $.each(errors, function (key, value) {
+            html += `<li>${value[0]}</li>`;
+        });
+        html += '</ul>';
+        displayMsg(msgArea,html,msgType);         
+        
+    }else{
+
+        displayMsg(msgArea,'Server Error!',msgType);
     }
+}
+
+function ajaxErrorSweetAlert(response){
+
+    hideAjaxLoader();
+   
+    var msgType = 'error';
+
+    if (response.responseJSON && response.responseJSON.errors){
+        let errors = response.responseJSON.errors;       
+        let html = '<ul >';
+        $.each(errors, function (key, value) {
+            html += `<li>${value[0]}</li>`;
+        });
+        html += '</ul>';
+        displayMsg('',html,msgType);         
+        
+    }else{
+
+        displayMsg('','Server Error!',msgType);
+    }
+}
+
+$(document).on("change","select#area_id",function(e){
+    e.preventDefault();    
+    var area_id = $(this).val();
+     $("#main_area_id").val(area_id);
+     $(".area-title").val($("select#area_id option:selected").text());
+    //var formData = new FormData(frm[0]); 
+    ajaxPostRequest("/get-sub-area/"+area_id,[],subAreaSuccessCallback,ajaxErrorCallback,true);    
+
 });
 
-function loadTimePicker(){
-    $('.time_from').timepicker({
-            timeFormat: 'HH:mm',
-            interval: 30,
-            minTime: '01',
-            maxTime: '23',
-            defaultTime: $("input.time_from").val(),
-            startTime: '01',
-            dynamic: false,
-            dropdown: true,
-            scrollbar: false
+function subAreaSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        $('select#sub_area_id').empty();
+
+        // Add placeholder again if needed
+        $('select#sub_area_id').append('<option value=""></option>');
+        
+   
+        response.subAreas.forEach(function(item){
+           
+             $('select#sub_area_id').append(new Option(item.name, item.id, false, false));
         });
 
-    $('.time_to').timepicker({
-        timeFormat: 'HH:mm',
-        interval: 30,
-        minTime: '01',
-        maxTime: '23',
-        defaultTime: $("input.time_to").val(),
-        startTime: '01',
-        dynamic: false,
-        dropdown: true,
-        scrollbar: false
+        $('select#sub_area_id').trigger('change');
+
+        //$('select#sub_area_id').html(options).show();
+
+    }else{
+
+         displayMsg(msgArea,response.message,msgType);
+    }
+}
+
+
+FilePond.registerPlugin(
+    //FilePondPluginImagePreview,
+    FilePondPluginFileValidateSize,
+    FilePondPluginFileValidateType
+);
+
+// Create pond instance
+FilePond.setOptions({
+        allowMultiple: false,
+        maxFileSize: '10MB',
+        acceptedFileTypes: ['image/*'],
+        server: {
+            process: {
+                url: '/admin/media/upload',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                onload: function (res) { 
+                    //console.log(res)
+                    const data = JSON.parse(res);
+                    var preview_id = 'uploaded-preview';
+                    if(data.mediaKey == 'project_gallery'){
+                        preview_id = 'gallery-preview';
+                    } else if(data.mediaKey == 'payment_plan'){
+                        preview_id = 'payment-preview';
+                    } else if(data.mediaKey == 'project_progress'){
+                        preview_id = 'project-progress-preview';
+                    }
+
+                    const inputElement = document.getElementById(preview_id); // Works now
+
+                    if (!inputElement) return; // Just in case
+
+                    const collection = inputElement.dataset.collection || 'default';
+
+                    // Hidden input
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = `media_ids[${collection}][]`;
+                    hidden.value = data.id;
+                    inputElement.closest('form').appendChild(hidden);
+
+                    // Preview container
+                    const previewContainerId = inputElement.dataset.preview;
+                    if (previewContainerId) {
+                        const container = document.getElementById(previewContainerId);
+                        if (container) {
+                            const wrapper = document.createElement('div');
+                            wrapper.classList.add('preview-box');
+                            wrapper.dataset.mediaId = data.id;
+
+                            const img = document.createElement('img');
+                            img.src = data.url.replace("storage", "storage/app/public");
+
+                            const removeBtn = document.createElement('span');
+                            removeBtn.classList.add('remove-media');
+                            removeBtn.innerText = 'Remove';
+
+                            /*removeBtn.onclick = function () {
+                                wrapper.remove();
+                                const hiddenInputs = document.querySelectorAll(`input[name="media_ids[${collection}][]"][value="${data.id}"]`);
+                                hiddenInputs.forEach(i => i.remove());
+                            };*/
+
+                            const thumb = document.createElement('div');
+                            thumb.classList.add('media-thumb');
+                            thumb.appendChild(img);
+
+                            const actions = document.createElement('div');
+                            actions.classList.add('media-remove');
+                            actions.appendChild(removeBtn);
+
+                            wrapper.appendChild(thumb);
+                            wrapper.appendChild(actions);
+                            container.appendChild(wrapper);
+                        }
+                    }
+
+                    return data.id;
+                }
+            },
+            revert: {
+                url: '/admin/upload-temp-revert',
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }
+        },
+
+        onremovefile: (file,file2, file3) => {
+            /*var mediaId = file2.source;
+            if(typeof mediaId === 'number' && !isNaN(mediaId) && mediaId !== null){
+                console.log(mediaId);
+                document.querySelector(`.remove-media[data-media-id="${mediaId}"]`)?.remove();
+                addDeletedFile(mediaId);
+            }*/
+                       
+        }
+
+        
+});
+
+FilePond.parse(document.body);
+
+
+function addUploadedFile(filePath) {
+        const field = document.getElementById('uploaded-files');
+        let val = field.value ? JSON.parse(field.value) : [];
+        val.push(filePath);
+        field.value = JSON.stringify(val);
+}
+
+function addDeletedFile(mediaId) {
+    const field = document.getElementById('deleted-files');
+    let val = field.value ? JSON.parse(field.value) : [];
+    val.push(mediaId);
+    field.value = JSON.stringify(val);
+}
+
+
+function deleteUploadedFile(mediaId){
+
+        // Send request to delete the media file
+        fetch(`/admin/media/${mediaId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            //console.log('Media deleted:', data);
+        })
+        .catch(err => {
+            console.error('Error deleting media:', err);
+        });
+    
+
+}
+
+$(document).on('click', 'span.remove-media', function(){
+    var mediaId = $(this).parents('.preview-box').data('media-id');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "The media will be deleted after you save the record.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if(typeof mediaId === 'number' && !isNaN(mediaId) && mediaId !== null){
+                
+                addDeletedFile(mediaId);
+                $(this).parents('.preview-box').remove();
+            }
+        }
     });
+    
+});
+
+
+$(document).on("change", "select#property_type", function(){
+
+    if($(this).val() == 'home'){
+
+        $(".category-home").show();
+        $(".amenity-home").show();
+        $(".amenity-plot").hide();
+        $(".amenity-commercial").hide();
+        $(".category-commercial").hide();
+
+    }else if($(this).val() == 'plot'){
+
+        $(".amenity-plot").show();
+        $(".category-plot").show();
+        $(".amenity-home").hide();
+        $(".category-home").hide();
+        $(".amenity-commercial").hide();
+        $(".category-commercial").hide();
+
+
+    }else if($(this).val() == 'commercial'){
+
+        $(".amenity-commercial").show();
+        $(".category-commercial").show();
+        $(".amenity-plot").hide();
+        $(".amenity-home").hide();
+        $(".category-plot").hide();
+        $(".category-home").hide();
+        
+    }
+
+});
+
+function renderStatusBadge(is_active) {
+    if (is_active === 1) {
+        return '<span class="badge bg-success">Active</span>';
+    } else {
+        return '<span class="badge bg-danger">Inactive</span>';
+    }
+}
+
+
+$(document).on("click",".updateStatus",function(e){
+    e.preventDefault();
+    var project_id = $(this).data("id");
+    var status = $(this).data("status");
+    var status_type = $(this).data("status-type");
+    var status_label = $(this).data("status-label");
+    
+    let $badge = $(this).children('.badge');
+    var msgArea = '';
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/project/update-status",
+        type: "GET",
+        data: {project_id:project_id,status:status,status_type:status_type},
+        success: function(response) {
+            //console.log(response.status);
+            if(response.status == 'success'){
+                //console.log($(this).children('.badge'));
+                
+
+                if ($badge.hasClass('bg-danger')) {
+                    if(status_type == 'is_active' ){
+                        status_label = 'Active';
+                        
+                    }else{
+                        status_label = 'Yes';
+                        
+                    }
+                    status = 1;
+                    $badge.removeClass('bg-danger').addClass('bg-success').text(status_label);
+                   
+                } else {
+                    if(status_type == 'is_active' ){
+                        status_label = 'Deactive';
+                        
+                    }else{
+                        status_label = 'No';
+                       
+                    }
+                    status = 0;
+                    $badge.removeClass('bg-success').addClass('bg-danger').text(status_label);
+                }
+
+                $(this).attr("data-status",status);
+                $(this).attr("data-status-label",status_label);
+                $(this).attr("title","Click to"+status_label);
+                
+                displayMsg(msgArea,response.message,'success');
+                
+            }
+            hideAjaxLoader();
+            
+        },
+        error: function(){
+            displayMsg(msgArea,'Error occurred while updating status!','success');
+        },
+        always:function(){
+            hideAjaxLoader();
+        }
+    });
+});
+
+
+$(document).on("submit","form#areaForm",function(e){
+    e.preventDefault();    
+
+    var msgArea = $(".ajax-msg-area");
+    var frm = $('form#areaForm');
+    var formData = new FormData(frm[0]);
+
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/areas",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        contentType: false,
+        processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            mainAreaSuccessCallback(data)
+            hideAjaxLoader();
+        },
+        error: ajaxErrorSweetAlert,
+        always: function(){
+            hideAjaxLoader();
+        }
+    });    
+
+});
+
+
+function mainAreaSuccessCallback(response){
+
+    var  msgArea = $('.ajax-msg-area');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        let newOption = new Option(response.area.name, response.area.id, true, true);
+        //setTimeout(function(){
+            //console.log(newOption);
+            $('#area_id').append(newOption).trigger('change'); // Add and select
+            $(".area-title").val($("select#area_id option:selected").text());
+        //},3000);
+        $('#areaModal').modal('hide'); // Close modal
+        $('#areaForm')[0].reset(); // Reset form
+        
+
+    }else{
+        
+         displayMsg(msgArea,response.message,msgType);
+    }
+
+    hideAjaxLoader();
+}
+
+
+
+$(document).on("submit","form#subAreaForm",function(e){
+    e.preventDefault();    
+
+    var msgArea = $(".ajax-msg-area");
+    var frm = $('form#subAreaForm');
+    var formData = new FormData(frm[0]);
+
+    showAjaxLoader();
+    $.ajax({
+        url: "/admin/sub-areas",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        contentType: false,
+        processData: false, 
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        success: function(data) {
+            subAreaSuccessRecord(data)
+            hideAjaxLoader();
+        },
+        error: ajaxErrorSweetAlert,
+        always: function(){
+            hideAjaxLoader();
+        }
+    });    
+
+});
+
+
+function subAreaSuccessRecord(response){
+
+    var  msgArea = $('.ajax-msg-sub-area');
+    var msgType = 'error';
+
+    if(response.status && response.status == 'success'){
+        msgType = 'success'; 
+
+        let newOption = new Option(response.subarea.name, response.subarea.id, true, true);
+        $('select#sub_area_id').append(newOption).trigger('change'); // Add and select
+        //$("#main_area_id").append(newOption).trigger('change');
+
+        $('#subAreaModal').modal('hide'); // Close modal
+        $('#sub-area-name').val(''); // Reset form
+        
+        displayMsg('','Sub Area Added Successfully!',msgType);
+    }else{
+        
+         displayMsg(msgArea,response.message,msgType);
+    }
+
+    hideAjaxLoader();
 }

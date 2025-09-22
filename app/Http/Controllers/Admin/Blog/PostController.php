@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Blog;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\DataTables;
 
 class PostController extends Controller
 {
@@ -18,6 +19,32 @@ class PostController extends Controller
         $records = Post::orderBy('position','asc')->get();
         $this->reGeneratePositions();
         return view('admin.blog.content.index',compact('records'));
+    }
+
+    public function getPosts(Request $request)
+    {
+        if ($request->ajax()) {
+            $posts = Post::getAllPosts();
+
+            return DataTables::of($posts)
+                ->addColumn('action', function ($post) {
+                    return '<a class="btn btn-sm btn-primary" href="'.url("admin/blog/posts/$post->id/edit").'" >
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-sm btn-success" target="_blank" href="'.url("/blog/$post->id/").'" >
+                                            View
+                                        </a>
+                                        <a type="button" href="#" class="delete-rec btn btn-sm btn-danger" data-route="/admin/blog/posts/'.$post->id.'" data-tableid="blogTable"   data-id="'.$post->id.'">
+                                            Delete
+                                        </a>';
+                })
+                ->editColumn('file_url', function($post) {
+                    $img = '<a href="'.asset('public/'.$post->file_url).'" target="_blank" ><img src="'.asset('public/'.$post->file_url).'" width="150" ></a>';
+                    return  $img;
+                })
+                ->rawColumns(['action','file_url'])
+                ->toJson();
+        }
     }
 
     /**
@@ -156,6 +183,8 @@ class PostController extends Controller
         if(!empty($header_image)){
             $data['header_image'] = $header_image;
         }
+
+        $data['status'] = $request->has('status') ? 'yes' : 'no'; 
         
 
         
@@ -178,8 +207,8 @@ class PostController extends Controller
             return abort(404);
         }
         Post::Where('id',$id)->delete();
-        $this->reGeneratePositions();
-        return redirect('/admin/blog/posts');
+        //$this->reGeneratePositions();
+        return response()->json(['success' => 'Record deleted successfully.']);
     }
 
     public function updatePosition(Request $request)

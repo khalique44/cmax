@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Helpers;
+use Illuminate\Support\Collection;
 use App\GlobalSetting;
 use Carbon\Carbon;
+use App\Country;
 
-class RosenHelper
+class GeneralHelper
 {
 	public static function setOption($optionKey,$optionValue){
 
@@ -111,8 +113,8 @@ class RosenHelper
     	if(!empty($bookedSlots)){
     		foreach ($bookedSlots as $key => $record) {
     			
-    			$timeFrom = RosenHelper::timeSlotFormat($timeFrom);
-    			$timeTo = RosenHelper::timeSlotFormat($timeTo);
+    			$timeFrom = GeneralHelper::timeSlotFormat($timeFrom);
+    			$timeTo = GeneralHelper::timeSlotFormat($timeTo);
     			
     			if($record->booking_time == "$timeFrom till $timeTo"){
     				
@@ -127,10 +129,138 @@ class RosenHelper
 
     public static function getAvailableTimeSlots(){
 
-        $timeFrom = RosenHelper::getOption('laundry_available_time_from');
-        $timeTo = RosenHelper::getOption('laundry_available_time_to');
+        $timeFrom = GeneralHelper::getOption('laundry_available_time_from');
+        $timeTo = GeneralHelper::getOption('laundry_available_time_to');
     }
 
+
+
+   
+    public static function getCitiesByCountry($countryId)
+    {
+        $country = Country::with(['states.cities' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])->find($countryId);
+
+        if (!$country) {
+            return collect();
+        }
+
+        $cities = collect();
+        foreach ($country->states as $state) {
+            $cities = $cities->merge($state->cities);
+        }
+
+        return $cities->sortBy('name')->values(); // Ensure fully sorted
+    }
+    
+
+    public static function getStatusLabel($status = 1,$color = 'success'){
+        $label = $status;
+        if(is_numeric($status)){
+
+            $label = $status == 1 ? 'Active' : 'Deactive';
+            $color = $status == 1 ? 'success' : 'danger';
+        }
+
+        return '<span class="badge bg-'.$color.'">'.$label.'</span>';
+    }
+
+
+    public static function getMediaWithPublicDir($url){
+        return str_replace('/storage/', '/public/storage/', $url);
+    }
+
+    public static function detectNumberUnit($number)
+    {
+        $number = (int)$number; // ensure integer
+
+        if ($number >= 10000000) {
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 10000000, 2)) , 'unit' => 'Crore'];
+        } elseif ($number >= 100000) {
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 100000, 2)) , 'unit' => 'Lakh'];
+            
+        } elseif ($number >= 1000) {
+            return ['amount' => GeneralHelper::cleanDecimal(number_format($number / 1000, 2)) , 'unit' => 'Thousand'];            
+        } else {
+            return ['amount' => number_format($number) , 'unit' => 'Hundered'];
+        }
+    }
+
+    public static function cleanDecimal($value): string
+    {
+        // Convert to float just in case
+        $value = floatval($value);
+
+        // If value is a whole number like 5.00 → return 5 (no decimal)
+        if (fmod($value, 1) === 0.0) {
+            return (string) intval($value);
+        }
+
+        // Otherwise, return with 2 decimal points
+        return number_format($value, 2, '.', '');
+    }
+
+
+
+    public static function formatCurrency($amount, $symbol = 'PKR') {
+        return $symbol . ' ' . $amount;
+    }
+
+    public static function parsePriceString($price, $format){
+
+        $format = strtolower(trim($format));        
+
+        if ($format == 'crore') {
+            return (float) $price * 10000000;
+        }
+
+        if ($format == 'lakh') {
+            return (float) $price * 100000;
+        }
+
+        return  $price; // fallback for raw numbers
+    }
+
+    public static function formatPriceRange(Collection $offers): array
+    {
+        if ($offers->isEmpty()) {
+            return ['min' => null, 'max' => null];
+        }
+
+        $allValues = [];
+
+        foreach ($offers as $offer) {
+            if (!empty($offer->price_from)) {
+                $allValues[] = GeneralHelper::parsePriceString($offer->price_from,$offer->price_from_in_format);
+            }
+            if (!empty($offer->price_to)) {
+                $allValues[] = GeneralHelper::parsePriceString($offer->price_to, $offer->price_to_in_format);
+            }
+        }
+
+        if (empty($allValues)) {
+            return ['min' => null, 'max' => null];
+        }
+
+        $min = min($allValues);
+        $max = max($allValues);
+
+        return  [
+            'min' => GeneralHelper::detectNumberUnit($min),
+            'max' => GeneralHelper::detectNumberUnit($max),
+        ];
+    }
+
+    public static function showSurveyFileds($project){
+
+        if($project->rate_per_square || $project->development_charges || $project->utility_charges || $project->distance || $project->project_floors || $project->project_start_date ){
+            return true;
+        }
+
+        return false;
+
+    }
 
     /*public static function timeTo24($time){
 

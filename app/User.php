@@ -60,7 +60,7 @@ class User extends Authenticatable
     }
     public function cat()
     {
-        return $this->belongsTo(category::class,'category','id');
+        return $this->belongsTo(Category::class,'category','id');
     }
     public function getFullNameAttribute(){
         return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
-use App\Http\Helpers\RosenHelper;
+use App\Http\Helpers\GeneralHelper;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -13,19 +13,24 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $records = Post::where('status','yes')->orderBy('position','asc')->get();
+        $posts = Post::query()->where('status','yes')->orderBy('position','asc');
+
+        $latestPosts = Post::where('status', 'yes')
+        ->latest()  // created_at DESC
+        ->take(10)
+        ->get();
          
         $data = [
-                          'title' => RosenHelper::getOption('blog_title'), 
-                          'description' => RosenHelper::getOption('blog_description'), 
-                          'meta_title' => RosenHelper::getOption('blog_meta_title'), 
-                          'meta_description' => RosenHelper::getOption('blog_meta_description'), 
-                          'meta_keywords' => RosenHelper::getOption('blog_meta_keywords'), 
+                          'title' => GeneralHelper::getOption('blog_title'), 
+                          'description' => GeneralHelper::getOption('blog_description'), 
+                          'meta_title' => GeneralHelper::getOption('blog_meta_title'), 
+                          'meta_description' => GeneralHelper::getOption('blog_meta_description'), 
+                          'meta_keywords' => GeneralHelper::getOption('blog_meta_keywords'), 
                        ];
         
-        $header_image = RosenHelper::getOption('blog_header_image');
+        $header_image = GeneralHelper::getOption('blog_header_image');
         $data = (object) $data;
        
 
@@ -37,8 +42,13 @@ class BlogController extends Controller
             $header_image = url('public/assets/images').'/header-bg.jpg';
           }
         }
+       $records = $posts->paginate(2);
+
+        if ($request->ajax()) {
+            return view('layouts.partials.blog_posts_list', compact('data','header_image','records'))->render();
+        }
         
-        return view('blog',compact('data','header_image','records'));
+        return view('blog',compact('data','header_image','records','latestPosts'));
     }
 
     /**
@@ -70,26 +80,27 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        $data = Post::find($id);
-        $related_records = Post::where('status','yes')
-                                ->where('id','!=',$id)
-                                ->limit(3)
-                                ->get();
-        if(!$data){
+        $post = Post::find($id);
+        $latestPosts = Post::where('status', 'yes')
+        ->latest()  // created_at DESC
+        ->take(10)
+        ->get();
+
+        if(!$post){
             return abort(404);
         }
 
         $header_image = url('public/assets/images').'/header-bg.jpg';
 
-        if(!empty($data->header_image)){
+        if(!empty($post->header_image)){
             
-          if(file_exists( public_path().'/'.$data->header_image )){
-            $header_image = url('public') .'/'.$data->header_image;
+          if(file_exists( public_path().'/'.$post->header_image )){
+            $header_image = url('public') .'/'.$post->header_image;
           } 
         }
 
 
-        return view('blogdetails',compact('header_image','data','related_records'));
+        return view('blogdetails',compact('header_image','post','latestPosts'));
     }
 
     /**

@@ -1,0 +1,4 @@
+[10-Apr-2025 18:14:21 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/cmaxstudio/public_html/cmax/config/app.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/cmaxstudio/public_html/cmax/config/app.php on line 16

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Project;
 use App\Property;
-use App\Http\Helpers\GeneralHelper;
 use App\Amenity;
 use App\Category;
 use App\Builder;
@@ -14,16 +13,18 @@ use App\Area;
 use App\SubArea;
 use App\ProjectOffer;
 use App\ProjectFloorPlan;
+use App\Http\Controllers\Controller;
+use App\Http\Helpers\GeneralHelper;
+use App\Http\Helpers\FileHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
-use Spatie\Image\Image;
-use Spatie\Image\Enums\ImageDriver;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Yajra\DataTables\DataTables;
 
 
 
@@ -213,31 +214,9 @@ class ProjectController extends Controller
 
         $logo_url = "";
 
+        if ($request->hasFile('project_logo')) {
 
-        if (!empty($request->project_logo)) {
-            $folderName = 'project_logos';
-            $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
-            $fullFileName = $fileName . "-" . time() . '.' . $request->project_logo->getClientOriginalExtension();
-            $fullFileName = str_replace(" ", "_", $fullFileName);
-
-            $destinationPath = public_path('uploads/' . $folderName);
-            $request->project_logo->move($destinationPath, $fullFileName);
-
-            $filePath = $destinationPath . '/' . $fullFileName;
-
-            // 🔹 Optimize the uploaded file
-            $optimizer = OptimizerChainFactory::create();
-            $optimizer->optimize($filePath);
-
-            $logo_url = 'uploads/' . $folderName . '/' . $fullFileName;
-
-            $webpPath = $destinationPath . '/' . $fileName . "-" . time() . '.webp';
-
-            Image::useImageDriver(ImageDriver::Gd);
-
-            Image::load($filePath)
-                ->format('webp')
-                ->save($webpPath);            
+            $logoUrl = FileHelper::uploadImage($request->file('project_logo'), 'project_logos');
            
         }
 
@@ -287,13 +266,10 @@ class ProjectController extends Controller
             for ($i = 0; $i < $count; $i++) {
 
                 if(!empty($request->floorplans['image'][$i])){
-                    $image = $request->floorplans['image'][$i];
-                    
-                    $fileName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);           
-                    $fullFileName = $fileName."-".time().'.'.$image->getClientOriginalExtension();
-                    $fullFileName = str_replace(" ","_",$fullFileName);
-                    $image->move(public_path('uploads/'.$folderName), $fullFileName);
-                    $mediaUrl = 'uploads/'.$folderName.'/'.$fullFileName;
+
+                    $image = $request->floorplans['image'][$i];                    
+
+                    $mediaUrl = FileHelper::uploadImage($image, 'project_floor_plans_images');
                 }
 
 
@@ -524,37 +500,18 @@ class ProjectController extends Controller
                 'sub_area_id' => $sub_area_id
             ]);
         }
+ 
+        
+        if ($request->hasFile('project_logo')) {
 
-        if (!empty($request->project_logo)) {
-            $folderName = 'project_logos';
-            $fileName = pathinfo($request->project_logo->getClientOriginalName(), PATHINFO_FILENAME);           
-            $fullFileName = $fileName . "-" . time() . '.' . $request->project_logo->getClientOriginalExtension();
-            $fullFileName = str_replace(" ", "_", $fullFileName);
-
-            $destinationPath = public_path('uploads/' . $folderName);
-            $request->project_logo->move($destinationPath, $fullFileName);
-
-            $filePath = $destinationPath . '/' . $fullFileName;
-
-            // 🔹 Optimize the uploaded file
-            $optimizer = OptimizerChainFactory::create();
-            $optimizer->optimize($filePath);
-
-            $logo_url = 'uploads/' . $folderName . '/' . $fullFileName;
-
-            $webpPath = $destinationPath . '/' . $fileName . "-" . time() . '.webp';
-
-            Image::useImageDriver(ImageDriver::Gd);
-
-            Image::load($filePath)
-                 ->format('webp')
-                 ->save($webpPath);
+            $logo_url = FileHelper::uploadImage($request->file('project_logo'), 'project_logos');
             
+            // Merge into request
             $request->merge([
                 'logo_url' => $logo_url,
             ]);
-           
-        }        
+        }
+
 
         $project->update($request->except('project_logo','project_gallery','payment_plan'));
         if ($request->has('features')) {
@@ -604,12 +561,8 @@ class ProjectController extends Controller
                 $floorplansId = $request->floorplans['id'][$i] ?? null;
                 if(!empty($request->floorplans['image'][$i])){
                     $image = $request->floorplans['image'][$i];
-                    
-                    $fileName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);           
-                    $fullFileName = $fileName."-".time().'.'.$image->getClientOriginalExtension();
-                    $fullFileName = str_replace(" ","_",$fullFileName);
-                    $image->move(public_path('uploads/'.$folderName), $fullFileName);
-                    $mediaUrl = 'uploads/'.$folderName.'/'.$fullFileName;
+                    $mediaUrl = FileHelper::uploadImage($image, 'project_floor_plans_images');
+
                     $project->floorPlan()->updateOrCreate(
                         ['id' => $floorplansId],
                         [
@@ -808,4 +761,5 @@ class ProjectController extends Controller
             $record->save();
         }
     }
+
 }

@@ -75,6 +75,23 @@ ul.paymentplan-area li img {
     
 }
 
+#progress ul.paymentplan-area {
+    display: inline-block;
+}
+
+#progress ul.paymentplan-area li {
+    width: 170px;
+    display: inline-block;
+
+}
+
+#progress ul.paymentplan-area li img {
+    width: 100%;
+    height: 123px;
+    
+}
+
+
 p.loc-txt {
     
     width: 100%;

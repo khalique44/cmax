@@ -730,8 +730,8 @@ span.number {
     display: block;
     width: 100%;
 }
-#home-floorplan-tab-1 .card-img img,
-#home-paymentplan-tab-16 .card-img img,
+#myTabContent-floorplan .card-img img,
+#paymentplan .card-img img,
 #home-paymentplan-tab-17 .card-img img{
     max-height: 200px;
     width: auto;

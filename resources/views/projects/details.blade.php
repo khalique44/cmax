@@ -63,7 +63,7 @@
             $projectProgress = $project->getMedia('project_progress');                        
             $gallery = $project->getMedia('project_gallery'
             );
-            $firstImage = $gallery->first();  // Get the first media
+            $firstImage = ($project->featuredImage) ? $project->featuredImage : $gallery->first();  // Get the first media
             $remainingImages = $gallery->slice(1);  // Skip the first media
           @endphp
 

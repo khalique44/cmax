@@ -184,7 +184,8 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'), function (){
         Route::resource('features','FeatureController');
         Route::get('/feature-data', 'FeatureController@getFeatures')->name('features.data');
         Route::get('feature/update-status','FeatureController@updateStatus')->name('feature.update-status');
-        
+        Route::post('/media/{media}/set-featured', 'MediaController@setFeatured')->name('media.setFeatured');
+
         
 
 

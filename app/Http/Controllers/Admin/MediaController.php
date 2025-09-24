@@ -62,4 +62,14 @@ class MediaController extends Controller
         Media::findOrFail($id)->delete();
         return response()->json(['status' => 'deleted']);
     }
+
+    public function setFeatured(Media $media)
+    {
+        $model = $media->model; // the parent (e.g. Project)
+
+        $model->featured_media_id = $media->id;
+        $model->save();
+
+        return response()->json(['success' => true, 'message' => 'Featured image set successfully']);
+    }
 }

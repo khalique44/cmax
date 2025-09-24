@@ -123,7 +123,7 @@ class ProjectController extends Controller
 
             'project_title' => [
                 'required',
-                Rule::unique('projects', 'project_title'),
+                //Rule::unique('projects', 'project_title'),
             ],                 
             'progress' => 'required',            
             'project_logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
@@ -196,6 +196,9 @@ class ProjectController extends Controller
             'is_featured' => $request->has('is_featured') ? 1 : 0,        
             'is_popular' => $request->has('is_popular') ? 1 : 0,        
             'added_by' => auth('admin')->user()->id,
+            //'featured_media_id' => ($request->has('featured_media_id')) ? $request->featured_media_id : 0,
+            // Save featured image after project exists
+    
         ]);
 
         $sub_area_id = 0;
@@ -480,8 +483,9 @@ class ProjectController extends Controller
             'is_featured' => $request->has('is_featured') ? 1 : 0,            
             'is_popular' => $request->has('is_popular') ? 1 : 0,            
             'added_by' => auth('admin')->user()->id,
+            
         ]);
-
+       
         $sub_area_id = 0;
 
         if(!empty($request->sub_area)){

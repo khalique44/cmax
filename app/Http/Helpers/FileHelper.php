@@ -39,7 +39,7 @@ class FileHelper
         // Check size
         $fileSizeKB = filesize($filePath) / 1024;
 
-        if ($fileSizeKB > 500) {
+        if ($fileSizeKB > 100) {
             // Convert to WebP
             $manager = new ImageManager(new Driver());
             $image = $manager->read($filePath);

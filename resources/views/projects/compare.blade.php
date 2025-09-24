@@ -41,7 +41,7 @@
                     @foreach($projects as $project)
                         @php
                             $gallery = $project->getMedia('project_gallery');
-                            $firstImage = $gallery->first();  // Get the first media
+                            $firstImage = ($project->featuredImage) ? $project->featuredImage : $gallery->first();  // Get the first media
                         @endphp
                         <div class="property-header">
                             <h2 class="property-title">

@@ -1,7 +1,7 @@
 @foreach($projects as $key => $project)
   @php
       $gallery = $project->getMedia('project_gallery');
-      $firstImage = $gallery->first();  // Get the first media
+      $firstImage = ($project->featuredImage) ? $project->featuredImage : $gallery->first();  // Get the first media
       $remainingImages = $gallery->slice(1);  // Skip the first media
   @endphp
   <div data-aos="fade-up" class="col-md-4 {{ ($key <= 1) ? 'mb-3 mb-md-0' : '' }}">

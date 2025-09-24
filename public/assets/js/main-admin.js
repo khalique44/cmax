@@ -478,14 +478,35 @@ FilePond.setOptions({
                             const thumb = document.createElement('div');
                             thumb.classList.add('media-thumb');
                             thumb.appendChild(img);
+                            console.log('preview_id:',preview_id)
+                            if(preview_id == 'gallery-preview'){
+                                // Create radio input
+                                const radio = document.createElement('input');
+                                radio.type = 'radio';
+                                radio.name = 'featured_image'; // same name for group
+                                radio.value = data.id; // set value according to your logic
+
+                                // Create label
+                                const label = document.createElement('label');
+                                label.classList.add('form-label');
+                                label.classList.add('featured-image-checkbox-label');
+                                label.textContent = ' Set Featured';
+                                label.prepend(radio); // put radio before text
+
+                                // Append to thumb
+                                thumb.appendChild(label);
+                            }
 
                             const actions = document.createElement('div');
                             actions.classList.add('media-remove');
                             actions.appendChild(removeBtn);
+                            thumb.appendChild(removeBtn);
 
                             wrapper.appendChild(thumb);
                             wrapper.appendChild(actions);
                             container.appendChild(wrapper);
+
+                           
                         }
                     }
 
@@ -792,3 +813,31 @@ function subAreaSuccessRecord(response){
 
     hideAjaxLoader();
 }
+
+$(document).on("change", "[name='featured_image']", function () {
+    $("#featured_media_id").val($(this).val());
+    /* var media_id = $(this).val();
+    showAjaxLoader();
+    fetch(`/admin/media/${media_id}/set-featured`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        })
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success) {
+            
+            displayMsg('',response.message,'success');
+        } else {
+            displayMsg('','⚠ Failed to set featured image','danger');
+        }
+        hideAjaxLoader();
+    })
+    .catch(err => console.error('❌ Error:', err)); */
+});

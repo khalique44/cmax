@@ -603,12 +603,13 @@
                                             @if(isset($project))
                                                 @foreach($project->getMedia('payment_plan') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
-                                                    <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
+                                                    <div class="media-thumb">
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" >
+                                                        <div class="remove-media">
+                                                            <span title="Remove" class="remove-media " >Remove</span>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <span title="Remove" class="remove-media " >Remove</span>
-                                                    </div>
+                                                    
                                                 </div>
                                                 @endforeach
                                             @endif
@@ -651,12 +652,13 @@
                                             @if(isset($project))
                                                 @foreach($project->getMedia('project_progress') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
-                                                    <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
+                                                    <div class="media-thumb">
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" >
+                                                        <div class="remove-media">
+                                                            <span title="Remove" class="remove-media " >Remove</span>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <span title="Remove" class="remove-media " >Remove</span>
-                                                    </div>
+                                                    
                                                 </div>
                                                 @endforeach
                                             @endif
@@ -699,12 +701,14 @@
                                             @if(isset($project))
                                                 @foreach($project->getMedia('project_gallery') as $media)
                                                 <div class="preview-box remove-media" data-media-id="{{ $media->id }}">
-                                                    <div>
-                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="width: 150px;">
+                                                    <div class="media-thumb">
+                                                        <img src="{{ str_replace('storage','storage/app/public',$media->getUrl()) }}" alt="uploaded" style="">
+                                                        <label class="form-label featured-image-checkbox-label"><input type="radio" name="featured_image" value="{{ $media->id }}" @checked($project->featured_media_id === $media->id)> Set Featured</label>
+                                                        <div class="remove-media">
+                                                            <span title="Remove" class="remove-media " >Remove</span>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <span title="Remove" class="remove-media " >Remove</span>
-                                                    </div>
+                                                    
                                                 </div>
                                                 @endforeach
                                             @endif
@@ -816,6 +820,7 @@
                                     <div class="form-group">
                                         <input type="hidden" name="deleted-offer[]" id="deleted-offer">
                                         <input type="hidden" name="deleted-floor-plan[]" id="deleted-floor-plan">
+                                        <input type="hidden" name="featured_media_id" id="featured_media_id" value="{{ isset($project) ? $project->featured_media_id : 0 }}">
                                         <button type="submit" class="btn btn-success mt-3">{{ isset($project) ? 'Update' : 'Save' }}</button>
                                         <button type="submit" class="btn btn-warning mt-3">Back</button>
                                     </div>
@@ -876,6 +881,7 @@
                     <label for="main_area_id">Area</label>
                     <input type="text" class="form-control area-title" name="" id="" disabled="" >
                     <input type="hidden" name="area_id" id="main_area_id" >
+                    
                   </div>
                 </div>
                 <div class="col-md-12">

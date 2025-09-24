@@ -10,7 +10,7 @@
                         @php
                                                   
                             $gallery = $project->getMedia('project_gallery');
-                            $firstImage = $gallery->first();  // Get the first media
+                            $firstImage = ($project->featuredImage) ? $project->featuredImage : $gallery->first();  // Get the first media
                              
                         @endphp
                         @if(!empty($firstImage))
